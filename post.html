@@ -106,7 +106,7 @@
       });
       if(res.ok){
         document.getElementById('wrap').innerHTML =
-          '<h2>Thanks — your job is posted.</h2><p class="sub">We'll verify your reply-time pledge and display your <b>Fast-Reply</b> badge accordingly.</p><p style="margin-top: 20px;"><a href="STRIPE_PAYMENT_LINK_URL" target="_blank" rel="noopener" style="display: none; margin-top: 16px; padding: 12px 16px; border-radius: 12px; border: 1px solid #0F172A; background: #0F172A; color: #fff; font-weight: 700; text-decoration: none;">Feature this job ($25)</a></p>';
+          '<h2>Thanks — your job is posted.</h2><p class="sub">We'll verify your reply-time pledge and display your <b>Fast-Reply</b> badge accordingly.</p><p style="margin-top: 20px;"><a href="feature.html" style="display: inline-block; margin-top: 16px; padding: 12px 16px; border-radius: 12px; border: 1px solid #0F172A; background: #0F172A; color: #fff; font-weight: 700; text-decoration: none;">Feature this job ($25)</a></p>';
       }else{
         btn.disabled = false; btn.textContent = 'Submit job';
         alert('Something went wrong. Please try again.');
