@@ -533,14 +533,14 @@
         // Load and display scoreboard stats
         async function loadScoreboard() {
             try {
-                const response = await fetch('scoreboard.json');
+                const response = await fetch(`scoreboard.json?ts=${Date.now()}`);
                 if (!response.ok) throw new Error('Scoreboard data not available');
                 
                 const data = await response.json();
                 
                 // Update stat displays
                 document.getElementById('medianReply').textContent = data.median_reply_hours_24h || '--';
-                document.getElementById('replyRate').textContent = data.reply_rate_24h ? `${data.reply_rate_24h}%` : '--%';
+                document.getElementById('replyRate').textContent = data.last24_replied && data.last24_apps ? `${data.last24_replied}/${data.last24_apps} (${data.reply_rate_24h}%)` : '--%';
                 document.getElementById('interviewRate').textContent = data.interview_rate_7d ? `${data.interview_rate_7d}%` : '--%';
                 document.getElementById('certifiedJobs').textContent = data.certified_jobs || '--';
                 

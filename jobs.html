@@ -337,7 +337,7 @@
         // Load and display jobs
         async function loadJobs() {
             try {
-                const response = await fetch('public_jobs.csv');
+                const response = await fetch(`public_jobs.csv?ts=${Date.now()}`);
                 if (!response.ok) throw new Error('Could not load jobs data');
                 
                 const csvText = await response.text();
