@@ -1,0 +1,4 @@
+applicant_id,job_id,ts_applied,ts_employer_reply,interview,hired,score,subject_variant,subject_text,body_variant
+A1,J1,2025-08-28T15:40:06.649664,,0.0,0.0,0.7199,,,
+A1,J1,2025-08-28T21:16:30.113123,0.8475,,,,,,
+A1,J1,2025-08-28T21:26:32.392348,0.8475,,,,subj_3,[Fast-Reply] Help Desk Technician opportunity for TestUser at Northstar MSP,social_proof

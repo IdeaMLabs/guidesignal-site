@@ -1,0 +1,2 @@
+applicant_id,applicant_name,applicant_email,job_id,employer,job_title,job_city,job_pay_min,job_pay_max,score,explanation
+A1,TestUser,YOUREMAIL@example.com,J1,Northstar MSP,Help Desk Technician,Worcester,21,26,0.8475,Fit: 24% • Must-haves met: 100% (help desk;windows;ticketing) • Fast-reply prior: 0.96 (median 0.5h) • Pay fit: 1.00 • Crowd penalty applied.

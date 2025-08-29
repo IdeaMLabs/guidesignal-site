@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast-Reply Certified Jobs - GuideSignal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #1e3a5f;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 40px 0;
+            text-align: center;
+            background: white;
+            box-shadow: 0 2px 20px rgba(30, 58, 95, 0.08);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo img {
+            width: 90%;
+            height: 90%;
+            object-fit: contain;
+            background: #ffffff;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 300;
+            color: #1e3a5f;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #6c757d;
+            font-weight: 300;
+        }
+
+        .nav-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #4a9eff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #1e3a5f;
+        }
+
+        .jobs-section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 300;
+            color: #1e3a5f;
+            margin-bottom: 50px;
+            letter-spacing: -1px;
+        }
+
+        .jobs-grid {
+            display: grid;
+            gap: 30px;
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(30, 58, 95, 0.15);
+        }
+
+        .fast-reply-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .job-title {
+            font-size: 24px;
+            font-weight: 500;
+            color: #1e3a5f;
+            margin-bottom: 8px;
+        }
+
+        .job-employer {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 12px;
+        }
+
+        .job-location {
+            font-size: 16px;
+            color: #495057;
+            margin-bottom: 15px;
+        }
+
+        .job-pay {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 15px;
+        }
+
+        .job-description {
+            color: #6c757d;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .job-skills {
+            margin-bottom: 20px;
+        }
+
+        .skills-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background: #e9ecef;
+            color: #495057;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 4px;
+        }
+
+        .apply-btn {
+            background: #1e3a5f;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .apply-btn:hover {
+            background: #2c4a6f;
+            transform: translateY(-2px);
+        }
+
+        .no-jobs {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .no-jobs h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .job-card {
+                padding: 20px;
+            }
+            
+            .fast-reply-badge {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 15px;
+                display: inline-block;
+            }
+            
+            .job-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="GuideSignalLogo.png" alt="GuideSignal Logo">
+            </div>
+            <h1>Fast-Reply Jobs</h1>
+            <p class="subtitle">Employers certified for quick responses</p>
+            <a href="index.html" class="nav-link">← Back to Home</a>
+        </div>
+    </header>
+
+    <section class="jobs-section">
+        <div class="container">
+            <h2 class="section-title">Available Positions</h2>
+            
+            <div class="loading" id="loading">
+                <h3>Loading jobs...</h3>
+                <p>Please wait while we fetch the latest opportunities</p>
+            </div>
+
+            <div class="jobs-grid" id="jobs-container" style="display: none;">
+                <!-- Jobs will be loaded here -->
+            </div>
+
+            <div class="no-jobs" id="no-jobs" style="display: none;">
+                <h3>No Fast-Reply Jobs Available</h3>
+                <p>Check back soon for new certified opportunities, or <a href="apply.html" style="color: #4a9eff;">submit your profile</a> to get matched when they become available.</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Parse CSV data
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            const headers = lines[0].split(',');
+            const data = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (lines[i].trim()) {
+                    const values = lines[i].split(',');
+                    const row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = values[index] || '';
+                    });
+                    data.push(row);
+                }
+            }
+            return data;
+        }
+
+        // Format pay range
+        function formatPay(min, max) {
+            return `$${min}–${max}/hr`;
+        }
+
+        // Format skills
+        function formatSkills(skillsText) {
+            if (!skillsText) return [];
+            return skillsText.split(';').map(skill => skill.trim()).filter(skill => skill);
+        }
+
+        // Create job card HTML
+        function createJobCard(job) {
+            const skills = formatSkills(job.musts);
+            const niceToHave = formatSkills(job.nice);
+            
+            const skillTags = skills.map(skill => 
+                `<span class="skill-tag">${skill}</span>`
+            ).join('');
+
+            const niceToHaveTags = niceToHave.length > 0 ? 
+                niceToHave.map(skill => 
+                    `<span class="skill-tag" style="background: #e3f2fd; color: #1976d2;">${skill}</span>`
+                ).join('') : '';
+
+            // Create URL parameters for apply link
+            const params = new URLSearchParams({
+                employer: job.employer,
+                job: job.job_title,
+                city: job.job_city,
+                pay: `${job.job_pay_min}-${job.job_pay_max}`
+            });
+            const applyUrl = `apply.html?${params.toString()}`;
+
+            return `
+                <div class="job-card">
+                    <div class="fast-reply-badge">Fast-Reply Certified</div>
+                    <h3 class="job-title">${job.job_title}</h3>
+                    <div class="job-employer">${job.employer}</div>
+                    <div class="job-location">📍 ${job.job_city}</div>
+                    <div class="job-pay">${formatPay(job.job_pay_min, job.job_pay_max)}</div>
+                    <div class="job-skills">
+                        <div class="skills-label">Required Skills:</div>
+                        ${skillTags}
+                        ${niceToHaveTags ? `<div class="skills-label" style="margin-top: 10px;">Nice-to-Have:</div>${niceToHaveTags}` : ''}
+                    </div>
+                    <a href="${applyUrl}" class="apply-btn">Apply Now</a>
+                </div>
+            `;
+        }
+
+        // Load and display jobs
+        async function loadJobs() {
+            try {
+                const response = await fetch('public_jobs.csv');
+                if (!response.ok) throw new Error('Could not load jobs data');
+                
+                const csvText = await response.text();
+                const jobs = parseCSV(csvText);
+                
+                // All jobs in public_jobs.csv are already filtered for certified & open jobs
+                const certifiedJobs = jobs.filter(job => 
+                    job.job_status === 'open' && 
+                    (job.fast_reply_certified === 'True' || job.fast_reply_certified === 'true')
+                );
+
+                const loadingEl = document.getElementById('loading');
+                const containerEl = document.getElementById('jobs-container');
+                const noJobsEl = document.getElementById('no-jobs');
+
+                loadingEl.style.display = 'none';
+
+                if (certifiedJobs.length === 0) {
+                    noJobsEl.style.display = 'block';
+                } else {
+                    containerEl.innerHTML = certifiedJobs.map(createJobCard).join('');
+                    containerEl.style.display = 'grid';
+                }
+
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+                document.getElementById('loading').innerHTML = 
+                    '<h3>Error loading jobs</h3><p>Please try again later</p>';
+            }
+        }
+
+        // Load jobs when page loads
+        document.addEventListener('DOMContentLoaded', loadJobs);
+    </script>
+</body>
+</html>

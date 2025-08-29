@@ -1,0 +1,14 @@
+to,subject,body,fast_reply_certified,score,subject_variant,body_variant,estimated_subject_rate,estimated_body_rate
+you@example.com,[Fast-Reply] Help Desk Technician opportunity for TestUser at Northstar MSP,"Hi Hiring Team,
+
+As a Fast-Reply Certified employer, you know great candidates move fast.
+
+**TestUser** is looking for Help Desk Technician roles and matches your requirements:
+Fit: 24% • Must-haves met: 100% (help desk;windows;ticketing) • Fast-reply prior: 0.96 (median 0.5h)...
+
+Your quick median response time is exactly what serious candidates want.
+
+Ready for an introduction?
+
+Best,
+GuideSignal Team",True,0.8475,subj_3,social_proof,0.5,0.5

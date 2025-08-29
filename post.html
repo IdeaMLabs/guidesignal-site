@@ -1,0 +1,119 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Post a Fast-Reply Job</title>
+<style>
+  body{margin:0;background:#F7F9FC;font:15px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#0F172A}
+  main{max-width:760px;margin:28px auto;padding:0 16px}
+  .card{background:#fff;border:1px solid #e5eaf1;border-radius:16px;padding:22px;box-shadow:0 6px 20px rgba(2,8,23,.06)}
+  h1{margin:0 0 8px}
+  p.sub{margin:0 0 16px;color:#64748b}
+  label{display:block;margin:12px 0 6px}
+  input,textarea,select{width:100%;padding:12px;border-radius:10px;border:1px solid #dbe1ea}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:640px){ .row{grid-template-columns:1fr} }
+  button{margin-top:14px;padding:12px 16px;border-radius:12px;border:1px solid #0F172A;background:#0F172A;color:#fff;font-weight:700;cursor:pointer}
+  small.note{color:#64748b;display:block;margin-top:10px}
+</style>
+
+<main>
+  <div class="card" id="wrap">
+    <h1>Post a Fast-Reply Job</h1>
+    <p class="sub">Fast responses get a <b>Fast-Reply Certified</b> badge and priority placement.</p>
+
+    <form id="jobForm" action="https://formspree.io/f/xvgbzwav" method="POST">
+      <!-- Company & Contact -->
+      <label>Company
+        <input name="company" required placeholder="Your Company Name">
+      </label>
+      <div class="row">
+        <label>Hiring contact (name)
+          <input name="contact_name" required placeholder="Your Name">
+        </label>
+        <label>Contact email
+          <input type="email" name="contact_email" required placeholder="your.email@company.com">
+        </label>
+      </div>
+
+      <!-- Role -->
+      <div class="row">
+        <label>Role title
+          <input name="job_title" required placeholder="Help Desk Technician">
+        </label>
+        <label>City / Remote
+          <input name="job_city" required placeholder="City, State / Remote">
+        </label>
+      </div>
+
+      <!-- Pay range (use separate fields to match the model) -->
+      <div class="row">
+        <label>Pay min (hourly)
+          <input type="number" step="0.01" name="job_pay_min" required placeholder="15">
+        </label>
+        <label>Pay max (hourly)
+          <input type="number" step="0.01" name="job_pay_max" required placeholder="25">
+        </label>
+      </div>
+
+      <!-- Requirements -->
+      <label>Must-have skills (comma-separated)
+        <textarea name="musts" rows="2" required placeholder="help desk, windows, ticketing"></textarea>
+      </label>
+      <label>Nice-to-haves (comma-separated)
+        <textarea name="nice" rows="2" placeholder="azure, scripting, itil"></textarea>
+      </label>
+
+      <!-- Reply-time pledge -->
+      <label>Reply-time pledge (SLA)
+        <select name="reply_sla" required>
+          <option value="<=2h">&le; 2 hours (Fast-Reply Certified)</option>
+          <option value="same-day">Same day</option>
+          <option value="48h">Within 48 hours</option>
+        </select>
+      </label>
+
+      <!-- Optional scheduling link (helps fast replies) -->
+      <label>Optional: Calendly / phone for fast scheduling
+        <input name="contact_channel" placeholder="https://calendly.com/your-link or phone number">
+      </label>
+
+      <!-- Metadata -->
+      <input type="hidden" name="_subject">
+      <input type="hidden" name="source">
+      <input type="hidden" name="_redirect">
+      <!-- Honeypot (spam trap) -->
+      <label style="display:none">Leave this empty <input name="website"></label>
+
+      <label><input type="checkbox" name="consent" required> I agree to the <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.</label>
+      <button type="submit">Submit job</button>
+      <small class="note">By submitting, you agree to the reply-time pledge; badge visibility depends on measured reply speed.</small>
+    </form>
+  </div>
+</main>
+
+<script>
+  // AJAX submit to keep user on-page with a success message
+  const f = document.getElementById('jobForm');
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = f.querySelector('button[type="submit"]');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    try{
+      const res = await fetch(f.action, {
+        method: 'POST',
+        body: new FormData(f),
+        headers: { 'Accept': 'application/json' }
+      });
+      if(res.ok){
+        document.getElementById('wrap').innerHTML =
+          '<h2>Thanks — your job is posted.</h2><p class="sub">We'll verify your reply-time pledge and display your <b>Fast-Reply</b> badge accordingly.</p><p style="margin-top: 20px;"><a href="STRIPE_PAYMENT_LINK_URL" target="_blank" rel="noopener" style="display: none; margin-top: 16px; padding: 12px 16px; border-radius: 12px; border: 1px solid #0F172A; background: #0F172A; color: #fff; font-weight: 700; text-decoration: none;">Feature this job ($25)</a></p>';
+      }else{
+        btn.disabled = false; btn.textContent = 'Submit job';
+        alert('Something went wrong. Please try again.');
+      }
+    }catch(err){
+      btn.disabled = false; btn.textContent = 'Submit job';
+      alert('Network error. Please try again.');
+    }
+  });
+</script>

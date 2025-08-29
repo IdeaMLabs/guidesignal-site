@@ -1,0 +1,4 @@
+id,employer_name,title,city,pay_min,pay_max,must_have_skills,nice_to_have,description,response_fast_prob,response_median_reply_hours,active_apps_last_24h,capacity_per_day
+J1,Northstar MSP,Help Desk Technician,Worcester,21,26,"help desk;windows;ticketing","o365;zendesk;azure","Tier‑1 support for SMB clients; Windows, ticketing, O365 helpful.",,0.8,6,6
+J2,LogiCo,Warehouse Associate,Shrewsbury,18,22,"warehouse;forklift","rf scanner;sap","High‑volume fulfillment; forklift cert preferred; day shift.",0.75,1.2,2,10
+J3,DataHands,Support Analyst (SQL + CS),Remote,24,30,"sql;support","excel;python","Hybrid support/analyst role; SQL queries + customer empathy.",,5,4,3

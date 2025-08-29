@@ -1,0 +1,4 @@
+id,name,email,city,target_pay_min,skills_text,skills_tags,certs,resume_text
+A1,Jordan Lee,jordan@example.com,Worcester,22,"Help desk, Windows 10, Office 365, ticketing","help desk;windows;office 365;ticketing","CompTIA ITF+;Google IT Support","Troubleshot end‑user issues, configured O365 accounts, managed tickets in Zendesk."
+A2,Samira K,samira@example.com,Boston,20,"Warehouse, forklift, picking/packing","warehouse;forklift;picking;packing","OSHA 10","Experienced warehouse associate with safety focus; can lift 50lbs and operate forklifts."
+A3,Diego P,diego@example.com,Remote,30,"Python, SQL, Excel, customer support","python;sql;excel;support","Google Data Analytics","Analyst/CSR hybrid: SQL querying, Excel dashboards, customer ticket triage."

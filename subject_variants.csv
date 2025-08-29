@@ -1,0 +1,9 @@
+variant_id,template,alpha,beta,total_sent,total_replies_24h,last_updated
+subj_1,{name} — {job} at {employer},1,1,0,0,2025-08-29T08:02:21.741696
+subj_2,Perfect match: {name} for {job} at {employer},1,1,0,0,2025-08-29T08:02:21.741696
+subj_3,{job} opportunity for {name} at {employer},1,1,0,0,2025-08-29T08:02:21.741696
+subj_4,Fast-Reply Match: {name} → {job} ({employer}),1,1,0,0,2025-08-29T08:02:21.741696
+subj_5,Skilled candidate for {job} at {employer},1,1,0,0,2025-08-29T08:02:21.741696
+subj_6,Quick response: {name} matches {job} at {employer},1,1,0,0,2025-08-29T08:02:21.741696
+subj_7,{employer} {job} — Strong candidate {name},1,1,0,0,2025-08-29T08:02:21.741696
+subj_8,Ready to start: {name} for {job} at {employer},2,1,1,1,2025-08-29T08:09:32.496773

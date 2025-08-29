@@ -1,0 +1,3 @@
+contact_email,reason,timestamp,source,job_id,employer_name
+bounce.test@example.com,bounce,2025-08-29T08:47:52.119706,bounce_detector,,
+complaint.test@example.com,complaint,2025-08-29T08:47:52.130709,bounce_detector,,

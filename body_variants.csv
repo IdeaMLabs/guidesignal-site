@@ -1,0 +1,83 @@
+variant_id,name,description,template,alpha,beta,total_sent,total_replies_24h,last_updated
+proof_first,Proof-First,Must-haves + score + CTA,"Hi {contact_name},
+
+I found a strong candidate for your {job_title} role:
+
+**{applicant_name}** - Match Score: {score_percent}%
+• Meets {must_haves_met}% of your must-have requirements
+• Experience includes: {key_skills}
+
+{fast_reply_note}
+
+Would you like me to put you in touch?
+
+Best regards,
+GuideSignal Team",1,1,0,0,2025-08-29T08:09:20.600187
+value_first,Value-First,Fast-Reply badge + SLA + CTA,"Hi {contact_name},
+
+{fast_reply_badge}Your commitment to fast responses (median {reply_time}) makes you stand out to candidates.
+
+I have a qualified {job_title} candidate ready to connect:
+• **{applicant_name}**
+• {explanation_summary}
+
+Given your excellent response track record, would you like an introduction?
+
+Best regards,
+GuideSignal Team",1,1,0,0,2025-08-29T08:09:20.600187
+skills_first,Skills-First,Tool stack bullets focus,"Hi {contact_name},
+
+Found a {job_title} candidate with your exact tool stack:
+
+**{applicant_name}**
+{skills_bullets}
+
+Match details: {explanation_summary}
+
+{fast_reply_note}
+
+Interested in connecting?
+
+Best,
+GuideSignal",1,1,0,0,2025-08-29T08:09:20.600187
+tldr_short,TL;DR Short,Ultra-brief format,"Hi {contact_name},
+
+Quick intro: **{applicant_name}** for {job_title}
+
+• {score_percent}% match
+• {key_skills}
+• {availability}
+
+{fast_reply_note}
+
+Connect? Reply here.
+
+-GuideSignal",1,1,0,0,2025-08-29T08:09:20.600187
+social_proof,Social Proof,Fast-reply certified emphasis,"Hi {contact_name},
+
+As a Fast-Reply Certified employer, you know great candidates move fast.
+
+**{applicant_name}** is looking for {job_title} roles and matches your requirements:
+{explanation_summary}
+
+Your {reply_time} median response time is exactly what serious candidates want.
+
+Ready for an introduction?
+
+Best,
+GuideSignal Team",1,1,0,0,2025-08-29T08:09:20.600187
+data_driven,Data-Driven,Metrics and numbers focus,"Hi {contact_name},
+
+**Candidate:** {applicant_name}
+**Role:** {job_title}
+**Match Score:** {score_percent}%
+**Must-haves satisfied:** {must_haves_met}%
+
+{explanation_summary}
+
+**Your response SLA:** {reply_time}
+**Platform success rate:** 67% reply rate within 24h
+
+Next step: Introduction call?
+
+GuideSignal Team",1,1,0,0,2025-08-29T08:09:20.600187

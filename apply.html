@@ -1,0 +1,115 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Get a Fast-Reply Match</title>
+<style>
+  body{margin:0;background:#F7F9FC;font:15px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  main{max-width:760px;margin:24px auto;padding:0 16px}
+  .card{background:#fff;border:1px solid #e5eaf1;border-radius:16px;padding:22px;box-shadow:0 6px 20px rgba(2,8,23,.06)}
+  label{display:block;margin:12px 0 6px}
+  input,textarea,select{width:100%;padding:12px;border-radius:10px;border:1px solid #dbe1ea}
+  button{margin-top:12px;padding:12px 16px;border-radius:12px;border:1px solid #0F172A;background:#0F172A;color:#fff;font-weight:700}
+  small{color:#64748b}
+  .targeting-banner{background:#e3f2fd;border:1px solid #4a9eff;border-radius:8px;padding:12px;margin-bottom:16px;color:#1976d2;font-size:14px;text-align:center}
+</style>
+<main>
+  <div class="card">
+    <div id="targeting-banner" class="targeting-banner" style="display:none"></div>
+    <h1 style="margin:0 0 8px">Get a Fast-Reply Match</h1>
+    <p><small>We optimize for real replies, not clicks.</small></p>
+    <!-- same form as Option A, but without inline styles if you prefer -->
+    <form id="fastReplyForm" action="https://formspree.io/f/xdklalra" method="POST">
+      <label>Full name<input name="name" required></label>
+      <label>Email<input type="email" name="email" required></label>
+      <label>City / ZIP<input name="location" required></label>
+      <label>Target role
+        <select name="role">
+          <option>Help Desk / Desktop Support</option>
+          <option>Warehouse Associate</option>
+          <option>Customer Support</option>
+          <option>Operations / Dispatcher</option>
+        </select>
+      </label>
+      <label>Skills (comma-separated)<textarea name="skills" rows="3" placeholder="relevant skills, experience, certifications"></textarea></label>
+      <label>Pay range (hourly)<input name="pay" placeholder="e.g., 15-25"></label>
+      <label>Resume / portfolio URL (optional)<input name="resume_url" placeholder="https://…"></label>
+      <input type="hidden" name="_subject">
+      <input type="hidden" name="source">
+      <input type="hidden" name="_redirect">
+      <label style="display:none">Leave this empty <input name="website"></label>
+      <label><input type="checkbox" name="consent" required> I agree to the <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.</label>
+      <button>Submit</button>
+      <p id="formNote"><small>We'll email you when we've found a fast-reply match.</small></p>
+    </form>
+  </div>
+</main>
+<script>
+  const f = document.getElementById('fastReplyForm');
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = f.querySelector('button[type="submit"]');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    const res = await fetch(f.action, { method: 'POST', body: new FormData(f), headers: { 'Accept': 'application/json' }});
+    if (res.ok) { f.innerHTML = '<h3>Thanks — you're in.</h3><p><small>We'll route your one best application ASAP.</small></p>'; }
+    else { btn.disabled = false; btn.textContent = 'Submit'; document.getElementById('formNote').textContent = 'Something went wrong. Please try again.'; }
+  });
+
+  // Parse URL parameters and prefill form
+  function prefillFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const employer = params.get('employer');
+    const job = params.get('job');
+    const city = params.get('city');
+    const pay = params.get('pay');
+
+    if (employer && job) {
+      // Show targeting banner
+      const banner = document.getElementById('targeting-banner');
+      banner.textContent = `Targeting: ${employer} — ${job}`;
+      banner.style.display = 'block';
+
+      // Prefill role field
+      const roleSelect = document.querySelector('select[name="role"]');
+      if (roleSelect) {
+        // Try to find matching option or add new one
+        let optionFound = false;
+        for (let option of roleSelect.options) {
+          if (option.value.toLowerCase().includes(job.toLowerCase()) || 
+              job.toLowerCase().includes(option.value.toLowerCase())) {
+            roleSelect.value = option.value;
+            optionFound = true;
+            break;
+          }
+        }
+        
+        // If no match found, add the job title as a new option
+        if (!optionFound) {
+          const newOption = document.createElement('option');
+          newOption.value = job;
+          newOption.textContent = job;
+          newOption.selected = true;
+          roleSelect.appendChild(newOption);
+        }
+      }
+
+      // Add hidden inputs for tracking
+      const form = document.getElementById('fastReplyForm');
+      
+      const hiddenInputs = [
+        { name: 'target_employer', value: employer },
+        { name: 'target_job_title', value: job },
+        { name: 'target_job_city', value: city || '' },
+        { name: 'target_pay_range', value: pay || '' }
+      ];
+
+      hiddenInputs.forEach(input => {
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = input.name;
+        hiddenInput.value = input.value;
+        form.appendChild(hiddenInput);
+      });
+    }
+  }
+
+  // Run prefill when page loads
+  document.addEventListener('DOMContentLoaded', prefillFromURL);
+</script>
