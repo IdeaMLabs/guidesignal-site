@@ -18,7 +18,7 @@ Quick stats:
 • Pre-screened candidates with skill verification  
 • Streamlined hiring process
 • Featured jobs get 5x more applications
-• Recent performance: {reply_rate}% reply rate from {total_applications} applications in last 24h
+• Recent performance: 0% reply rate from 0 applications in last 24h
 
 Would love to show you our current candidate pool - we have [specific roles relevant to their company] ready to interview.
 
