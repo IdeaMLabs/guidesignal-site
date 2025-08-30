@@ -17,6 +17,12 @@
 </style>
 
 <main>
+  <div style="text-align:center;margin-bottom:20px">
+    <a href="index.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">← Home</a>
+    <a href="jobs.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">Fast-Reply Jobs</a>
+    <a href="how.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">How it Works</a>
+    <a href="faq.html" style="color:#4a9eff;text-decoration:none">FAQ</a>
+  </div>
   <div class="card" id="wrap">
     <h1>Post a Fast-Reply Job</h1>
     <p class="sub">Fast responses get a <b>Fast-Reply Certified</b> badge and priority placement.</p>
@@ -81,6 +87,10 @@
       <input type="hidden" name="_subject">
       <input type="hidden" name="source">
       <input type="hidden" name="_redirect">
+      <!-- UTM tracking -->
+      <input type="hidden" name="utm_source">
+      <input type="hidden" name="utm_medium">
+      <input type="hidden" name="utm_campaign">
       <!-- Honeypot (spam trap) -->
       <label style="display:none">Leave this empty <input name="website"></label>
 
@@ -106,7 +116,7 @@
       });
       if(res.ok){
         document.getElementById('wrap').innerHTML =
-          '<h2>Thanks — your job is posted.</h2><p class="sub">We'll verify your reply-time pledge and display your <b>Fast-Reply</b> badge accordingly.</p><p style="margin-top: 20px;"><a href="STRIPE_PAYMENT_LINK_URL" target="_blank" rel="noopener" style="display: none; margin-top: 16px; padding: 12px 16px; border-radius: 12px; border: 1px solid #0F172A; background: #0F172A; color: #fff; font-weight: 700; text-decoration: none;">Feature this job ($25)</a></p>';
+          '<h2>Thanks — your job is posted.</h2><p class="sub">We'll verify your reply-time pledge and display your <b>Fast-Reply</b> badge accordingly.</p><p style="margin-top: 20px;"><a href="https://buy.stripe.com/8x25kC7gS1zz6AxeFk5Rm00" target="_blank" rel="noopener" style="display: inline-block; margin-top: 16px; padding: 12px 16px; border-radius: 12px; border: 1px solid #0F172A; background: #0F172A; color: #fff; font-weight: 700; text-decoration: none;">Feature this job ($25)</a></p>';
       }else{
         btn.disabled = false; btn.textContent = 'Submit job';
         alert('Something went wrong. Please try again.');
@@ -116,4 +126,71 @@
       alert('Network error. Please try again.');
     }
   });
+
+  // Handle URL parameters from cohort.html intro requests
+  function handleURLParams() {
+    const params = new URLSearchParams(window.location.search);
+    const role = params.get('role');
+    const candidate = params.get('candidate');
+    const source = params.get('source');
+    
+    // Handle UTM parameters
+    const utmSource = params.get('utm_source');
+    const utmMedium = params.get('utm_medium');
+    const utmCampaign = params.get('utm_campaign');
+    
+    if (utmSource) {
+      const utmSourceField = document.querySelector('input[name="utm_source"]');
+      if (utmSourceField) utmSourceField.value = utmSource;
+    }
+    
+    if (utmMedium) {
+      const utmMediumField = document.querySelector('input[name="utm_medium"]');
+      if (utmMediumField) utmMediumField.value = utmMedium;
+    }
+    
+    if (utmCampaign) {
+      const utmCampaignField = document.querySelector('input[name="utm_campaign"]');
+      if (utmCampaignField) utmCampaignField.value = utmCampaign;
+    }
+
+    if (role) {
+      // Pre-fill the job title with the role
+      const jobTitleField = document.querySelector('input[name="job_title"]');
+      if (jobTitleField) {
+        jobTitleField.value = role;
+      }
+    }
+
+    if (candidate && source === 'cohort_intro') {
+      // Show a helpful banner about the intro request
+      const form = document.getElementById('jobForm');
+      const banner = document.createElement('div');
+      banner.style.cssText = `
+        background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+        border: 1px solid #4a9eff;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 16px;
+        color: #1e3a5f;
+        font-size: 14px;
+        text-align: center;
+      `;
+      banner.innerHTML = `
+        <strong>🤝 Intro Request:</strong> You're posting a job for <strong>${role}</strong> 
+        after viewing <strong>${candidate}'s</strong> profile. They'll be notified when you post!
+      `;
+      form.parentNode.insertBefore(banner, form);
+
+      // Add hidden field to track the intro source
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = 'intro_candidate';
+      hiddenInput.value = candidate;
+      form.appendChild(hiddenInput);
+    }
+  }
+
+  // Run URL param handler on page load
+  document.addEventListener('DOMContentLoaded', handleURLParams);
 </script>
