@@ -5,7 +5,13 @@
   main{max-width:760px;margin:24px auto;padding:0 16px}
   .card{background:#fff;border:1px solid #e5eaf1;border-radius:16px;padding:22px;box-shadow:0 6px 20px rgba(2,8,23,.06)}
   label{display:block;margin:12px 0 6px}
-  input,textarea,select{width:100%;padding:12px;border-radius:10px;border:1px solid #dbe1ea}
+  input,textarea,select{width:100%;padding:12px;border-radius:10px;border:1px solid #dbe1ea;box-sizing:border-box}
+  select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right 12px center;background-size:16px;padding-right:40px}
+  @media (max-width: 480px) {
+    main{padding:0 12px}
+    .card{padding:16px}
+    input,textarea,select{font-size:16px}
+  }
   button{margin-top:12px;padding:12px 16px;border-radius:12px;border:1px solid #0F172A;background:#0F172A;color:#fff;font-weight:700}
   small{color:#64748b}
   .targeting-banner{background:#e3f2fd;border:1px solid #4a9eff;border-radius:8px;padding:12px;margin-bottom:16px;color:#1976d2;font-size:14px;text-align:center}
@@ -27,13 +33,16 @@
       <label>Email<input type="email" name="email" required></label>
       <label>City / ZIP<input name="location" required></label>
       <label>Target role
-        <select name="role">
+        <select name="role" onchange="toggleCustomRole()">
           <option>Help Desk / Desktop Support</option>
           <option>Warehouse Associate</option>
           <option>Customer Support</option>
           <option>Operations / Dispatcher</option>
+          <option value="Other">Other (type your role)</option>
         </select>
       </label>
+      <p><small style="color:#64748b">Don't see your role? Choose Other and type it</small></p>
+      <label id="custom-role-label" style="display:none">Custom role<input name="role_custom" placeholder="Enter your target role"></label>
       <label>Skills (comma-separated)<textarea name="skills" rows="3" placeholder="relevant skills, experience, certifications"></textarea></label>
       <label>Pay range (hourly)<input name="pay" placeholder="e.g., 15-25"></label>
       <label>Resume / portfolio URL (optional)<input name="resume_url" placeholder="https://…"></label>
@@ -54,6 +63,23 @@
   </div>
 </main>
 <script>
+  function toggleCustomRole() {
+    const roleSelect = document.querySelector('select[name="role"]');
+    const customRoleLabel = document.getElementById('custom-role-label');
+    const customRoleInput = document.querySelector('input[name="role_custom"]');
+    
+    if (roleSelect.value === 'Other') {
+      customRoleLabel.style.display = 'block';
+      customRoleInput.required = true;
+      // Focus the input on mobile devices for better UX
+      setTimeout(() => customRoleInput.focus(), 100);
+    } else {
+      customRoleLabel.style.display = 'none';
+      customRoleInput.required = false;
+      customRoleInput.value = '';
+    }
+  }
+
   const f = document.getElementById('fastReplyForm');
   f.addEventListener('submit', async (e) => {
     e.preventDefault();
