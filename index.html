@@ -65,6 +65,27 @@
             font-weight: 600;
         }
 
+        .join-cta-index {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            border: 1px solid #4a9eff;
+            color: #1565c0;
+            padding: 8px 16px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .join-cta-index a {
+            color: #1565c0;
+            text-decoration: none;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+
+        .join-cta-index a:hover {
+            text-decoration: underline;
+        }
+
         header {
             padding: 60px 0 40px;
             text-align: center;
@@ -450,7 +471,12 @@
 
     <!-- Mini Stats Line -->
     <div class="mini-stats" id="mini-stats">
-        This week: <span id="stat-replies">0</span>/<span id="stat-apps">0</span> replies &lt;24h
+        This week: <span id="stat-replies">0</span>/<span id="stat-apps">0</span> replies &lt;24h • Real candidates: <span id="candidateCount">-</span> • Updated: <span id="lastUpdated">-</span>
+    </div>
+
+    <!-- Join CTA (when < 5 candidates) -->
+    <div class="join-cta-index" id="joinCTAIndex" style="display: none;">
+        Growing our candidate pool! <a href="apply.html">Be the first to join →</a>
     </div>
 
     <section class="hero-section">
@@ -605,6 +631,38 @@
             } catch (error) {
                 console.log('Scoreboard data not available:', error.message);
                 // Keep default placeholder values
+            }
+            
+            // Load cohort stats
+            try {
+                const cohortResponse = await fetch(`public_cohort.csv?ts=${Date.now()}`);
+                if (cohortResponse.ok) {
+                    const csvText = await cohortResponse.text();
+                    const lines = csvText.trim().split('\n');
+                    const candidateCount = Math.max(0, lines.length - 1); // Subtract header row
+                    
+                    const lastModified = cohortResponse.headers.get('last-modified');
+                    const updateTime = lastModified ? new Date(lastModified) : new Date();
+                    const timeStr = updateTime.toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: '2-digit', 
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    }).replace(',', '');
+                    
+                    document.getElementById('candidateCount').textContent = candidateCount;
+                    document.getElementById('lastUpdated').textContent = timeStr;
+                    
+                    // Show join CTA if count < 5
+                    const joinCTA = document.getElementById('joinCTAIndex');
+                    if (joinCTA && candidateCount < 5) {
+                        joinCTA.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.log('Cohort data not available:', error.message);
             }
         }
 
