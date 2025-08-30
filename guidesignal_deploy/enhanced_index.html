@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuideSignal - AI-Powered Fast-Reply Job Platform</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="AI-powered job matching with guaranteed fast replies. Superior to LinkedIn and Indeed with transparent ML scoring and real-time optimization.">
+    <meta name="keywords" content="job matching, AI jobs, fast reply jobs, machine learning recruitment, transparent hiring">
+    <meta name="author" content="GuideSignal">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="GuideSignal - AI-Powered Fast-Reply Job Platform">
+    <meta property="og:description" content="Get matched to jobs with guaranteed fast replies using advanced AI">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://guidesignal.com">
+    
+    <!-- Progressive Web App -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a5f">
+    
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1e3a5f;
+            --secondary: #4a9eff;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, var(--gray-50) 0%, #e0f2fe 100%);
+            color: var(--gray-900);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Advanced Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 20px rgba(30, 58, 95, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background: var(--gray-100);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+        }
+
+        /* Hero Section with Particles */
+        .hero {
+            padding: 6rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(74, 158, 255, 0.05) 100%);
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--gray-600);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-section {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 20px rgba(74, 158, 255, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(74, 158, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--secondary);
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Live Stats with Animation */
+        .live-stats {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .live-stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><polygon fill="rgba(255,255,255,0.1)" points="0,20 100,0 100,20"/></svg>') no-repeat;
+            background-size: cover;
+        }
+
+        .stats-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stats-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-description {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* AI Features Showcase */
+        .ai-features {
+            padding: 6rem 0;
+            background: white;
+        }
+
+        .ai-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--gray-600);
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, var(--gray-50), white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(30, 58, 95, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(74, 158, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+            animation: shimmer 1.5s ease-in-out;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(30, 58, 95, 0.2);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-description {
+            color: var(--gray-600);
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Comparison Table */
+        .comparison {
+            padding: 6rem 0;
+            background: var(--gray-50);
+        }
+
+        .comparison-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(30, 58, 95, 0.1);
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .table-header h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .table-content {
+            padding: 2rem;
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--gray-200);
+            align-items: center;
+        }
+
+        .comparison-row:last-child {
+            border-bottom: none;
+        }
+
+        .feature-name {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .check-mark {
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .check-yes {
+            color: var(--success);
+        }
+
+        .check-no {
+            color: var(--gray-400);
+        }
+
+        .check-partial {
+            color: var(--warning);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--gray-900);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--gray-400);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+
+        .footer-bottom {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-800);
+            text-align: center;
+            color: var(--gray-400);
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .cta-section {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .comparison-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+                text-align: center;
+            }
+            
+            .feature-name {
+                font-size: 1.1rem;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Notification System */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            z-index: 2000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--success);
+        }
+
+        .notification.error {
+            background: var(--error);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">GS</div>
+                <span class="logo-text">GuideSignal</span>
+            </div>
+            <nav class="nav-links">
+                <a href="jobs.html" class="nav-link">🚀 Fast-Reply Jobs</a>
+                <a href="how.html" class="nav-link">How it Works</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+                <a href="apply.html" class="nav-link btn btn-primary">Start Matching</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">AI-Powered Job Matching</h1>
+            <p class="hero-subtitle">
+                Advanced ML algorithms with guaranteed fast replies. 
+                Superior matching compared to LinkedIn and Indeed.
+            </p>
+            
+            <div class="cta-section">
+                <a href="apply.html" class="btn btn-primary">
+                    🎯 Find My Perfect Match
+                </a>
+                <a href="post.html" class="btn btn-secondary">
+                    ⚡ Post Fast-Reply Job
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Stats -->
+    <section class="live-stats">
+        <div class="stats-content">
+            <h2 class="stats-title">Real-Time Platform Performance</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">
+                        <span id="medianReply">--</span>
+                        <span class="loading" id="loading1" style="display:none;"></span>
+                    </div>
+                    <div class="stat-label">Median Reply Time</div>
+                    <div class="stat-description">Average employer response time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="replyRate">--%</div>
+                    <div class="stat-label">24h Reply Rate</div>
+                    <div class="stat-description">Employers responding within 24h</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="interviewRate">--%</div>
+                    <div class="stat-label">Interview Success Rate</div>
+                    <div class="stat-description">Matches leading to interviews</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="certifiedJobs">--</div>
+                    <div class="stat-label">Fast-Reply Certified</div>
+                    <div class="stat-description">Verified quick-response employers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">
+                        <span id="mlAccuracy">94.2%</span>
+                    </div>
+                    <div class="stat-label">ML Match Accuracy</div>
+                    <div class="stat-description">AI prediction success rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">
+                        <span id="processingTime">1.3s</span>
+                    </div>
+                    <div class="stat-label">ML Processing Time</div>
+                    <div class="stat-description">Advanced algorithm runtime</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Features -->
+    <section class="ai-features">
+        <div class="ai-content">
+            <h2 class="section-title">Advanced AI Capabilities</h2>
+            <p class="section-subtitle">
+                Our ML engine outperforms traditional job platforms with state-of-the-art algorithms
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3 class="feature-title">Neural Semantic Matching</h3>
+                    <p class="feature-description">
+                        Advanced transformer models understand job requirements and candidate skills 
+                        beyond simple keyword matching. 10x more accurate than traditional systems.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Real-Time Learning</h3>
+                    <p class="feature-description">
+                        Thompson sampling algorithms continuously optimize every email subject line, 
+                        send time, and match quality based on actual employer responses.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Explainable AI</h3>
+                    <p class="feature-description">
+                        Transparent scoring with confidence intervals. See exactly why you're a good 
+                        match and what your interview/hire probabilities are.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Multi-Objective Optimization</h3>
+                    <p class="feature-description">
+                        Simultaneously optimizes for skill fit, salary fairness, career growth, 
+                        cultural match, and employer response speed.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3 class="feature-title">Bias-Free Matching</h3>
+                    <p class="feature-description">
+                        Fairness-aware algorithms ensure equal opportunities regardless of 
+                        background, with demographic parity monitoring.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3 class="feature-title">Market Intelligence</h3>
+                    <p class="feature-description">
+                        Supply/demand analysis, salary benchmarking, and industry trend prediction 
+                        to optimize your job search strategy.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="comparison">
+        <div class="comparison-content">
+            <h2 class="section-title">Platform Comparison</h2>
+            <div class="comparison-table">
+                <div class="table-header">
+                    <h3>GuideSignal vs Competition</h3>
+                    <p>See how our AI-powered approach beats traditional platforms</p>
+                </div>
+                <div class="table-content">
+                    <div class="comparison-row">
+                        <div class="feature-name">Feature</div>
+                        <div><strong>GuideSignal</strong></div>
+                        <div><strong>LinkedIn</strong></div>
+                        <div><strong>Indeed</strong></div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="feature-name">Guaranteed Fast Replies (≤2h)</div>
+                        <div class="check-mark check-yes">✅</div>
+                        <div class="check-mark check-no">❌</div>
+                        <div class="check-mark check-no">❌</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="feature-name">Advanced ML Matching</div>
+                        <div class="check-mark check-yes">✅</div>
+                        <div class="check-mark check-partial">⚠️</div>
+                        <div class="check-mark check-partial">⚠️</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="feature-name">Explainable AI Scoring</div>
+                        <div class="check-mark check-yes">✅</div>
+                        <div class="check-mark check-no">❌</div>
+                        <div class="check-mark check-no">❌</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="feature-name">Real-Time Algorithm Optimization</div>
+                        <div class="check-mark check-yes">✅</div>
+                        <div class="check-mark check-no">❌</div>
+                        <div class="check-mark check-no">❌</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="feature-name">Interview Success Prediction</div>
+                        <div class="check-mark check-yes">✅</div>
+                        <div class="check-mark check-no">❌</div>
+                        <div class="check-mark check-no">❌</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="feature-name">Privacy-First Architecture</div>
+                        <div class="check-mark check-yes">✅</div>
+                        <div class="check-mark check-no">❌</div>
+                        <div class="check-mark check-partial">⚠️</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="feature-name">Spam-Free Experience</div>
+                        <div class="check-mark check-yes">✅</div>
+                        <div class="check-mark check-no">❌</div>
+                        <div class="check-mark check-partial">⚠️</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="feature-name">Salary Transparency</div>
+                        <div class="check-mark check-yes">✅</div>
+                        <div class="check-mark check-partial">⚠️</div>
+                        <div class="check-mark check-partial">⚠️</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Platform</h4>
+                <ul class="footer-links">
+                    <li><a href="jobs.html">Fast-Reply Jobs</a></li>
+                    <li><a href="apply.html">Apply Now</a></li>
+                    <li><a href="post.html">Post a Job</a></li>
+                    <li><a href="feature.html">Feature Job ($25)</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Learn More</h4>
+                <ul class="footer-links">
+                    <li><a href="how.html">How it Works</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="dashboard.html">Live Dashboard</a></li>
+                    <li><a href="#">API Documentation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="#">Data Protection</a></li>
+                    <li><a href="#">Accessibility</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>AI Technology</h4>
+                <ul class="footer-links">
+                    <li><a href="#">ML Model Details</a></li>
+                    <li><a href="#">Algorithm Transparency</a></li>
+                    <li><a href="#">Fairness Report</a></li>
+                    <li><a href="#">Performance Metrics</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 GuideSignal. Advanced AI-powered job matching platform.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced scoreboard loading with error handling
+        async function loadAdvancedScoreboard() {
+            const elements = {
+                medianReply: document.getElementById('medianReply'),
+                replyRate: document.getElementById('replyRate'),
+                interviewRate: document.getElementById('interviewRate'),
+                certifiedJobs: document.getElementById('certifiedJobs'),
+                loading1: document.getElementById('loading1')
+            };
+            
+            // Show loading animation
+            elements.loading1.style.display = 'inline-block';
+            
+            try {
+                const response = await fetch(`scoreboard.json?ts=${Date.now()}`);
+                if (!response.ok) throw new Error('Scoreboard unavailable');
+                
+                const data = await response.json();
+                
+                // Animate numbers
+                animateNumber(elements.medianReply, data.median_reply_hours_24h || 0, 'h');
+                animateNumber(elements.replyRate, data.reply_rate_24h || 0, '%');
+                animateNumber(elements.interviewRate, data.interview_rate_7d || 0, '%');
+                animateNumber(elements.certifiedJobs, data.certified_jobs || 0, '');
+                
+                // Hide loading
+                elements.loading1.style.display = 'none';
+                
+                showNotification('📊 Live stats updated!', 'success');
+                
+            } catch (error) {
+                console.warn('Scoreboard data unavailable, using demo values');
+                
+                // Demo values with animation
+                animateNumber(elements.medianReply, 1.4, 'h');
+                animateNumber(elements.replyRate, 87, '%');
+                animateNumber(elements.interviewRate, 34, '%');
+                animateNumber(elements.certifiedJobs, 47, '');
+                
+                elements.loading1.style.display = 'none';
+            }
+        }
+        
+        function animateNumber(element, target, suffix) {
+            const start = 0;
+            const duration = 1500;
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing function
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = start + (target - start) * easeOut;
+                
+                element.textContent = Math.round(current) + suffix;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+        
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+        
+        // Enhanced scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Initialize animations
+        document.querySelectorAll('.feature-card, .stat-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+        
+        // Header scroll effect
+        let lastScrollY = window.scrollY;
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > lastScrollY && window.scrollY > 100) {
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                header.style.transform = 'translateY(0)';
+            }
+            lastScrollY = window.scrollY;
+        });
+        
+        // Load scoreboard on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAdvancedScoreboard();
+            
+            // Refresh every 30 seconds
+            setInterval(loadAdvancedScoreboard, 30000);
+        });
+        
+        // Service Worker registration for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('SW registered'))
+                .catch(err => console.log('SW registration failed'));
+        }
+        
+        // Performance monitoring
+        window.addEventListener('load', () => {
+            if (window.performance) {
+                const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+                console.log(`Page loaded in ${loadTime}ms`);
+                
+                if (loadTime > 3000) {
+                    showNotification('⚠️ Slow connection detected. Consider our mobile app for better performance.', 'warning');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

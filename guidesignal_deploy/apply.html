@@ -44,6 +44,8 @@
       <input type="hidden" name="utm_source">
       <input type="hidden" name="utm_medium">
       <input type="hidden" name="utm_campaign">
+      <!-- Referral tracking -->
+      <input type="hidden" name="ref">
       <label style="display:none">Leave this empty <input name="website"></label>
       <label><input type="checkbox" name="consent" required> I agree to the <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.</label>
       <button>Submit</button>
@@ -74,6 +76,7 @@
     const utmSource = params.get('utm_source');
     const utmMedium = params.get('utm_medium');
     const utmCampaign = params.get('utm_campaign');
+    const ref = params.get('ref');
     
     if (utmSource) {
       const utmSourceField = document.querySelector('input[name="utm_source"]');
@@ -88,6 +91,18 @@
     if (utmCampaign) {
       const utmCampaignField = document.querySelector('input[name="utm_campaign"]');
       if (utmCampaignField) utmCampaignField.value = utmCampaign;
+    }
+    
+    if (ref) {
+      const refField = document.querySelector('input[name="ref"]');
+      if (refField) refField.value = ref;
+      
+      // Show referral banner if ref parameter exists
+      const banner = document.getElementById('targeting-banner');
+      if (banner) {
+        banner.textContent = `Referred by: ${ref}`;
+        banner.style.display = 'block';
+      }
     }
 
     if (employer && job) {

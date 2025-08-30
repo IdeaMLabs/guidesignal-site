@@ -1,0 +1,25 @@
+{
+  "name": "GuideSignal - AI Job Matching",
+  "short_name": "GuideSignal",
+  "description": "Advanced ML-powered job matching with guaranteed fast replies",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e3a5f",
+  "theme_color": "#4a9eff",
+  "icons": [
+    {
+      "src": "assets/GuideSignalLogo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/GuideSignalLogo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["business", "productivity", "employment"],
+  "lang": "en",
+  "dir": "ltr",
+  "orientation": "portrait-primary"
+}

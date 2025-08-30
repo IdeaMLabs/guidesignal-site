@@ -235,11 +235,13 @@
     <header>
         <div class="container">
             <div class="logo">
-                <img src="GuideSignalLogo.png" alt="GuideSignal Logo">
+                <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo">
             </div>
             <h1>Fast-Reply Jobs</h1>
             <p class="subtitle">Employers certified for quick responses</p>
             <a href="index.html" class="nav-link">← Back to Home</a>
+            <a href="how.html" class="nav-link">How it Works</a>
+            <a href="faq.html" class="nav-link">FAQ</a>
         </div>
     </header>
 
@@ -337,7 +339,7 @@
         // Load and display jobs
         async function loadJobs() {
             try {
-                const response = await fetch('public_jobs.csv');
+                const response = await fetch(`public_jobs.csv?ts=${Date.now()}`);
                 if (!response.ok) throw new Error('Could not load jobs data');
                 
                 const csvText = await response.text();
