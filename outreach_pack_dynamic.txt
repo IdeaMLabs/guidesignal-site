@@ -22,8 +22,8 @@ Quick stats:
 
 Would love to show you our current candidate pool - we have [specific roles relevant to their company] ready to interview.
 
-Post your first job free: https://ideamlabs.github.io/guidesignal-site/post.html
-Feature it for just $25: https://ideamlabs.github.io/guidesignal-site/feature.html
+Post your first job free: https://ideamlabs.github.io/guidesignal-site/post.html?utm_source=outreach&utm_medium=email&utm_campaign=cohort_push
+Feature it for just $25: https://ideamlabs.github.io/guidesignal-site/feature.html?utm_source=outreach&utm_medium=email&utm_campaign=cohort_push
 
 Best,
 [Your Name]

@@ -40,6 +40,10 @@
       <input type="hidden" name="_subject">
       <input type="hidden" name="source">
       <input type="hidden" name="_redirect">
+      <!-- UTM tracking -->
+      <input type="hidden" name="utm_source">
+      <input type="hidden" name="utm_medium">
+      <input type="hidden" name="utm_campaign">
       <label style="display:none">Leave this empty <input name="website"></label>
       <label><input type="checkbox" name="consent" required> I agree to the <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.</label>
       <button>Submit</button>
@@ -65,6 +69,26 @@
     const job = params.get('job');
     const city = params.get('city');
     const pay = params.get('pay');
+    
+    // Handle UTM parameters
+    const utmSource = params.get('utm_source');
+    const utmMedium = params.get('utm_medium');
+    const utmCampaign = params.get('utm_campaign');
+    
+    if (utmSource) {
+      const utmSourceField = document.querySelector('input[name="utm_source"]');
+      if (utmSourceField) utmSourceField.value = utmSource;
+    }
+    
+    if (utmMedium) {
+      const utmMediumField = document.querySelector('input[name="utm_medium"]');
+      if (utmMediumField) utmMediumField.value = utmMedium;
+    }
+    
+    if (utmCampaign) {
+      const utmCampaignField = document.querySelector('input[name="utm_campaign"]');
+      if (utmCampaignField) utmCampaignField.value = utmCampaign;
+    }
 
     if (employer && job) {
       // Show targeting banner

@@ -37,6 +37,27 @@ def generate_outreach_pack():
         dynamic_content = dynamic_content.replace('{total_applications}', str(total_applications))
         dynamic_content = dynamic_content.replace('{replied_count}', str(replied_count))
         
+        # Add UTM parameters to all GuideSignal links
+        utm_params = "?utm_source=outreach&utm_medium=email&utm_campaign=cohort_push"
+        
+        # Replace GuideSignal URLs with UTM parameters
+        dynamic_content = dynamic_content.replace(
+            "https://ideamlabs.github.io/guidesignal-site/post.html",
+            f"https://ideamlabs.github.io/guidesignal-site/post.html{utm_params}"
+        )
+        dynamic_content = dynamic_content.replace(
+            "https://ideamlabs.github.io/guidesignal-site/feature.html", 
+            f"https://ideamlabs.github.io/guidesignal-site/feature.html{utm_params}"
+        )
+        dynamic_content = dynamic_content.replace(
+            "https://ideamlabs.github.io/guidesignal-site/apply.html",
+            f"https://ideamlabs.github.io/guidesignal-site/apply.html{utm_params}"
+        )
+        dynamic_content = dynamic_content.replace(
+            "https://ideamlabs.github.io/guidesignal-site/jobs.html",
+            f"https://ideamlabs.github.io/guidesignal-site/jobs.html{utm_params}"
+        )
+        
         # Write dynamic outreach pack
         with open('outreach_pack_dynamic.txt', 'w') as f:
             f.write(dynamic_content)
