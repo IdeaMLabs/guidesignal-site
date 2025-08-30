@@ -130,6 +130,42 @@
             margin-right: auto;
         }
 
+        .cohort-stats {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            text-align: center;
+            padding: 8px 0;
+            font-size: 12px;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .cohort-stats span {
+            color: #1e3a5f;
+            font-weight: 600;
+        }
+
+        .join-cta {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            border: 1px solid #4a9eff;
+            color: #1565c0;
+            padding: 8px 16px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .join-cta a {
+            color: #1565c0;
+            text-decoration: none;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+
+        .join-cta a:hover {
+            text-decoration: underline;
+        }
+
         .candidates-section {
             max-width: 1200px;
             margin: 0 auto;
@@ -369,6 +405,16 @@
         </p>
     </section>
 
+    <!-- Cohort Stats -->
+    <div class="cohort-stats" id="cohortStats">
+        Real candidates: <span id="candidateCount">-</span> • Updated: <span id="lastUpdated">-</span>
+    </div>
+
+    <!-- Join CTA (when < 5 candidates) -->
+    <div class="join-cta" id="joinCTA" style="display: none;">
+        Growing our candidate pool! <a href="apply.html">Be the first to join →</a>
+    </div>
+
     <!-- Candidates Section -->
     <section class="candidates-section">
         <div id="candidatesContainer">
@@ -423,6 +469,38 @@
             }
         ];
 
+        // Update cohort statistics display
+        function updateCohortStats(count, updateTime) {
+            const countElement = document.getElementById('candidateCount');
+            const updatedElement = document.getElementById('lastUpdated');
+            const joinCTA = document.getElementById('joinCTA');
+            
+            if (countElement) countElement.textContent = count;
+            
+            if (updatedElement) {
+                if (updateTime === 'Demo') {
+                    updatedElement.textContent = 'Demo Data';
+                } else {
+                    const timeStr = updateTime.toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: '2-digit', 
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    }).replace(',', '');
+                    updatedElement.textContent = timeStr;
+                }
+            }
+            
+            // Show join CTA if count < 5 and not in demo mode
+            if (joinCTA && count < 5 && updateTime !== 'Demo') {
+                joinCTA.style.display = 'block';
+            } else if (joinCTA) {
+                joinCTA.style.display = 'none';
+            }
+        }
+
         // Load cohort data from CSV or use demo data
         async function loadCohortData() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -431,6 +509,7 @@
             if (showDemo) {
                 cohortData = demoData;
                 showDemoBanner();
+                updateCohortStats(demoData.length, 'Demo');
                 renderCohort();
                 return;
             }
@@ -442,6 +521,12 @@
                 const csvText = await response.text();
                 cohortData = parseCSV(csvText);
                 
+                // Get last modified date from response headers or current date
+                const lastModified = response.headers.get('last-modified');
+                const updateTime = lastModified ? new Date(lastModified) : new Date();
+                
+                updateCohortStats(cohortData.length, updateTime);
+                
                 if (cohortData.length === 0) {
                     showEmptyState();
                 } else {
@@ -449,6 +534,7 @@
                 }
             } catch (error) {
                 console.log('Could not load cohort data:', error);
+                updateCohortStats(0, new Date());
                 showEmptyState();
             }
         }
