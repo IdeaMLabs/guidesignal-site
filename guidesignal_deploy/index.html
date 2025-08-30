@@ -25,6 +25,31 @@
             padding: 0 20px;
         }
 
+        .employer-banner {
+            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
+            color: white;
+            padding: 12px 0;
+            text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .employer-banner a {
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            margin: 0 8px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .employer-banner a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
         header {
             padding: 60px 0 40px;
             text-align: center;
@@ -388,13 +413,20 @@
     </style>
 </head>
 <body>
+    <!-- Employer Banner -->
+    <div class="employer-banner">
+        Employers: <a href="post.html">Post free</a> or <a href="feature.html">Feature for $25</a>
+    </div>
+    
     <header>
         <div class="header-nav">
             <a href="jobs.html" class="nav-link">Fast-Reply Jobs</a>
+            <a href="how.html" class="nav-link">How it Works</a>
+            <a href="faq.html" class="nav-link">FAQ</a>
         </div>
         <div class="container">
             <div class="logo">
-                <img src="GuideSignalLogo.png" alt="GuideSignal Logo">
+                <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo">
             </div>
             <h1>GuideSignal</h1>
             <p class="subtitle">Guiding talent to opportunity with precision and speed</p>
@@ -513,7 +545,7 @@
                         <li>✓ Response tracking</li>
                     </ul>
                     <a href="post.html" class="btn btn-secondary">Start Hiring</a>
-                    <a href="STRIPE_PAYMENT_LINK_URL" class="btn btn-primary" target="_blank" rel="noopener" style="margin-top: 10px;">Feature this job ($25)</a>
+                    <a href="https://buy.stripe.com/8x25kC7gS1zz6AxeFk5Rm00" class="btn btn-primary" target="_blank" rel="noopener" style="margin-top: 10px;">Feature this job ($25)</a>
                 </div>
             </div>
         </div>
@@ -522,10 +554,11 @@
     <footer>
         <div class="container">
             <p>&copy; 2024 GuideSignal. Guiding talent to opportunity.</p>
-            <p>Questions? Contact us at hello@guidesignal.com</p>
             <p>
                 <a href="privacy.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">Privacy Policy</a>
-                <a href="terms.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">Terms of Service</a>
+                <a href="terms.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">Terms of Service</a>
+                <a href="how.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">How it Works</a>
+                <a href="faq.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">FAQ</a>
             </p>
         </div>
     </footer>
@@ -534,14 +567,14 @@
         // Load and display scoreboard stats
         async function loadScoreboard() {
             try {
-                const response = await fetch('scoreboard.json');
+                const response = await fetch(`scoreboard.json?ts=${Date.now()}`);
                 if (!response.ok) throw new Error('Scoreboard data not available');
                 
                 const data = await response.json();
                 
                 // Update stat displays
                 document.getElementById('medianReply').textContent = data.median_reply_hours_24h || '--';
-                document.getElementById('replyRate').textContent = data.reply_rate_24h ? `${data.reply_rate_24h}%` : '--%';
+                document.getElementById('replyRate').textContent = data.last24_replied && data.last24_apps ? `${data.last24_replied}/${data.last24_apps} (${data.reply_rate_24h}%)` : '--%';
                 document.getElementById('interviewRate').textContent = data.interview_rate_7d ? `${data.interview_rate_7d}%` : '--%';
                 document.getElementById('certifiedJobs').textContent = data.certified_jobs || '--';
                 
