@@ -54,9 +54,12 @@ def generate_public_cohort():
             full_name = str(row.get('name', 'Anonymous'))
             first_name = full_name.split()[0] if full_name and full_name != 'nan' else 'Anonymous'
             
-            # Map skills to target role (basic mapping)
-            skills_text = str(row.get('skills_text', '')).lower()
-            target_role = infer_target_role(skills_text, row.get('skills_tags', ''))
+            # Use target_role if available, otherwise infer from skills
+            if 'target_role' in row and pd.notna(row['target_role']) and str(row['target_role']).strip():
+                target_role = str(row['target_role']).strip()
+            else:
+                skills_text = str(row.get('skills_text', '')).lower()
+                target_role = infer_target_role(skills_text, row.get('skills_tags', ''))
             
             # Create spotlight from skills/experience
             spotlight = create_spotlight(row)

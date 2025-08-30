@@ -27,13 +27,15 @@
       <label>Email<input type="email" name="email" required></label>
       <label>City / ZIP<input name="location" required></label>
       <label>Target role
-        <select name="role">
+        <select name="role" onchange="toggleCustomRole()">
           <option>Help Desk / Desktop Support</option>
           <option>Warehouse Associate</option>
           <option>Customer Support</option>
           <option>Operations / Dispatcher</option>
+          <option value="Other">Other (type your role)</option>
         </select>
       </label>
+      <label id="custom-role-label" style="display:none">Custom role<input name="role_custom" placeholder="Enter your target role"></label>
       <label>Skills (comma-separated)<textarea name="skills" rows="3" placeholder="relevant skills, experience, certifications"></textarea></label>
       <label>Pay range (hourly)<input name="pay" placeholder="e.g., 15-25"></label>
       <label>Resume / portfolio URL (optional)<input name="resume_url" placeholder="https://…"></label>
@@ -54,6 +56,21 @@
   </div>
 </main>
 <script>
+  function toggleCustomRole() {
+    const roleSelect = document.querySelector('select[name="role"]');
+    const customRoleLabel = document.getElementById('custom-role-label');
+    const customRoleInput = document.querySelector('input[name="role_custom"]');
+    
+    if (roleSelect.value === 'Other') {
+      customRoleLabel.style.display = 'block';
+      customRoleInput.required = true;
+    } else {
+      customRoleLabel.style.display = 'none';
+      customRoleInput.required = false;
+      customRoleInput.value = '';
+    }
+  }
+
   const f = document.getElementById('fastReplyForm');
   f.addEventListener('submit', async (e) => {
     e.preventDefault();
