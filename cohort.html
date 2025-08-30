@@ -393,6 +393,156 @@
             50% { transform: scale(1.2); opacity: 0.7; }
             100% { transform: scale(1); opacity: 1; }
         }
+
+        /* Sticky CTA Bar */
+        .sticky-cta {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #1e3a5f, #4a9eff);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 -4px 20px rgba(30, 58, 95, 0.3);
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .sticky-cta.show {
+            transform: translateY(0);
+        }
+
+        .sticky-cta-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .sticky-cta-text {
+            flex: 1;
+        }
+
+        .sticky-cta-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .sticky-cta-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .sticky-cta-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .sticky-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .sticky-btn-primary {
+            background: white;
+            color: #1e3a5f;
+        }
+
+        .sticky-btn-primary:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        .sticky-btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .sticky-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .sticky-cta-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .sticky-cta-close:hover {
+            opacity: 1;
+        }
+
+        /* Request Intro Button */
+        .request-intro-btn {
+            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 2px 10px rgba(74, 158, 255, 0.3);
+        }
+
+        .request-intro-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(74, 158, 255, 0.4);
+        }
+
+        /* Mobile adjustments for sticky bar */
+        @media (max-width: 768px) {
+            .sticky-cta {
+                padding: 0.75rem 1rem;
+            }
+            
+            .sticky-cta-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.75rem;
+            }
+            
+            .sticky-cta-buttons {
+                flex-direction: column;
+                width: 100%;
+                gap: 0.5rem;
+            }
+            
+            .sticky-btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .request-intro-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Add padding to body to account for sticky bar */
+        body.sticky-visible {
+            padding-bottom: 100px;
+        }
     </style>
 </head>
 <body>
@@ -468,6 +618,21 @@
             </div>
         </div>
     </main>
+
+    <!-- Sticky CTA Bar -->
+    <div class="sticky-cta" id="stickyCTA">
+        <div class="sticky-cta-content">
+            <div class="sticky-cta-text">
+                <div class="sticky-cta-title">Ready to Connect with Top Talent?</div>
+                <div class="sticky-cta-subtitle">Post a job or feature your listing to reach these exceptional candidates</div>
+            </div>
+            <div class="sticky-cta-buttons">
+                <a href="post.html" class="sticky-btn sticky-btn-primary">📝 Post Job (Free)</a>
+                <a href="feature.html" class="sticky-btn sticky-btn-secondary">⭐ Feature Job ($25)</a>
+            </div>
+            <button class="sticky-cta-close" onclick="hideStickyCTA()" aria-label="Close">×</button>
+        </div>
+    </div>
 
     <script>
         // Candidate data loaded from applicants.csv (opt-in only)
@@ -634,6 +799,14 @@
                 ? candidate.spotlight.substring(0, 160) + '...'
                 : candidate.spotlight;
 
+            // Create URL parameters for post.html with role
+            const postParams = new URLSearchParams({
+                role: candidate.targetRole,
+                candidate: candidate.name,
+                source: 'cohort_intro'
+            });
+            const postUrl = `post.html?${postParams.toString()}`;
+
             return `
                 <div class="candidate-card">
                     <div class="candidate-header">
@@ -660,6 +833,10 @@
                         <div class="skills-label">Skills & Certifications</div>
                         ${skillTags}
                     </div>
+                    
+                    <a href="${postUrl}" class="request-intro-btn" onclick="trackRequestIntro('${candidate.name}', '${candidate.targetRole}')">
+                        🤝 Request Intro
+                    </a>
                 </div>
             `;
         }
@@ -673,11 +850,52 @@
             document.getElementById('totalCandidates').textContent = cohortData.length;
         }
 
+        // Sticky CTA functionality
+        function showStickyCTA() {
+            const cta = document.getElementById('stickyCTA');
+            cta.classList.add('show');
+            document.body.classList.add('sticky-visible');
+        }
+
+        function hideStickyCTA() {
+            const cta = document.getElementById('stickyCTA');
+            cta.classList.remove('show');
+            document.body.classList.remove('sticky-visible');
+            
+            // Store preference to not show again for this session
+            sessionStorage.setItem('ctaHidden', 'true');
+        }
+
+        function trackRequestIntro(candidateName, role) {
+            // Track intro requests for analytics
+            console.log(`Intro requested for ${candidateName} (${role})`);
+            
+            // Could send to analytics endpoint
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'request_intro', {
+                    'candidate_name': candidateName,
+                    'candidate_role': role,
+                    'event_category': 'cohort_interaction'
+                });
+            }
+        }
+
+        // Show sticky CTA after user scrolls through some content
+        function handleStickyDisplay() {
+            const scrollPercent = (window.scrollY + window.innerHeight) / document.body.scrollHeight;
+            
+            if (scrollPercent > 0.3 && !sessionStorage.getItem('ctaHidden')) {
+                showStickyCTA();
+            }
+        }
+
         // Load cohort on page load
         document.addEventListener('DOMContentLoaded', loadCohort);
 
         // Add some visual polish
         document.addEventListener('DOMContentLoaded', function() {
+            // Set up sticky CTA scroll trigger
+            window.addEventListener('scroll', handleStickyDisplay);
             // Animate cards on scroll
             const observerOptions = {
                 threshold: 0.1,

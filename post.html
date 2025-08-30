@@ -122,4 +122,51 @@
       alert('Network error. Please try again.');
     }
   });
+
+  // Handle URL parameters from cohort.html intro requests
+  function handleURLParams() {
+    const params = new URLSearchParams(window.location.search);
+    const role = params.get('role');
+    const candidate = params.get('candidate');
+    const source = params.get('source');
+
+    if (role) {
+      // Pre-fill the job title with the role
+      const jobTitleField = document.querySelector('input[name="job_title"]');
+      if (jobTitleField) {
+        jobTitleField.value = role;
+      }
+    }
+
+    if (candidate && source === 'cohort_intro') {
+      // Show a helpful banner about the intro request
+      const form = document.getElementById('jobForm');
+      const banner = document.createElement('div');
+      banner.style.cssText = `
+        background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+        border: 1px solid #4a9eff;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 16px;
+        color: #1e3a5f;
+        font-size: 14px;
+        text-align: center;
+      `;
+      banner.innerHTML = `
+        <strong>🤝 Intro Request:</strong> You're posting a job for <strong>${role}</strong> 
+        after viewing <strong>${candidate}'s</strong> profile. They'll be notified when you post!
+      `;
+      form.parentNode.insertBefore(banner, form);
+
+      // Add hidden field to track the intro source
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = 'intro_candidate';
+      hiddenInput.value = candidate;
+      form.appendChild(hiddenInput);
+    }
+  }
+
+  // Run URL param handler on page load
+  document.addEventListener('DOMContentLoaded', handleURLParams);
 </script>
