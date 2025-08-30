@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Candidate Cohort - GuideSignal</title>
+    <meta name="description" content="Meet our exceptional candidate cohort - skilled professionals ready for fast-reply opportunities">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #1e3a5f;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 20px rgba(30, 58, 95, 0.08);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #1e3a5f, #4a9eff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e3a5f;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #6c757d;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #1e3a5f;
+            background: #f3f4f6;
+        }
+
+        .top-notice {
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            color: #1e3a5f;
+            padding: 1rem 2rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-bottom: 3px solid #e6a300;
+        }
+
+        .top-notice a {
+            color: #1e3a5f;
+            text-decoration: none;
+            font-weight: 700;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .top-notice a:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .hero-section {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #1e3a5f 0%, #4a9eff 100%);
+            color: white;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 1rem;
+        }
+
+        .section-description {
+            font-size: 1.1rem;
+            color: #6c757d;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cohort-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .candidate-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .candidate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(30, 58, 95, 0.15);
+            border-color: #4a9eff;
+        }
+
+        .candidate-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .candidate-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-right: 1rem;
+        }
+
+        .candidate-info h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 0.25rem;
+        }
+
+        .candidate-location {
+            color: #6c757d;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .target-role {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            color: #1e3a5f;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .spotlight-text {
+            color: #495057;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .candidate-links {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .candidate-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #495057;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .candidate-link:hover {
+            background: #4a9eff;
+            color: white;
+            border-color: #4a9eff;
+        }
+
+        .skills-section {
+            margin-top: 1rem;
+        }
+
+        .skills-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6c757d;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background: #e9ecef;
+            color: #495057;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin: 0.25rem 0.5rem 0.25rem 0;
+            font-weight: 500;
+        }
+
+        .cta-section {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+            margin-top: 3rem;
+        }
+
+        .cta-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 1rem;
+        }
+
+        .cta-description {
+            font-size: 1.1rem;
+            color: #6c757d;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            margin: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3a5f, #4a9eff);
+            color: white;
+            box-shadow: 0 4px 20px rgba(74, 158, 255, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(74, 158, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1e3a5f;
+            border: 2px solid #4a9eff;
+        }
+
+        .btn-secondary:hover {
+            background: #4a9eff;
+            color: white;
+        }
+
+        .privacy-note {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .cohort-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .main-content {
+                padding: 2rem 1rem;
+            }
+        }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #10b981;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Sticky CTA Bar */
+        .sticky-cta {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #1e3a5f, #4a9eff);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 -4px 20px rgba(30, 58, 95, 0.3);
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .sticky-cta.show {
+            transform: translateY(0);
+        }
+
+        .sticky-cta-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .sticky-cta-text {
+            flex: 1;
+        }
+
+        .sticky-cta-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .sticky-cta-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .sticky-cta-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .sticky-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .sticky-btn-primary {
+            background: white;
+            color: #1e3a5f;
+        }
+
+        .sticky-btn-primary:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        .sticky-btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .sticky-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .sticky-cta-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .sticky-cta-close:hover {
+            opacity: 1;
+        }
+
+        /* Request Intro Button */
+        .request-intro-btn {
+            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 2px 10px rgba(74, 158, 255, 0.3);
+        }
+
+        .request-intro-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(74, 158, 255, 0.4);
+        }
+
+        /* Mobile adjustments for sticky bar */
+        @media (max-width: 768px) {
+            .sticky-cta {
+                padding: 0.75rem 1rem;
+            }
+            
+            .sticky-cta-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.75rem;
+            }
+            
+            .sticky-cta-buttons {
+                flex-direction: column;
+                width: 100%;
+                gap: 0.5rem;
+            }
+            
+            .sticky-btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .request-intro-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Add padding to body to account for sticky bar */
+        body.sticky-visible {
+            padding-bottom: 100px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">GS</div>
+                <span class="logo-text">GuideSignal</span>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">← Home</a>
+                <a href="jobs.html" class="nav-link">Fast-Reply Jobs</a>
+                <a href="how.html" class="nav-link">How it Works</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Top Notice -->
+    <div class="top-notice">
+        Hire from this cohort → <a href="post.html">Post free</a> · <a href="feature.html">Feature for $25</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1 class="hero-title">Live Candidate Cohort</h1>
+        <p class="hero-subtitle">
+            Meet exceptional professionals in our candidate pool, ready for fast-reply opportunities
+        </p>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-number" id="totalCandidates">12</div>
+                <div class="hero-stat-label">Active Candidates</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number">94%</div>
+                <div class="hero-stat-label">Match Accuracy</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number">34%</div>
+                <div class="hero-stat-label">Interview Rate</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="section-header">
+            <div class="live-indicator">
+                <div class="pulse-dot"></div>
+                Updated in real-time
+            </div>
+            <h2 class="section-title">Featured Candidates</h2>
+            <p class="section-description">
+                These candidates have opted-in to be featured and are actively seeking new opportunities. 
+                All profiles are verified and skills-matched to current openings.
+            </p>
+        </div>
+
+        <!-- Cohort Grid -->
+        <div class="cohort-grid" id="cohortGrid">
+            <!-- Candidates will be loaded here by JavaScript -->
+        </div>
+
+        <!-- Call to Action -->
+        <div class="cta-section">
+            <h3 class="cta-title">Ready to Connect with Top Talent?</h3>
+            <p class="cta-description">
+                Join our fast-reply employer network and get matched with these exceptional candidates
+            </p>
+            <a href="post.html" class="btn btn-primary">Post Fast-Reply Job</a>
+            <a href="feature.html" class="btn btn-secondary">Feature Your Job ($25)</a>
+            
+            <div class="privacy-note">
+                <strong>Privacy Note:</strong> Only candidates who have explicitly opted-in to public visibility are shown. 
+                All data is anonymized and sanitized. Contact information is shared only after mutual match confirmation.
+            </div>
+        </div>
+    </main>
+
+    <!-- Sticky CTA Bar -->
+    <div class="sticky-cta" id="stickyCTA">
+        <div class="sticky-cta-content">
+            <div class="sticky-cta-text">
+                <div class="sticky-cta-title">Ready to Connect with Top Talent?</div>
+                <div class="sticky-cta-subtitle">Post a job or feature your listing to reach these exceptional candidates</div>
+            </div>
+            <div class="sticky-cta-buttons">
+                <a href="post.html" class="sticky-btn sticky-btn-primary">📝 Post Job (Free)</a>
+                <a href="feature.html" class="sticky-btn sticky-btn-secondary">⭐ Feature Job ($25)</a>
+            </div>
+            <button class="sticky-cta-close" onclick="hideStickyCTA()" aria-label="Close">×</button>
+        </div>
+    </div>
+
+    <script>
+        let cohortData = [];
+        let showDemo = false;
+        
+        // Sample demo data for demonstration
+        const demoData = [
+            {
+                first_name: "Jordan",
+                city: "Worcester, MA",
+                target_role: "Help Desk Technician",
+                spotlight: "Experienced in troubleshooting end-user issues, configuring O365 accounts, and managing tickets in Zendesk. Strong customer service focus with technical depth.",
+                sample_links: "Portfolio • Certifications",
+                skills_display: "Help Desk • Windows 10 • Office 365 • Ticketing",
+                avatar: "🔧"
+            },
+            {
+                first_name: "Samira",
+                city: "Boston, MA", 
+                target_role: "Warehouse Associate",
+                spotlight: "Safety-focused warehouse professional with forklift certification. Can lift 50lbs and operate various warehouse equipment. Strong attention to detail and efficiency.",
+                sample_links: "Safety Record • References",
+                skills_display: "Warehouse Operations • Forklift • Picking/Packing • OSHA 10",
+                avatar: "📦"
+            },
+            {
+                name: "Diego P.",
+                city: "Remote",
+                targetRole: "Support Analyst",
+                spotlight: "Hybrid analyst/CSR with SQL expertise. Creates Excel dashboards, handles customer ticket triage, and bridges technical and business needs effectively.",
+                links: [
+                    { text: "💻 SQL Projects", url: "https://github.com/diego-analyst", icon: "💻" },
+                    { text: "📊 Dashboard Samples", url: "https://portfolio.diego.com", icon: "📊" }
+                ],
+                skills: ["Python", "SQL", "Excel", "Customer Support", "Data Analytics"],
+                avatar: "DP"
+            },
+            {
+                name: "Alex M.",
+                city: "Boston, MA",
+                targetRole: "Frontend Developer",
+                spotlight: "React specialist with modern JS expertise. Built responsive web applications for e-commerce and SaaS platforms. Strong eye for UX/UI design and performance optimization.",
+                links: [
+                    { text: "🌐 Live Projects", url: "https://alexm-portfolio.dev", icon: "🌐" },
+                    { text: "⚡ CodePen", url: "https://codepen.io/alexm", icon: "⚡" }
+                ],
+                skills: ["React", "JavaScript", "TypeScript", "CSS3", "Node.js"],
+                avatar: "AM"
+            },
+            {
+                name: "Riley C.",
+                city: "Austin, TX",
+                targetRole: "DevOps Engineer", 
+                spotlight: "Cloud infrastructure expert with AWS and Docker experience. Automated deployment pipelines, reduced deployment time by 75%, and improved system reliability.",
+                links: [
+                    { text: "☁️ Architecture Docs", url: "https://riley-devops.com", icon: "☁️" },
+                    { text: "🔧 Automation Scripts", url: "https://github.com/riley-ops", icon: "🔧" }
+                ],
+                skills: ["AWS", "Docker", "Kubernetes", "CI/CD", "Linux"],
+                avatar: "RC"
+            },
+            {
+                name: "Taylor S.",
+                city: "Remote",
+                targetRole: "UX Designer",
+                spotlight: "User-centered design professional with 4+ years experience. Led redesigns that increased conversion rates by 40%. Specializes in B2B SaaS and accessibility.",
+                links: [
+                    { text: "🎨 Design Portfolio", url: "https://taylor-ux.design", icon: "🎨" },
+                    { text: "📱 Case Studies", url: "https://medium.com/@taylor-ux", icon: "📱" }
+                ],
+                skills: ["Figma", "User Research", "Prototyping", "Accessibility", "Design Systems"],
+                avatar: "TS"
+            },
+            {
+                name: "Morgan R.",
+                city: "Seattle, WA",
+                targetRole: "Data Scientist",
+                spotlight: "ML engineer with production experience. Built recommendation systems serving 1M+ users, predictive models for business intelligence, and automated ML pipelines.",
+                links: [
+                    { text: "🤖 ML Projects", url: "https://github.com/morgan-ml", icon: "🤖" },
+                    { text: "📈 Research Papers", url: "https://scholar.google.com/morgan", icon: "📈" }
+                ],
+                skills: ["Python", "TensorFlow", "scikit-learn", "SQL", "AWS"],
+                avatar: "MR"
+            },
+            {
+                name: "Casey J.",
+                city: "Denver, CO",
+                targetRole: "Product Manager",
+                spotlight: "Strategic product leader with 6+ years experience. Launched 3 successful products, managed $2M+ budgets, and led cross-functional teams of 15+ members.",
+                links: [
+                    { text: "📋 Product Case Studies", url: "https://casey-pm.com", icon: "📋" },
+                    { text: "💼 LinkedIn Profile", url: "https://linkedin.com/in/casey-pm", icon: "💼" }
+                ],
+                skills: ["Product Strategy", "Agile", "User Stories", "Analytics", "Leadership"],
+                avatar: "CJ"
+            },
+            {
+                name: "Avery L.",
+                city: "Remote",
+                targetRole: "Cybersecurity Analyst", 
+                spotlight: "Security professional with incident response expertise. Managed SOC operations, threat hunting, and vulnerability assessments. Strong focus on compliance and risk management.",
+                links: [
+                    { text: "🛡️ Security Blog", url: "https://avery-security.blog", icon: "🛡️" },
+                    { text: "🏅 Certifications", url: "https://credly.com/avery", icon: "🏅" }
+                ],
+                skills: ["SIEM", "Incident Response", "Threat Hunting", "CISSP", "Risk Assessment"],
+                avatar: "AL"
+            },
+            {
+                name: "River K.",
+                city: "Portland, OR",
+                targetRole: "Backend Engineer",
+                spotlight: "Distributed systems engineer with microservices expertise. Built high-throughput APIs serving 10M+ requests daily, optimized database performance, and led architecture decisions.",
+                links: [
+                    { text: "⚙️ System Design", url: "https://river-backend.dev", icon: "⚙️" },
+                    { text: "🐙 GitHub", url: "https://github.com/river-backend", icon: "🐙" }
+                ],
+                skills: ["Go", "PostgreSQL", "Redis", "Microservices", "Docker"],
+                avatar: "RK"
+            },
+            {
+                name: "Sage W.",
+                city: "San Francisco, CA",
+                targetRole: "Marketing Manager",
+                spotlight: "Growth marketing specialist with B2B SaaS experience. Increased lead generation by 200%, managed $500K ad budgets, and built marketing automation workflows.",
+                links: [
+                    { text: "📊 Campaign Results", url: "https://sage-marketing.com", icon: "📊" },
+                    { text: "✍️ Marketing Blog", url: "https://medium.com/@sage-growth", icon: "✍️" }
+                ],
+                skills: ["Growth Marketing", "SEO/SEM", "Marketing Automation", "Analytics", "A/B Testing"],
+                avatar: "SW"
+            },
+            {
+                name: "Quinn T.",
+                city: "Chicago, IL",
+                targetRole: "Sales Development Rep",
+                spotlight: "High-performing SDR with 150%+ quota achievement. Expert in cold outreach, lead qualification, and CRM management. Strong track record in B2B technology sales.",
+                links: [
+                    { text: "🎯 Sales Results", url: "https://quinn-sales.com", icon: "🎯" },
+                    { text: "📞 Testimonials", url: "https://linkedin.com/in/quinn-sdr", icon: "📞" }
+                ],
+                skills: ["B2B Sales", "Lead Generation", "CRM", "Cold Outreach", "Salesforce"],
+                avatar: "QT"
+            }
+        ];
+
+        function createCandidateCard(candidate) {
+            const skillTags = candidate.skills.map(skill => 
+                `<span class="skill-tag">${skill}</span>`
+            ).join('');
+
+            const linkElements = candidate.links.map(link =>
+                `<a href="${link.url}" class="candidate-link" target="_blank" rel="noopener">
+                    ${link.icon} ${link.text}
+                </a>`
+            ).join('');
+
+            // Truncate spotlight to 160 characters
+            const truncatedSpotlight = candidate.spotlight.length > 160 
+                ? candidate.spotlight.substring(0, 160) + '...'
+                : candidate.spotlight;
+
+            // Create URL parameters for post.html with role
+            const postParams = new URLSearchParams({
+                role: candidate.targetRole,
+                candidate: candidate.name,
+                source: 'cohort_intro'
+            });
+            const postUrl = `post.html?${postParams.toString()}`;
+
+            return `
+                <div class="candidate-card">
+                    <div class="candidate-header">
+                        <div class="candidate-avatar">${candidate.avatar}</div>
+                        <div class="candidate-info">
+                            <h3>${candidate.name}</h3>
+                            <div class="candidate-location">
+                                📍 ${candidate.city}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="target-role">${candidate.targetRole}</div>
+                    
+                    <div class="spotlight-text">
+                        "${truncatedSpotlight}"
+                    </div>
+                    
+                    <div class="candidate-links">
+                        ${linkElements}
+                    </div>
+                    
+                    <div class="skills-section">
+                        <div class="skills-label">Skills & Certifications</div>
+                        ${skillTags}
+                    </div>
+                    
+                    <a href="${postUrl}" class="request-intro-btn" onclick="trackRequestIntro('${candidate.name}', '${candidate.targetRole}')">
+                        🤝 Request Intro
+                    </a>
+                </div>
+            `;
+        }
+
+        function loadCohort() {
+            const grid = document.getElementById('cohortGrid');
+            const candidateCards = cohortData.map(createCandidateCard).join('');
+            grid.innerHTML = candidateCards;
+            
+            // Update total count
+            document.getElementById('totalCandidates').textContent = cohortData.length;
+        }
+
+        // Sticky CTA functionality
+        function showStickyCTA() {
+            const cta = document.getElementById('stickyCTA');
+            cta.classList.add('show');
+            document.body.classList.add('sticky-visible');
+        }
+
+        function hideStickyCTA() {
+            const cta = document.getElementById('stickyCTA');
+            cta.classList.remove('show');
+            document.body.classList.remove('sticky-visible');
+            
+            // Store preference to not show again for this session
+            sessionStorage.setItem('ctaHidden', 'true');
+        }
+
+        function trackRequestIntro(candidateName, role) {
+            // Track intro requests for analytics
+            console.log(`Intro requested for ${candidateName} (${role})`);
+            
+            // Could send to analytics endpoint
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'request_intro', {
+                    'candidate_name': candidateName,
+                    'candidate_role': role,
+                    'event_category': 'cohort_interaction'
+                });
+            }
+        }
+
+        // Show sticky CTA after user scrolls through some content
+        function handleStickyDisplay() {
+            const scrollPercent = (window.scrollY + window.innerHeight) / document.body.scrollHeight;
+            
+            if (scrollPercent > 0.3 && !sessionStorage.getItem('ctaHidden')) {
+                showStickyCTA();
+            }
+        }
+
+        // Load cohort on page load
+        document.addEventListener('DOMContentLoaded', loadCohort);
+
+        // Add some visual polish
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up sticky CTA scroll trigger
+            window.addEventListener('scroll', handleStickyDisplay);
+            // Animate cards on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Set initial state and observe cards
+            setTimeout(() => {
+                document.querySelectorAll('.candidate-card').forEach((card, index) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(30px)';
+                    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    card.style.transitionDelay = `${index * 0.1}s`;
+                    observer.observe(card);
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>
