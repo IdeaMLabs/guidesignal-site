@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Ambassadors - GuideSignal</title>
+    <meta name="description" content="Join GuideSignal's Campus Ambassador program and help students find fast-reply career opportunities">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #1e3a5f;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem 0;
+        }
+
+        .nav-links {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .nav-link {
+            color: #4a9eff;
+            text-decoration: none;
+            font-weight: 500;
+            margin: 0 1rem;
+            padding: 0.5rem;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        .program-overview {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .benefit-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e5eaf1;
+        }
+
+        .benefit-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1e3a5f;
+        }
+
+        .benefit-description {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1e3a5f;
+        }
+
+        .form-subtitle {
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #1e3a5f;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #dbe1ea;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #4a9eff;
+            box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 640px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(74, 158, 255, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #64748b;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .form-note {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-top: 1rem;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">← Home</a>
+            <a href="jobs.html" class="nav-link">Fast-Reply Jobs</a>
+            <a href="cohort.html" class="nav-link">Candidate Cohort</a>
+            <a href="apply.html" class="nav-link">Apply</a>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <h1 class="hero-title">Campus Ambassadors</h1>
+            <p class="hero-subtitle">Help your classmates discover fast-reply career opportunities</p>
+        </div>
+
+        <!-- Program Overview -->
+        <div class="program-overview">
+            <h2 style="color: #1e3a5f; margin-bottom: 1rem;">Join Our Campus Ambassador Program</h2>
+            <p style="color: #64748b; margin-bottom: 2rem;">
+                Partner with GuideSignal to bring fast-reply job opportunities directly to your campus community. 
+                As a Campus Ambassador, you'll help fellow students connect with employers who guarantee quick responses to applications.
+            </p>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎓</div>
+                    <div class="benefit-title">Student Leadership</div>
+                    <div class="benefit-description">Build leadership experience while helping peers find career opportunities</div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💼</div>
+                    <div class="benefit-title">Career Network</div>
+                    <div class="benefit-description">Connect directly with fast-reply employers and build your professional network</div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📊</div>
+                    <div class="benefit-title">Impact Tracking</div>
+                    <div class="benefit-description">See real metrics on how many classmates you've helped land interviews</div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🏆</div>
+                    <div class="benefit-title">Recognition</div>
+                    <div class="benefit-description">Featured recognition on campus and GuideSignal's ambassador hall of fame</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Form -->
+        <div class="form-section">
+            <div class="success-message" id="successMessage">
+                <strong>Thanks for your interest!</strong> We'll review your application and get back to you within 48 hours.
+            </div>
+
+            <h2 class="form-title">Apply to be a Campus Ambassador</h2>
+            <p class="form-subtitle">Tell us about yourself and why you'd be a great ambassador for your campus</p>
+
+            <form id="ambassadorForm" action="https://formspree.io/f/xjkvbpzj" method="POST">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" required placeholder="Your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required placeholder="your.email@university.edu">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="school">School/University *</label>
+                        <input type="text" id="school" name="school" required placeholder="University name">
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Current Role *</label>
+                        <select id="role" name="role" required>
+                            <option value="">Select your role</option>
+                            <option value="Undergraduate Student">Undergraduate Student</option>
+                            <option value="Graduate Student">Graduate Student</option>
+                            <option value="Career Services Staff">Career Services Staff</option>
+                            <option value="Student Organization Leader">Student Organization Leader</option>
+                            <option value="Alumni/Recent Graduate">Alumni/Recent Graduate</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Why do you want to be a Campus Ambassador? *</label>
+                    <textarea id="message" name="message" required placeholder="Tell us about your interest in helping fellow students find career opportunities, any relevant experience, and how you'd promote GuideSignal on your campus..."></textarea>
+                </div>
+
+                <!-- Hidden fields for tracking -->
+                <input type="hidden" name="_subject" value="New Campus Ambassador Application">
+                <input type="hidden" name="source" value="ambassadors_page">
+                <input type="hidden" name="ref" id="refField">
+                <input type="hidden" name="utm_source" id="utmSource">
+                <input type="hidden" name="utm_medium" id="utmMedium">
+                <input type="hidden" name="utm_campaign" id="utmCampaign">
+                
+                <!-- Honeypot for spam prevention -->
+                <label style="display: none;">
+                    Leave this empty: <input name="_honeypot">
+                </label>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
+            </form>
+
+            <p class="form-note">
+                * Required fields. We'll review applications within 48 hours and reach out with next steps.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Handle URL parameters
+        function handleURLParams() {
+            const params = new URLSearchParams(window.location.search);
+            
+            // Handle referral tracking
+            const ref = params.get('ref');
+            const utmSource = params.get('utm_source');
+            const utmMedium = params.get('utm_medium');
+            const utmCampaign = params.get('utm_campaign');
+            
+            if (ref) {
+                const refField = document.getElementById('refField');
+                if (refField) refField.value = ref;
+            }
+            
+            if (utmSource) {
+                const utmSourceField = document.getElementById('utmSource');
+                if (utmSourceField) utmSourceField.value = utmSource;
+            }
+            
+            if (utmMedium) {
+                const utmMediumField = document.getElementById('utmMedium');
+                if (utmMediumField) utmMediumField.value = utmMedium;
+            }
+            
+            if (utmCampaign) {
+                const utmCampaignField = document.getElementById('utmCampaign');
+                if (utmCampaignField) utmCampaignField.value = utmCampaign;
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('ambassadorForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const submitBtn = document.getElementById('submitBtn');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    // Show success message
+                    successMessage.style.display = 'block';
+                    
+                    // Hide form
+                    form.style.display = 'none';
+                    
+                    // Scroll to success message
+                    successMessage.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                alert('Something went wrong. Please try again or email us directly.');
+                
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Application';
+            }
+        });
+
+        // Initialize URL parameter handling
+        document.addEventListener('DOMContentLoaded', handleURLParams);
+    </script>
+</body>
+</html>
