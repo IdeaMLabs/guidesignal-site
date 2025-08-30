@@ -27,7 +27,7 @@ def generate_public_cohort():
         # Read applicants CSV
         applicants_df = pd.read_csv('applicants.csv')
         
-        # Filter by consent (if column exists, otherwise skip filtering for now)
+        # Filter by consent and exclude test/demo rows
         if 'consent' in applicants_df.columns:
             # Filter only those who gave consent
             consented_df = applicants_df[applicants_df['consent'] == True].copy()
@@ -35,6 +35,16 @@ def generate_public_cohort():
             print("Note: No consent column found, processing all applicants")
             # For now, process all applicants but limit to test data
             consented_df = applicants_df.copy()
+        
+        # Exclude test/demo rows
+        if not consented_df.empty:
+            consented_df = consented_df[
+                ~(
+                    (consented_df.get('source', '') == 'test') |
+                    (consented_df.get('email', '').str.endswith('@example.com')) |
+                    (consented_df.get('name', '').isin(['TestUser', 'Demo', 'Sample']))
+                )
+            ].copy()
         
         # Process each consented applicant
         public_cohort = []
