@@ -1,0 +1,91 @@
+GuideSignal Outreach Pack
+==========================
+
+EMAIL SUBJECT LINE:
+Fast hiring at [Company] - 2-hour replies guaranteed ⚡
+
+EMAIL BODY:
+Hi [Name],
+
+I noticed [Company] is growing fast and might need to fill roles quickly. 
+
+We've built something different at GuideSignal - a hiring platform where employers pledge 2-hour reply times and get a "Fast-Reply Certified" badge that attracts top talent.
+
+Quick stats:
+• 94% faster than LinkedIn/Indeed
+• Pre-screened candidates with skill verification  
+• Average time-to-hire: 3.2 days vs industry 23 days
+• Featured jobs get 5x more applications
+
+Would love to show you our current candidate pool - we have [specific roles relevant to their company] ready to interview.
+
+Post your first job free: https://ideamlabs.github.io/guidesignal-site/post.html
+Feature it for just $25: https://ideamlabs.github.io/guidesignal-site/feature.html
+
+Best,
+[Your Name]
+GuideSignal
+
+P.S. - We're launching with founding employers who get priority placement. Interested in being featured?
+
+---
+
+COLD CALL SCRIPT:
+================
+
+OPENING (15 seconds):
+"Hi [Name], this is [Your Name] from GuideSignal. I'm calling because I noticed [Company] has been posting a lot of job openings recently. Do you have 30 seconds for me to share how we're helping companies like yours fill roles in 3 days instead of 23?"
+
+[Wait for response]
+
+VALUE PROPOSITION (30 seconds):
+"Great! So here's what makes us different - we require employers to pledge 2-hour reply times, and in return, they get a 'Fast-Reply Certified' badge that top candidates love. Think of it like Amazon Prime for hiring.
+
+Our data shows:
+- 94% faster placement than LinkedIn
+- Pre-screened candidates with verified skills
+- Average 3.2 days to hire vs 23 days industry average
+
+We currently have [X number] of pre-vetted [relevant role] candidates ready to interview."
+
+CLOSE (15 seconds):
+"I can get you set up with a free job posting in 2 minutes, or for $25 you can feature it for 5x more visibility. Which sounds better - starting with the free posting to test it out, or going straight to the featured option?"
+
+[Handle response]
+
+OBJECTION HANDLING:
+===================
+
+"We already use LinkedIn/Indeed"
+→ "I understand - most of our clients did too. The difference is speed. While LinkedIn averages 23 days to hire, we're seeing 3.2 days because candidates know you'll respond fast. Can I show you our current [relevant role] candidates?"
+
+"We don't have budget"
+→ "The free posting gives you everything - pre-screened candidates, our matching algorithm, and the fast-reply badge. The $25 feature option is just for 5x more visibility if you need to fill the role urgently. Want to start free?"
+
+"We're not hiring right now"
+→ "Perfect timing actually - you can browse our candidate pool at no cost and post when you're ready. Our best clients build relationships before they need to hire. Mind if I send you our candidate showcase?"
+
+"I need to think about it"
+→ "Absolutely. While you're considering it, can I send you our candidate pool for [relevant role]? No commitment, just so you can see the quality we attract. What's the best email?"
+
+FOLLOW-UP SEQUENCES:
+===================
+
+DAY 2: "Hi [Name], following up on GuideSignal. Saw [Company news/update]. Our [relevant role] candidates are perfect for this growth phase. Still interested in the free posting?"
+
+DAY 7: "Quick check-in on GuideSignal, [Name]. We just added 12 new pre-screened [relevant role] candidates this week. Worth a look?"
+
+DAY 14: "Final follow-up, [Name]. If timing isn't right now, no worries. I'll check back in Q[next quarter]. In the meantime, here's our candidate showcase: [link]"
+
+CLOSING NOTES:
+- Always mention specific candidate numbers ("We have 23 software engineers")
+- Use urgency ("Candidate pool is growing 40% monthly") 
+- Reference company-specific info when possible
+- End with clear next steps
+- Track response rates and optimize messaging
+
+Success metrics to track:
+- Email open rates (target: >25%)
+- Call connection rates (target: >15%) 
+- Demo/signup conversion (target: >30%)
+- Free to paid conversion (target: >10%)
