@@ -29,24 +29,25 @@
     <p><small>We optimize for real replies, not clicks.</small></p>
     <!-- same form as Option A, but without inline styles if you prefer -->
     <form id="fastReplyForm" action="https://formspree.io/f/xdklalra" method="POST">
-      <label>Full name<input name="name" required></label>
-      <label>Email<input type="email" name="email" required></label>
-      <label>City / ZIP<input name="location" required></label>
-      <label>Target role (optional)
-        <select name="role" onchange="toggleCustomRole()">
-          <option value="">-- Select or type your own --</option>
-          <option value="Help Desk / Desktop Support">Help Desk / Desktop Support</option>
-          <option value="Warehouse Associate">Warehouse Associate</option>
-          <option value="Customer Support">Customer Support</option>
-          <option value="Operations / Dispatcher">Operations / Dispatcher</option>
-          <option value="Other">Other (type your role)</option>
-        </select>
+      <label>Target role (free-text)
+        <input name="role">
       </label>
-      <p><small style="color:#64748b">Role is optional — we match by your skills and Written Spotlight. Examples: Help Desk, Lab Tech, Customer Support, or type your own</small></p>
-      <label id="custom-role-label" style="display:none">Custom role<input name="role_custom" placeholder="Enter your target role"></label>
-      <label>Skills (comma-separated)<textarea name="skills" rows="3" placeholder="e.g., windows, ticketing, sql, excel, customer service"></textarea></label>
-      <label>Pay range (hourly)<input name="pay" placeholder="e.g., 15-25"></label>
-      <label>Resume / portfolio URL (optional)<input name="resume_url" placeholder="https://…"></label>
+      
+      <label>Spotlight (≈4 sentences)
+        <textarea name="spotlight" rows="4" required></textarea>
+      </label>
+      
+      <label>Skills (5–10, comma-separated)
+        <textarea name="skills" rows="2" required></textarea>
+      </label>
+      
+      <label>Link 1
+        <input name="link1">
+      </label>
+      
+      <label>Link 2
+        <input name="link2">
+      </label>
       <input type="hidden" name="_subject">
       <input type="hidden" name="source">
       <input type="hidden" name="_redirect" value="https://ideamlabs.github.io/guidesignal-site/thanks.html">
@@ -64,26 +65,6 @@
   </div>
 </main>
 <script>
-  function toggleCustomRole() {
-    const roleSelect = document.querySelector('select[name="role"]');
-    const customRoleLabel = document.getElementById('custom-role-label');
-    const customRoleInput = document.querySelector('input[name="role_custom"]');
-    
-    console.log('toggleCustomRole called, value:', roleSelect.value); // Debug log
-    
-    if (roleSelect.value === 'Other' || roleSelect.value === '') {
-      console.log('Showing custom role input'); // Debug log
-      customRoleLabel.style.display = 'block';
-      customRoleInput.required = false; // Make it optional
-      // Focus the input on mobile devices for better UX
-      setTimeout(() => customRoleInput.focus(), 100);
-    } else {
-      console.log('Hiding custom role input'); // Debug log
-      customRoleLabel.style.display = 'none';
-      customRoleInput.required = false;
-      customRoleInput.value = '';
-    }
-  }
 
   const f = document.getElementById('fastReplyForm');
   f.addEventListener('submit', async (e) => {

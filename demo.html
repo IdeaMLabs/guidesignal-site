@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo: 60-Second Hiring Flow - GuideSignal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #1e3a5f;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+        }
+
+        .demo-title {
+            font-size: 32px;
+            font-weight: 300;
+            color: #1e3a5f;
+            margin-bottom: 10px;
+        }
+
+        .demo-subtitle {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        .demo-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .step {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            opacity: 1;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(30, 58, 95, 0.15);
+        }
+
+        .step.completed {
+            opacity: 0.8;
+            background: #f8f9fa;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #4a9eff;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+
+        .step-number.completed {
+            background: #28a745;
+        }
+
+        .step-title {
+            display: inline-block;
+            font-size: 24px;
+            font-weight: 500;
+            color: #1e3a5f;
+            vertical-align: middle;
+        }
+
+        .step-content {
+            margin-top: 20px;
+            padding-left: 55px;
+        }
+
+        .demo-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .demo-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dbe1ea;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .demo-button {
+            background: #1e3a5f;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .demo-button:hover {
+            background: #2c4a6f;
+            transform: translateY(-2px);
+        }
+
+        .demo-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            z-index: 1000;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #e8f5e8, #f0f9ff);
+            border: 2px solid #4ade80;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #166534;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .nav-links a {
+            color: #4a9eff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #1e3a5f;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 10px;
+            }
+            
+            .step {
+                padding: 20px;
+            }
+            
+            .step-content {
+                padding-left: 0;
+                margin-top: 15px;
+            }
+            
+            .step-number {
+                display: block;
+                margin: 0 auto 15px;
+            }
+            
+            .step-title {
+                display: block;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="timer" id="timer">60s</div>
+    
+    <div class="container">
+        <div class="nav-links">
+            <a href="index.html">← Home</a>
+            <a href="jobs.html">Fast-Reply Jobs</a>
+            <a href="how.html">How it Works</a>
+            <a href="faq.html">FAQ</a>
+        </div>
+        
+        <div class="demo-header">
+            <h1 class="demo-title">60-Second Hiring Flow Demo</h1>
+            <p class="demo-subtitle">Experience our streamlined process with sample data</p>
+            <div class="demo-badge">Interactive Demo</div>
+        </div>
+
+        <!-- Step 1: Post Role -->
+        <div class="step active" id="step1">
+            <div class="step-number" id="step1-number">1</div>
+            <h2 class="step-title">Post Your Role</h2>
+            <div class="step-content">
+                <p>Let's start by posting a sample role. In the real flow, this takes 30 seconds.</p>
+                <div class="demo-form">
+                    <input type="text" class="demo-input" value="Help Desk Technician" readonly>
+                    <textarea class="demo-input" rows="2" readonly>windows, ticketing, customer service</textarea>
+                    <input type="text" class="demo-input" value="$18-25/hr" readonly>
+                    <input type="email" class="demo-input" value="hiring@techcorp.com" readonly>
+                    <label><input type="checkbox" checked disabled> 48h reply pledge</label>
+                </div>
+                <button class="demo-button" onclick="completeStep(1)">Submit Job Post</button>
+            </div>
+        </div>
+
+        <!-- Step 2: AI Matching -->
+        <div class="step" id="step2">
+            <div class="step-number" id="step2-number">2</div>
+            <h2 class="step-title">AI Finds Matches</h2>
+            <div class="step-content">
+                <p>Our AI instantly scans qualified candidates based on your requirements.</p>
+                <div class="demo-form">
+                    <div style="padding: 20px; background: white; border-radius: 8px; margin: 10px 0;">
+                        <strong>🎯 Matching in progress...</strong><br>
+                        • Scanning 247 candidates<br>
+                        • Skills compatibility: 94%<br>
+                        • Pay range match: ✓<br>
+                        • Location preference: ✓
+                    </div>
+                </div>
+                <button class="demo-button" onclick="completeStep(2)" disabled id="step2-btn">Finding matches...</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Review Candidates -->
+        <div class="step" id="step3">
+            <div class="step-number" id="step3-number">3</div>
+            <h2 class="step-title">Review Top Matches</h2>
+            <div class="step-content">
+                <p>Review the top 3 candidates selected by our AI.</p>
+                <div class="demo-form">
+                    <div style="background: white; border-radius: 8px; padding: 15px; margin: 10px 0; border-left: 4px solid #4a9eff;">
+                        <strong>Sarah M.</strong> - Help Desk Specialist<br>
+                        <small>3 years exp • Windows, ServiceNow, Active Directory • $19-24/hr</small>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 15px; margin: 10px 0; border-left: 4px solid #4a9eff;">
+                        <strong>Mike R.</strong> - IT Support Technician<br>
+                        <small>2 years exp • Windows, Ticketing, Customer Service • $18-23/hr</small>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 15px; margin: 10px 0; border-left: 4px solid #4a9eff;">
+                        <strong>Lisa K.</strong> - Technical Support<br>
+                        <small>4 years exp • Help Desk, ITIL, Communication • $20-26/hr</small>
+                    </div>
+                </div>
+                <button class="demo-button" onclick="completeStep(3)" disabled id="step3-btn">Select candidates to contact</button>
+            </div>
+        </div>
+
+        <!-- Step 4: Send Intros -->
+        <div class="step" id="step4">
+            <div class="step-number" id="step4-number">4</div>
+            <h2 class="step-title">Connect & Schedule</h2>
+            <div class="step-content">
+                <p>Candidates are notified and can respond directly to you within 48 hours.</p>
+                <div class="demo-form">
+                    <div style="background: #e8f5e8; border-radius: 8px; padding: 15px; margin: 10px 0;">
+                        <strong>✅ Introductions sent!</strong><br>
+                        • 3 candidates notified<br>
+                        • Expected responses: within 24 hours<br>
+                        • Your 48h reply pledge is active
+                    </div>
+                </div>
+                <button class="demo-button" onclick="completeStep(4)" disabled id="step4-btn">Complete setup</button>
+            </div>
+        </div>
+
+        <div class="success-message" id="success" style="display: none;">
+            <h3>🎉 Demo Complete!</h3>
+            <p>Total time: <strong><span id="final-time">60</span> seconds</strong></p>
+            <p>In the real flow, you'd now start receiving candidate responses within 48 hours.</p>
+            <div style="margin-top: 20px;">
+                <a href="post.html" class="demo-button" style="margin-right: 10px; text-decoration: none;">Try it for real</a>
+                <a href="index.html" class="demo-button" style="background: #6c757d; text-decoration: none;">Back to home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let startTime = Date.now();
+        let timerInterval;
+        
+        // Start 60-second timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const remaining = Math.max(0, 60 - elapsed);
+                document.getElementById('timer').textContent = remaining + 's';
+                
+                if (remaining === 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer').textContent = 'Done!';
+                    document.getElementById('timer').style.background = '#28a745';
+                }
+            }, 100);
+        }
+
+        function completeStep(stepNum) {
+            // Mark current step as completed
+            const currentStepEl = document.getElementById(`step${stepNum}`);
+            const currentNumberEl = document.getElementById(`step${stepNum}-number`);
+            
+            currentStepEl.classList.remove('active');
+            currentStepEl.classList.add('completed');
+            currentNumberEl.classList.add('completed');
+            currentNumberEl.textContent = '✓';
+
+            if (stepNum < 4) {
+                // Activate next step after a delay
+                setTimeout(() => {
+                    const nextStepEl = document.getElementById(`step${stepNum + 1}`);
+                    nextStepEl.classList.add('active');
+                    
+                    // Enable button after another delay
+                    setTimeout(() => {
+                        const nextBtn = document.getElementById(`step${stepNum + 1}-btn`);
+                        if (nextBtn) {
+                            nextBtn.disabled = false;
+                            nextBtn.textContent = stepNum === 1 ? 'Review matches' : 
+                                                stepNum === 2 ? 'Contact selected candidates' : 
+                                                'Finish demo';
+                        }
+                    }, stepNum === 1 ? 3000 : 2000);
+                }, 1000);
+            } else {
+                // Show completion
+                setTimeout(() => {
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    document.getElementById('final-time').textContent = elapsed;
+                    document.getElementById('success').style.display = 'block';
+                    clearInterval(timerInterval);
+                    document.getElementById('timer').style.background = '#28a745';
+                    document.getElementById('timer').textContent = 'Complete!';
+                }, 1000);
+            }
+        }
+
+        // Start the demo
+        document.addEventListener('DOMContentLoaded', () => {
+            startTimer();
+        });
+    </script>
+</body>
+</html>

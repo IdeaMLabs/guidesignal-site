@@ -374,41 +374,21 @@
 
         // Create job card HTML
         function createJobCard(job) {
-            const skills = formatSkills(job.musts);
-            const niceToHave = formatSkills(job.nice);
-            
-            const skillTags = skills.map(skill => 
-                `<span class="skill-tag">${skill}</span>`
-            ).join('');
-
-            const niceToHaveTags = niceToHave.length > 0 ? 
-                niceToHave.map(skill => 
-                    `<span class="skill-tag" style="background: #e3f2fd; color: #1976d2;">${skill}</span>`
-                ).join('') : '';
-
-            // Create URL parameters for apply link
+            // Create URL parameters for intro link
             const params = new URLSearchParams({
                 employer: job.employer,
-                job: job.job_title,
-                city: job.job_city,
-                pay: `${job.job_pay_min}-${job.job_pay_max}`
+                role: job.job_title
             });
-            const applyUrl = `apply.html?${params.toString()}`;
+            const introUrl = `intro.html?${params.toString()}`;
 
             return `
                 <div class="job-card">
                     <div class="fast-reply-badge">Fast-Reply Certified</div>
                     ${job.pledged_48h ? '<div class="pledge-48h-badge">48h Reply Pledge</div>' : ''}
                     <h3 class="job-title">${job.job_title}</h3>
-                    <div class="job-employer">${job.employer}</div>
-                    <div class="job-location">📍 ${job.job_city}</div>
                     <div class="job-pay">${formatPay(job.job_pay_min, job.job_pay_max)}</div>
-                    <div class="job-skills">
-                        <div class="skills-label">Required Skills:</div>
-                        ${skillTags}
-                        ${niceToHaveTags ? `<div class="skills-label" style="margin-top: 10px;">Nice-to-Have:</div>${niceToHaveTags}` : ''}
-                    </div>
-                    <a href="${applyUrl}" class="apply-btn">Apply Now</a>
+                    <div class="job-location">📍 ${job.job_city}</div>
+                    <a href="${introUrl}" class="apply-btn">Request intros</a>
                 </div>
             `;
         }

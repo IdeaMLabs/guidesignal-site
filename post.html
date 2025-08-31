@@ -28,30 +28,15 @@
     <p class="sub">Fast responses get a <b>Fast-Reply Certified</b> badge and priority placement.</p>
 
     <form id="jobForm" action="https://formspree.io/f/xvgbzwav" method="POST">
-      <!-- Company & Contact -->
-      <label>Company
-        <input name="company" required placeholder="Your Company Name">
+      <!-- Essential fields -->
+      <label>Role
+        <input name="job_title" required placeholder="Help Desk Technician">
       </label>
-      <div class="row">
-        <label>Hiring contact (name)
-          <input name="contact_name" required placeholder="Your Name">
-        </label>
-        <label>Contact email
-          <input type="email" name="contact_email" required placeholder="your.email@company.com">
-        </label>
-      </div>
-
-      <!-- Role -->
-      <div class="row">
-        <label>Role title
-          <input name="job_title" required placeholder="Help Desk Technician">
-        </label>
-        <label>City / Remote
-          <input name="job_city" required placeholder="City, State / Remote">
-        </label>
-      </div>
-
-      <!-- Pay range (use separate fields to match the model) -->
+      
+      <label>3–5 Must-haves
+        <textarea name="musts" rows="3" required placeholder="help desk, windows, ticketing"></textarea>
+      </label>
+      
       <div class="row">
         <label>Pay min (hourly)
           <input type="number" step="0.01" name="job_pay_min" required placeholder="15">
@@ -60,34 +45,49 @@
           <input type="number" step="0.01" name="job_pay_max" required placeholder="25">
         </label>
       </div>
-
-      <!-- Requirements -->
-      <label>Must-have skills (comma-separated)
-        <textarea name="musts" rows="2" required placeholder="help desk, windows, ticketing"></textarea>
+      
+      <label>Work email
+        <input type="email" name="contact_email" required placeholder="your.email@company.com">
       </label>
-      <label>Nice-to-haves (comma-separated)
-        <textarea name="nice" rows="2" placeholder="azure, scripting, itil"></textarea>
-      </label>
-
-      <!-- Reply-time pledge -->
-      <label>Reply-time pledge (SLA)
-        <select name="reply_sla" required>
-          <option value="<=2h">&le; 2 hours (Fast-Reply Certified)</option>
-          <option value="same-day">Same day</option>
-          <option value="48h">Within 48 hours</option>
-        </select>
-      </label>
-
-      <!-- 48-hour pledge checkbox -->
+      
+      <!-- 48-hour pledge checkbox (checked by default) -->
       <label class="pledge">
-        <input type="checkbox" name="reply_pledge_48h" value="true">
-        We commit to reply to applicants within 48 hours.
+        <input type="checkbox" name="reply_pledge_48h" value="true" checked>
+        48h pledge: We commit to reply to applicants within 48 hours.
       </label>
-
-      <!-- Optional scheduling link (helps fast replies) -->
-      <label>Optional: Calendly / phone for fast scheduling
-        <input name="contact_channel" placeholder="https://calendly.com/your-link or phone number">
-      </label>
+      
+      <!-- Collapsible More Options -->
+      <details style="margin-top: 16px; border: 1px solid #dbe1ea; border-radius: 10px; padding: 12px;">
+        <summary style="font-weight: 600; cursor: pointer; margin-bottom: 12px;">More options</summary>
+        
+        <label>Company
+          <input name="company" placeholder="Your Company Name">
+        </label>
+        
+        <label>Hiring contact (name)
+          <input name="contact_name" placeholder="Your Name">
+        </label>
+        
+        <label>City / Remote
+          <input name="job_city" placeholder="City, State / Remote">
+        </label>
+        
+        <label>Nice-to-haves (comma-separated)
+          <textarea name="nice" rows="2" placeholder="azure, scripting, itil"></textarea>
+        </label>
+        
+        <label>Reply-time pledge (SLA)
+          <select name="reply_sla">
+            <option value="48h" selected>Within 48 hours</option>
+            <option value="<=2h">&le; 2 hours (Fast-Reply Certified)</option>
+            <option value="same-day">Same day</option>
+          </select>
+        </label>
+        
+        <label>Optional: Calendly / phone for fast scheduling
+          <input name="contact_channel" placeholder="https://calendly.com/your-link or phone number">
+        </label>
+      </details>
 
       <!-- Metadata -->
       <input type="hidden" name="_subject">
@@ -100,7 +100,7 @@
       <!-- Honeypot (spam trap) -->
       <label style="display:none">Leave this empty <input name="website"></label>
 
-      <label><input type="checkbox" name="consent" required> I agree to the <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.</label>
+      <label style="margin-top: 16px;"><input type="checkbox" name="consent" required> I agree to the <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.</label>
       <button type="submit">Submit job</button>
       <small class="note">By submitting, you agree to the reply-time pledge; badge visibility depends on measured reply speed.</small>
     </form>

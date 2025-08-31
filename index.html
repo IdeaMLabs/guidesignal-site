@@ -520,12 +520,17 @@
 
     <section class="hero-section">
         <div class="container">
-            <h2 class="hero-title">The future of hiring is here</h2>
-            <p class="hero-description">Fast replies. Perfect matches. Fair compensation.</p>
+            <h2 class="hero-title">Hear back within 48 hours</h2>
+            <p class="hero-description">(from pledged employers)</p>
             
             <div class="cta-buttons">
-                <a href="apply.html" class="btn btn-primary">Find Your Role</a>
-                <a href="post.html" class="btn btn-secondary">Post a Position</a>
+                <a href="post.html" class="btn btn-primary">Post Role</a>
+                <a href="how.html" class="btn btn-secondary">How it Works</a>
+            </div>
+            
+            <!-- Proof Strip -->
+            <div class="proof-strip" id="proof-strip" style="display: none; margin-top: 40px; padding: 20px; background: linear-gradient(135deg, #e8f5e8, #f0f9ff); border: 1px solid #4ade80; border-radius: 12px; color: #166534; font-weight: 600; font-size: 18px; text-align: center;">
+                <span id="proof-content">Live this week: 0 intros → 0 interviews (7d)</span>
             </div>
         </div>
     </section>
@@ -642,7 +647,8 @@
             <p>
                 <a href="privacy.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">Privacy Policy</a>
                 <a href="terms.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">Terms of Service</a>
-                <a href="ambassadors.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">Campus Ambassadors</a>
+                <a href="demo.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">Demo</a>
+                <a href="presskit.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">Press Kit</a>
                 <a href="how.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">How it Works</a>
                 <a href="faq.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">FAQ</a>
             </p>
@@ -664,12 +670,26 @@
                 document.getElementById('interviewRate').textContent = data.interview_rate_7d ? `${data.interview_rate_7d}%` : '--%';
                 document.getElementById('certifiedJobs').textContent = data.certified_jobs || '--';
                 
-                // Update mini stats line
-                document.getElementById('stat-replies').textContent = data.last24_replied || '0';
-                document.getElementById('stat-apps').textContent = data.last24_apps || '0';
-                document.getElementById('pledged-employers').textContent = data.pledged_employers || '0';
-                document.getElementById('open-tickets').textContent = data.open_tickets || '0';
-                document.getElementById('acks-pending').textContent = data.acks_pending || '0';
+                // Update mini stats line and hide when all values are zero
+                const replies = data.last24_replied || 0;
+                const apps = data.last24_apps || 0;
+                const pledged = data.pledged_employers || 0;
+                const tickets = data.open_tickets || 0;
+                const acks = data.acks_pending || 0;
+                
+                document.getElementById('stat-replies').textContent = replies;
+                document.getElementById('stat-apps').textContent = apps;
+                document.getElementById('pledged-employers').textContent = pledged;
+                document.getElementById('open-tickets').textContent = tickets;
+                document.getElementById('acks-pending').textContent = acks;
+                
+                // Hide mini-stats if all values are zero
+                const miniStatsEl = document.getElementById('mini-stats');
+                if (replies === 0 && apps === 0 && pledged === 0 && tickets === 0 && acks === 0) {
+                    miniStatsEl.style.display = 'none';
+                } else {
+                    miniStatsEl.style.display = 'block';
+                }
                 
                 // Update ML learning info
                 const trainingEvents = data.training_events || 0;
@@ -696,6 +716,19 @@
                 document.getElementById('slots-today').textContent = slotsToday;
                 document.getElementById('next-review').textContent = data.next_review || '-';
                 document.getElementById('capacity-fill').style.width = `${capacityPercent}%`;
+                
+                // Update proof strip - show if intros or interviews > 0
+                const intros = data.intros_7d || 0;
+                const interviews = data.interviews_7d || 0;
+                const proofStripEl = document.getElementById('proof-strip');
+                const proofContentEl = document.getElementById('proof-content');
+                
+                if (intros > 0 || interviews > 0) {
+                    proofContentEl.textContent = `Live this week: ${intros} intros → ${interviews} interviews (7d)`;
+                    proofStripEl.style.display = 'block';
+                } else {
+                    proofStripEl.style.display = 'none';
+                }
                 
             } catch (error) {
                 console.log('Scoreboard data not available:', error.message);

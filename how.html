@@ -1,61 +1,377 @@
-<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>How GuideSignal Works</title>
-<style>
-body{margin:0;background:#F7F9FC;font:16px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:#0F172A}
-main{max-width:860px;margin:28px auto;padding:0 16px}
-.card{background:#fff;border:1px solid #e5eaf1;border-radius:16px;padding:22px;box-shadow:0 6px 20px rgba(2,8,23,.06);margin-bottom:16px}
-h1{margin:0 0 10px} h2{margin:8px 0} p{margin:8px 0;color:#334155}
-.badge{display:inline-block;background:#0F172A;color:#fff;padding:4px 10px;border-radius:999px;font-size:12px;margin-right:6px}
-.list{padding-left:18px;margin:10px 0} .list li{margin:6px 0}
-.cta a{display:inline-block;margin:10px 10px 0 0;padding:12px 16px;border-radius:12px;text-decoration:none;border:1px solid #0F172A}
-.primary{background:#0F172A;color:#fff}
-.note{color:#64748B;font-size:14px}
-</style>
-<main>
-  <div style="text-align:center;margin-bottom:20px">
-    <a href="index.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">← Home</a>
-    <a href="jobs.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">Fast-Reply Jobs</a>
-    <a href="apply.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">Apply</a>
-    <a href="post.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">Post Job</a>
-    <a href="faq.html" style="color:#4a9eff;text-decoration:none">FAQ</a>
-  </div>
-  <div class="card">
-    <h1>How GuideSignal Works</h1>
-    <p><span class="badge">Lighthouse Model</span> We shine a focused beam on jobs that <b>reply fast</b> and fit your skills/pay—so you spend time where a human will actually answer.</p>
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How it Works - GuideSignal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <div class="card">
-    <h2>For Candidates (simple steps)</h2>
-    <ol class="list">
-      <li><b>Share your basics</b> — city/remote, pay floor, skills, and a 120–180 word <i>Written Spotlight</i> with 2 links.</li>
-      <li><b>See targeted roles</b> — a short list ranked by fit, pay, and employer reply speed.</li>
-      <li><b>One-tap outreach</b> — we craft a brief email and send it when the employer usually answers.</li>
-      <li><b>Clarity, not silence</b> — if no response in 24h, we re-aim you to the next best option.</li>
-    </ol>
-    <p class="note">Free for candidates. No accounts. No data selling.</p>
-    <div class="cta"><a class="primary" href="apply.html">Start Your Spotlight</a></div>
-  </div>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #1e3a5f;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
 
-  <div class="card">
-    <h2>For Employers (fast signal, less noise)</h2>
-    <ol class="list">
-      <li><b>Post a role</b> with must-have skills, pay band, and a reply-time pledge.</li>
-      <li><b>Get fewer, better intros</b> — proof-first messages at your peak reply hour.</li>
-      <li><b>Earn the Beacon Badge</b> — fast responses keep your badge and trust high.</li>
-      <li><b>Optional: Feature</b> your job ($25) for top placement.</li>
-    </ol>
-    <div class="cta">
-      <a class="primary" href="post.html">Post a Fast-Reply Job</a>
-      <a href="feature.html">Feature for $25</a>
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+        }
+
+        .header h1 {
+            font-size: 42px;
+            font-weight: 300;
+            color: #1e3a5f;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            font-size: 20px;
+            color: #6c757d;
+            font-weight: 300;
+        }
+
+        .nav-links {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .nav-links a {
+            color: #4a9eff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #1e3a5f;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+        }
+
+        .section h2 {
+            font-size: 28px;
+            font-weight: 400;
+            color: #1e3a5f;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .steps {
+            display: grid;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #4a9eff;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            background: #4a9eff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .step-content h3 {
+            font-size: 20px;
+            font-weight: 500;
+            color: #1e3a5f;
+            margin-bottom: 10px;
+        }
+
+        .step-content p {
+            color: #495057;
+            font-size: 16px;
+        }
+
+        .differences {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .differences li {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .differences li:last-child {
+            border-bottom: none;
+        }
+
+        .differences .icon {
+            flex-shrink: 0;
+            width: 30px;
+            height: 30px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .differences strong {
+            color: #1e3a5f;
+        }
+
+        .mini-faq {
+            margin-bottom: 20px;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .faq-item h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 8px;
+        }
+
+        .faq-item p {
+            color: #495057;
+            font-size: 14px;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
+            color: white;
+            border-radius: 16px;
+        }
+
+        .cta-section h3 {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 15px;
+        }
+
+        .cta-section p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            min-width: 160px;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #1e3a5f;
+        }
+
+        .btn-primary:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 10px;
+            }
+            
+            .section {
+                padding: 25px;
+            }
+            
+            .header h1 {
+                font-size: 32px;
+            }
+            
+            .step {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="index.html">← Home</a>
+            <a href="jobs.html">Fast-Reply Jobs</a>
+            <a href="faq.html">FAQ</a>
+            <a href="demo.html">Demo</a>
+        </div>
+        
+        <div class="header">
+            <h1>How it Works</h1>
+            <p>Simple, fast, and focused on real results</p>
+        </div>
+
+        <!-- Three Steps -->
+        <div class="section">
+            <h2>Three Simple Steps</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Post Your Role</h3>
+                        <p>Share your job requirements in 60 seconds. Tell us what you need: role, must-have skills, pay range, and commit to our 48-hour reply pledge.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>We Send ≤3 Proof-First Intros</h3>
+                        <p>Our AI finds the best matches and sends you up to 3 qualified candidates at your optimal reply time. Each intro includes proof of their skills and experience.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>You Reply Within 48 Hours</h3>
+                        <p>Keep your pledge and respond to candidates within 48 hours. This builds trust and earns you our Fast-Reply Certified badge for future posts.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Why It's Different -->
+        <div class="section">
+            <h2>Why It's Different</h2>
+            <ul class="differences">
+                <li>
+                    <div class="icon">✓</div>
+                    <div>
+                        <strong>Fewer Messages:</strong> You get maximum 3 carefully chosen candidates instead of hundreds of random applications to sort through.
+                    </div>
+                </li>
+                <li>
+                    <div class="icon">⚡</div>
+                    <div>
+                        <strong>Pledge Badge:</strong> Employers who consistently reply fast get certified with our Fast-Reply badge, attracting better candidates.
+                    </div>
+                </li>
+                <li>
+                    <div class="icon">🎯</div>
+                    <div>
+                        <strong>Outcome Learning:</strong> Our system learns from hiring outcomes to send you increasingly better matches over time.
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Mini FAQ -->
+        <div class="section">
+            <h2>Quick Questions</h2>
+            <div class="mini-faq">
+                <div class="faq-item">
+                    <h4>Is my information private?</h4>
+                    <p>Yes. We only share what's needed for introductions. Employer contact details are encrypted and never sold. See our <a href="privacy.html" style="color: #4a9eff;">Privacy Policy</a> for details.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h4>How do you prevent spam?</h4>
+                    <p>We limit intros to 3 per role per week, verify all candidates manually, and require employers to maintain their 48-hour reply pledge to stay certified.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h4>What does it cost?</h4>
+                    <p>Posting jobs is free. Candidates use the service free. Optional job featuring costs $25 for priority placement and guaranteed Fast-Reply badge.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final CTA -->
+        <div class="cta-section">
+            <h3>Ready to Find Great Candidates?</h3>
+            <p>Join employers who get better results with fewer applications</p>
+            <div class="cta-buttons">
+                <a href="post.html" class="btn btn-primary">Post Role</a>
+                <a href="jobs.html" class="btn btn-secondary">See Jobs</a>
+            </div>
+        </div>
     </div>
-  </div>
-
-  <div class="card">
-    <h2>Trust & Safety</h2>
-    <ul class="list">
-      <li><b>Privacy by design</b>: the public site is static; submissions go via Formspree; payments via Stripe.</li>
-      <li><b>No PII published</b>: public listings are sanitized; only aggregates on the dashboard.</li>
-      <li><b>Accountability</b>: Beacon (Fast-Reply) badges are earned on measured data and can be revoked.</li>
-    </ul>
-  </div>
-</main>
+</body>
+</html>
