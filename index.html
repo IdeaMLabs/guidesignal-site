@@ -65,6 +65,34 @@
             font-weight: 600;
         }
 
+        .capacity-notice {
+            background: linear-gradient(135deg, #fff3cd, #ffeeba);
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 8px 16px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .capacity-bar {
+            display: inline-block;
+            width: 60px;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin: 0 8px;
+            position: relative;
+            vertical-align: middle;
+        }
+
+        .capacity-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
         .join-cta-index {
             background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
             border: 1px solid #4a9eff;
@@ -474,6 +502,11 @@
         This week: <span id="stat-replies">0</span>/<span id="stat-apps">0</span> replies &lt;24h • Real candidates: <span id="candidateCount">-</span> • Pledged employers: <span id="pledged-employers">0</span> • Updated: <span id="lastUpdated">-</span>
     </div>
 
+    <!-- Capacity Notice -->
+    <div class="capacity-notice" id="capacity-notice">
+        Capacity: <span id="slots-today">-</span> <div class="capacity-bar"><div class="capacity-fill" id="capacity-fill" style="width: 100%"></div></div> • Next review: <span id="next-review">-</span> • We cap at 3 intros per role/week
+    </div>
+
     <!-- Join CTA (when < 5 candidates) -->
     <div class="join-cta-index" id="joinCTAIndex" style="display: none;">
         Growing our candidate pool! <a href="apply.html">Be the first to join →</a>
@@ -629,6 +662,15 @@
                 document.getElementById('stat-replies').textContent = data.last24_replied || '0';
                 document.getElementById('stat-apps').textContent = data.last24_apps || '0';
                 document.getElementById('pledged-employers').textContent = data.pledged_employers || '0';
+                
+                // Update capacity bar
+                const slotsToday = data.slots_today || 0;
+                const maxSlots = 3;
+                const capacityPercent = Math.max(0, Math.min(100, (slotsToday / maxSlots) * 100));
+                
+                document.getElementById('slots-today').textContent = slotsToday;
+                document.getElementById('next-review').textContent = data.next_review || '-';
+                document.getElementById('capacity-fill').style.width = `${capacityPercent}%`;
                 
             } catch (error) {
                 console.log('Scoreboard data not available:', error.message);

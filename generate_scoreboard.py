@@ -25,6 +25,8 @@ def generate_scoreboard():
         "interview_rate_7d": 0,
         "certified_jobs": 0,
         "pledged_employers": 0,
+        "slots_today": 5,  # Default remaining intro slots
+        "next_review": "10:00 / 16:00 ET",  # Default review times
         "last24_apps": 0,
         "last24_replied": 0,
         "last_updated": datetime.now().isoformat()
@@ -116,6 +118,29 @@ def generate_scoreboard():
                 print(f"Warning: Could not read public_jobs.csv for pledged employers count: {e}")
                 metrics["pledged_employers"] = 0
         
+        # Calculate intro capacity and review times
+        current_hour = datetime.now().hour
+        
+        # Calculate remaining slots (assume max 3 intros per day, reduce throughout day)
+        if current_hour < 10:
+            slots_remaining = 3  # Morning: full capacity
+        elif current_hour < 14:
+            slots_remaining = 2  # Midday: reduced capacity  
+        elif current_hour < 17:
+            slots_remaining = 1  # Afternoon: limited capacity
+        else:
+            slots_remaining = 0  # Evening: no capacity
+        
+        metrics["slots_today"] = slots_remaining
+        
+        # Set next review times based on Eastern Time business hours
+        if current_hour < 10:
+            metrics["next_review"] = "10:00 / 16:00 ET"
+        elif current_hour < 16:
+            metrics["next_review"] = "16:00 ET / Tomorrow 10:00 ET"
+        else:
+            metrics["next_review"] = "Tomorrow 10:00 / 16:00 ET"
+        
         # Write scoreboard.json
         with open('scoreboard.json', 'w') as f:
             json.dump(metrics, f, indent=2)
@@ -128,6 +153,8 @@ def generate_scoreboard():
         print(f"  7d interview rate: {metrics['interview_rate_7d']}%")
         print(f"  Certified jobs: {metrics['certified_jobs']}")
         print(f"  Pledged employers: {metrics['pledged_employers']}")
+        print(f"  Slots today: {metrics['slots_today']}")
+        print(f"  Next review: {metrics['next_review']}")
         
     except Exception as e:
         print(f"Error generating scoreboard: {e}")

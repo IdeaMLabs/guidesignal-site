@@ -147,6 +147,35 @@
             font-size: 14px;
         }
 
+        .capacity-notice {
+            background: linear-gradient(135deg, #fff3cd, #ffeeba);
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 20px 0;
+        }
+
+        .capacity-bar {
+            display: inline-block;
+            width: 60px;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin: 0 8px;
+            position: relative;
+            vertical-align: middle;
+        }
+
+        .capacity-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
         .job-title {
             font-size: 24px;
             font-weight: 500;
@@ -266,6 +295,13 @@
             <a href="faq.html" class="nav-link">FAQ</a>
         </div>
     </header>
+
+    <!-- Capacity Notice -->
+    <div class="container">
+        <div class="capacity-notice" id="capacity-notice">
+            Capacity: <span id="slots-today">-</span> <div class="capacity-bar"><div class="capacity-fill" id="capacity-fill" style="width: 100%"></div></div> • Next review: <span id="next-review">-</span> • We cap at 3 intros per role/week
+        </div>
+    </div>
 
     <!-- Founding Employers Ribbon -->
     <section class="founding-employers-ribbon" style="background: linear-gradient(135deg, #ffd700, #ff8c00); padding: 1rem 0; text-align: center; box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);">
@@ -412,6 +448,24 @@
                 const counterEl = document.getElementById('pledged-counter');
                 if (counterEl && pledgedCount > 0) {
                     counterEl.textContent = `• Pledged employers: ${pledgedCount}`;
+                }
+
+                // Load capacity data from scoreboard
+                try {
+                    const scoreboardResponse = await fetch(`scoreboard.json?ts=${Date.now()}`);
+                    if (scoreboardResponse.ok) {
+                        const scoreboardData = await scoreboardResponse.json();
+                        
+                        const slotsToday = scoreboardData.slots_today || 0;
+                        const maxSlots = 3;
+                        const capacityPercent = Math.max(0, Math.min(100, (slotsToday / maxSlots) * 100));
+                        
+                        document.getElementById('slots-today').textContent = slotsToday;
+                        document.getElementById('next-review').textContent = scoreboardData.next_review || '-';
+                        document.getElementById('capacity-fill').style.width = `${capacityPercent}%`;
+                    }
+                } catch (scoreboardError) {
+                    console.log('Could not load capacity data:', scoreboardError);
                 }
 
             } catch (error) {
