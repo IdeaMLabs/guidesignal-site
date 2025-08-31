@@ -72,6 +72,59 @@ def process_applicants_data(input_file='applicants.csv', output_file=None):
         print(f"Error processing applicants data: {e}")
         return False
 
+def process_jobs_data(input_file='jobs.csv', output_file=None):
+    """Process jobs data to add reply_pledge_48h field"""
+    
+    if output_file is None:
+        output_file = input_file
+    
+    try:
+        # Read the CSV file, create if it doesn't exist
+        if os.path.exists(input_file):
+            df = pd.read_csv(input_file)
+        else:
+            # Create empty jobs dataframe with expected columns
+            df = pd.DataFrame(columns=[
+                'id', 'employer_name', 'title', 'city', 'pay_min', 'pay_max', 
+                'must_have_skills', 'nice_to_have', 'description', 
+                'response_fast_prob', 'response_median_reply_hours', 
+                'active_apps_last_24h', 'capacity_per_day', 'reply_pledge_48h'
+            ])
+        
+        # Add reply_pledge_48h column if it doesn't exist
+        if 'reply_pledge_48h' not in df.columns:
+            df['reply_pledge_48h'] = False
+        
+        # Process each row to ensure reply_pledge_48h is boolean
+        for idx, row in df.iterrows():
+            pledge_value = row.get('reply_pledge_48h', False)
+            
+            # Convert various representations to boolean
+            if isinstance(pledge_value, str):
+                pledge_bool = pledge_value.lower() in ['true', '1', 'yes', 'on', 'checked']
+            elif pd.isna(pledge_value):
+                pledge_bool = False
+            else:
+                pledge_bool = bool(pledge_value)
+            
+            df.at[idx, 'reply_pledge_48h'] = pledge_bool
+        
+        # Save the updated data
+        df.to_csv(output_file, index=False)
+        
+        print(f"Processed {len(df)} job records")
+        print(f"Updated reply_pledge_48h field for job listings")
+        
+        return True
+        
+    except Exception as e:
+        print(f"Error processing jobs data: {e}")
+        return False
+
 if __name__ == '__main__':
-    success = process_applicants_data()
+    # Process both applicants and jobs data
+    success_applicants = process_applicants_data()
+    success_jobs = process_jobs_data()
+    
+    success = success_applicants and success_jobs
     sys.exit(0 if success else 1)
