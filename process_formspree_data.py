@@ -78,6 +78,13 @@ def process_job_form_submission(form_data):
     # Extract pledge information using the specified logic
     pledge = (form_data.get('reply_pledge_48h','').strip().lower() in {'true','on','1','yes'})
     
+    # Check work email validation
+    needs_verification = (form_data.get('needs_verification', 'false').strip().lower() == 'true')
+    work_email_ok = not needs_verification
+    
+    # Determine priority: HIGH only if work_email_ok is True
+    priority = 'HIGH' if work_email_ok else 'NORMAL'
+    
     row = {
         'id': f"J{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}",  # Generate unique ID
         'employer_name': form_data.get('company', ''),
@@ -95,7 +102,10 @@ def process_job_form_submission(form_data):
         'fast_reply_certified': False,  # Will be updated based on actual performance
         'contact_email': form_data.get('contact_email', ''),
         'contact_name': form_data.get('contact_name', ''),
-        'reply_pledge_48h': pledge
+        'reply_pledge_48h': pledge,
+        'work_email_ok': work_email_ok,
+        'priority': priority,
+        'needs_verification': needs_verification
     }
     
     return row

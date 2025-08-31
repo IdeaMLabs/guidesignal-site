@@ -47,7 +47,13 @@
       </div>
       
       <label>Work email
-        <input type="email" name="contact_email" required placeholder="your.email@company.com">
+        <input type="email" name="contact_email" required placeholder="your.email@company.com" id="contact_email">
+        <small id="email-warning" style="color: #dc3545; display: none; margin-top: 5px;">Please use your company email</small>
+      </label>
+      
+      <label class="bypass-checkbox" id="bypass-checkbox" style="display: none; margin-top: 10px;">
+        <input type="checkbox" name="no_company_email" id="no_company_email" onchange="toggleEmailBypass()">
+        I don't have a company email
       </label>
       
       <!-- 48-hour pledge checkbox (checked by default) -->
@@ -93,6 +99,7 @@
       <input type="hidden" name="_subject">
       <input type="hidden" name="source">
       <input type="hidden" name="_redirect">
+      <input type="hidden" name="needs_verification" id="needs_verification" value="false">
       <!-- UTM tracking -->
       <input type="hidden" name="utm_source">
       <input type="hidden" name="utm_medium">
@@ -108,6 +115,54 @@
 </main>
 
 <script>
+  // Email domain validation
+  const freeEmailDomains = [
+    'gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 
+    'icloud.com', 'aol.com', 'protonmail.com', 'proton.me'
+  ];
+  
+  function validateEmail() {
+    const emailInput = document.getElementById('contact_email');
+    const emailWarning = document.getElementById('email-warning');
+    const bypassCheckbox = document.getElementById('bypass-checkbox');
+    const noCompanyEmailCheckbox = document.getElementById('no_company_email');
+    const needsVerificationField = document.getElementById('needs_verification');
+    
+    const email = emailInput.value.toLowerCase();
+    const domain = email.split('@')[1];
+    
+    if (domain && freeEmailDomains.includes(domain)) {
+      emailWarning.style.display = 'block';
+      bypassCheckbox.style.display = 'block';
+      emailInput.setCustomValidity('Please use your company email or check the bypass option');
+      return false;
+    } else {
+      emailWarning.style.display = 'none';
+      bypassCheckbox.style.display = 'none';
+      noCompanyEmailCheckbox.checked = false;
+      needsVerificationField.value = 'false';
+      emailInput.setCustomValidity('');
+      return true;
+    }
+  }
+  
+  function toggleEmailBypass() {
+    const noCompanyEmailCheckbox = document.getElementById('no_company_email');
+    const emailInput = document.getElementById('contact_email');
+    const needsVerificationField = document.getElementById('needs_verification');
+    
+    if (noCompanyEmailCheckbox.checked) {
+      emailInput.setCustomValidity('');
+      needsVerificationField.value = 'true';
+    } else {
+      validateEmail();
+    }
+  }
+  
+  // Add email validation listener
+  document.getElementById('contact_email').addEventListener('input', validateEmail);
+  document.getElementById('contact_email').addEventListener('blur', validateEmail);
+  
   // AJAX submit to keep user on-page with a success message
   const f = document.getElementById('jobForm');
   f.addEventListener('submit', async (e) => {
