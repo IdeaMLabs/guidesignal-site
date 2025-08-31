@@ -32,8 +32,9 @@
       <label>Full name<input name="name" required></label>
       <label>Email<input type="email" name="email" required></label>
       <label>City / ZIP<input name="location" required></label>
-      <label>Target role
+      <label>Target role (optional)
         <select name="role" onchange="toggleCustomRole()">
+          <option value="">-- Select or type your own --</option>
           <option value="Help Desk / Desktop Support">Help Desk / Desktop Support</option>
           <option value="Warehouse Associate">Warehouse Associate</option>
           <option value="Customer Support">Customer Support</option>
@@ -41,7 +42,7 @@
           <option value="Other">Other (type your role)</option>
         </select>
       </label>
-      <p><small style="color:#64748b">Don't see your role? Choose Other and type it</small></p>
+      <p><small style="color:#64748b">Select from common roles or type your own</small></p>
       <label id="custom-role-label" style="display:none">Custom role<input name="role_custom" placeholder="Enter your target role"></label>
       <label>Skills (comma-separated)<textarea name="skills" rows="3" placeholder="relevant skills, experience, certifications"></textarea></label>
       <label>Pay range (hourly)<input name="pay" placeholder="e.g., 15-25"></label>
@@ -70,10 +71,10 @@
     
     console.log('toggleCustomRole called, value:', roleSelect.value); // Debug log
     
-    if (roleSelect.value === 'Other') {
+    if (roleSelect.value === 'Other' || roleSelect.value === '') {
       console.log('Showing custom role input'); // Debug log
       customRoleLabel.style.display = 'block';
-      customRoleInput.required = true;
+      customRoleInput.required = false; // Make it optional
       // Focus the input on mobile devices for better UX
       setTimeout(() => customRoleInput.focus(), 100);
     } else {

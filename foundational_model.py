@@ -49,6 +49,14 @@ except Exception:
     _USE_ST = False
     from sklearn.feature_extraction.text import TfidfVectorizer
 
+# K-means clustering
+try:
+    from sklearn.cluster import KMeans
+    from sklearn.metrics.pairwise import cosine_similarity
+    _USE_KMEANS = True
+except Exception:
+    _USE_KMEANS = False
+
 
 def _norm_text(x: str) -> str:
     return (x or "").strip().lower()
@@ -126,10 +134,33 @@ def cosine_sim_matrix(A, B) -> np.ndarray:
 
 
 def req_score(applicant_text: str, must_haves: List[str]) -> float:
-    """Fraction of must-have tokens present (case-insensitive substring match)."""
+    """Fuzzy must-have matching using cosine similarity ≥ 0.6 threshold."""
     if not must_haves:
         return 1.0
+    
     at = _norm_text(applicant_text)
+    if not at:
+        return 0.0
+    
+    # Try fuzzy matching first
+    global _USE_ST
+    if _USE_ST:
+        try:
+            model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+            # Create embeddings for applicant text and each must-have skill
+            app_emb = model.encode([at], normalize_embeddings=True)
+            must_have_embs = model.encode(must_haves, normalize_embeddings=True)
+            
+            # Calculate cosine similarities
+            similarities = cosine_similarity(app_emb, must_have_embs)[0]
+            
+            # Count matches with cosine >= 0.6
+            hits = sum(1 for sim in similarities if sim >= 0.6)
+            return hits / max(len(must_haves), 1)
+        except Exception:
+            _USE_ST = False  # fallback to exact matching
+    
+    # Fallback to exact substring matching
     hits = 0
     for m in must_haves:
         if not m:
@@ -176,6 +207,42 @@ def market_load_penalty(active_apps_last_24h) -> float:
         return float(math.log1p(max(0.0, x)))  # log(1+x)
     except Exception:
         return 0.0
+
+
+def cluster_jobs_and_find_nearest(A, J, n_clusters=None):
+    """
+    Cluster jobs using K-means and find nearest cluster for each applicant.
+    Returns: (job_clusters, applicant_nearest_clusters, cluster_distances)
+    """
+    global _USE_KMEANS
+    if not _USE_KMEANS:
+        # Fallback: no clustering, return empty arrays
+        return np.zeros(len(J)), np.zeros(len(A)), np.zeros(len(A))
+    
+    try:
+        n_jobs = len(J)
+        if n_jobs < 2:
+            return np.zeros(n_jobs), np.zeros(len(A)), np.zeros(len(A))
+        
+        # Determine number of clusters (default to sqrt(n_jobs), min 2, max 20)
+        if n_clusters is None:
+            n_clusters = max(2, min(20, int(np.sqrt(n_jobs))))
+        
+        # Cluster jobs
+        kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
+        job_clusters = kmeans.fit_predict(J)
+        
+        # Find nearest cluster for each applicant
+        cluster_centers = kmeans.cluster_centers_
+        similarities = cosine_similarity(A, cluster_centers)
+        applicant_nearest_clusters = np.argmax(similarities, axis=1)
+        cluster_distances = np.max(similarities, axis=1)
+        
+        return job_clusters, applicant_nearest_clusters, cluster_distances
+        
+    except Exception as e:
+        print(f"Warning: K-means clustering failed: {e}")
+        return np.zeros(len(J)), np.zeros(len(A)), np.zeros(len(A))
 
 
 def targeting_boost(applicant_row, job_row) -> float:
@@ -261,7 +328,11 @@ def main():
     A, J = make_pair_embeddings(app_texts, job_texts)
     COS = cosine_sim_matrix(A, J)  # shape: (n_applicants, n_jobs)
 
+    # K-means clustering for job matching
+    job_clusters, applicant_nearest_clusters, cluster_distances = cluster_jobs_and_find_nearest(A, J)
+
     rows = []
+    detailed_rows = []  # For top_matches_detailed.csv
     for ai, arow in apps.iterrows():
         # applicant base fields
         a_id = arow.get("id")
@@ -274,6 +345,11 @@ def main():
         best_score = -1e9
         best_expl = None
         best_j = None
+        best_ji = None
+
+        # Get applicant's nearest cluster
+        nearest_cluster = applicant_nearest_clusters[ai] if len(applicant_nearest_clusters) > ai else -1
+        cluster_distance = cluster_distances[ai] if len(cluster_distances) > ai else 0.0
 
         for ji, jrow in jobs.iterrows():
             # Subscores
@@ -301,7 +377,39 @@ def main():
             
             # Apply targeting boost after calibration (additive)
             target_boost = targeting_boost(arow, jrow)
-            score = base_score + target_boost
+            
+            # Add cluster-based boost
+            job_cluster = job_clusters[ji] if len(job_clusters) > ji else -1
+            cluster_boost = 0.0
+            if nearest_cluster >= 0 and job_cluster == nearest_cluster:
+                cluster_boost = min(0.05, cluster_distance * 0.05)  # Small boost for same cluster
+            
+            score = base_score + target_boost + cluster_boost
+
+            # Store detailed information for all matches
+            detailed_rows.append({
+                "applicant_id": a_id,
+                "applicant_name": a_name,
+                "applicant_email": a_email,
+                "job_id": jrow.get("id"),
+                "employer": jrow.get("employer_name"),
+                "job_title": jrow.get("title"),
+                "job_city": jrow.get("city"),
+                "job_pay_min": jrow.get("pay_min"),
+                "job_pay_max": jrow.get("pay_max"),
+                "score": round(float(score), 4),
+                "sem_score": round(float(sem), 4),
+                "req_score": round(float(req), 4),
+                "pay_score": round(float(pay), 4),
+                "fast_reply_score": round(float(fast), 4),
+                "load_penalty": round(float(load_pen), 4),
+                "interview_score": round(float(interview), 4),
+                "target_boost": round(float(target_boost), 4),
+                "cluster_boost": round(float(cluster_boost), 4),
+                "job_cluster": int(job_cluster),
+                "applicant_nearest_cluster": int(nearest_cluster),
+                "cluster_distance": round(float(cluster_distance), 4)
+            })
 
             if score > best_score:
                 best_score = score
@@ -355,6 +463,13 @@ def main():
     out_df = pd.DataFrame(rows).sort_values("score", ascending=False)
     out_df.to_csv(args.out, index=False)
     print(f"Wrote {args.out} with {len(out_df)} matches.")
+    
+    # Write detailed subscores CSV
+    detailed_df = pd.DataFrame(detailed_rows).sort_values(["applicant_id", "score"], ascending=[True, False])
+    detailed_out = "top_matches_detailed.csv"
+    detailed_df.to_csv(detailed_out, index=False)
+    print(f"Wrote {detailed_out} with {len(detailed_df)} detailed matches.")
+    
     if len(out_df) > 0:
         print(out_df.head(10).to_string(index=False))
 

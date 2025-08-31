@@ -14,15 +14,13 @@ def process_role_fields(row):
     role = str(row.get('role', '')).strip()
     role_custom = str(row.get('role_custom', '')).strip()
     
-    # If role is 'Other' and role_custom is provided, use role_custom
-    if role == 'Other' and role_custom and role_custom != 'nan':
+    # Priority order: role_custom > role > empty string
+    if role_custom and role_custom != 'nan' and role_custom != '':
         return role_custom
-    # Otherwise use the selected role
-    elif role and role != 'nan' and role != 'Other':
+    elif role and role != 'nan' and role != '' and role != 'Other':
         return role
-    # Fallback to inferring from skills if no role specified
     else:
-        return None
+        return ""
 
 def infer_target_role_from_skills(skills_text, skills_tags):
     """Fallback: infer target role from skills if not specified"""
@@ -56,15 +54,8 @@ def process_applicants_data(input_file='applicants.csv', output_file=None):
         
         # Process each row
         for idx, row in df.iterrows():
-            # First, try to get target_role from role/role_custom fields
+            # Get target_role from role/role_custom fields (returns role_custom or role or "")
             target_role = process_role_fields(row)
-            
-            # If no role specified, infer from skills
-            if not target_role:
-                target_role = infer_target_role_from_skills(
-                    row.get('skills_text', ''),
-                    row.get('skills_tags', '')
-                )
             
             # Update the target_role field
             df.at[idx, 'target_role'] = target_role
