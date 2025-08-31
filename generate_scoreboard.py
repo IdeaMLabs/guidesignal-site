@@ -27,6 +27,7 @@ def generate_scoreboard():
         "pledged_employers": 0,
         "open_tickets": 0,
         "acks_pending": 0,
+        "oldest_ticket_hours": 0.0,
         "slots_today": 5,  # Default remaining intro slots
         "next_review": "10:00 / 16:00 ET",  # Default review times
         "last24_apps": 0,
@@ -155,6 +156,31 @@ def generate_scoreboard():
         else:
             metrics["acks_pending"] = 0
         
+        # Calculate oldest ticket hours from triage.csv
+        if os.path.exists('triage.csv'):
+            try:
+                triage_df = pd.read_csv('triage.csv')
+                if 'received_date' in triage_df.columns and 'status' in triage_df.columns:
+                    open_tickets = triage_df[triage_df['status'] == 'OPEN']
+                    if not open_tickets.empty:
+                        # Convert to datetime and calculate ages
+                        received_dates = pd.to_datetime(open_tickets['received_date'], errors='coerce')
+                        now = datetime.now()
+                        ages_hours = [(now - date).total_seconds() / 3600 for date in received_dates if pd.notna(date)]
+                        if ages_hours:
+                            metrics["oldest_ticket_hours"] = float(max(ages_hours))
+                        else:
+                            metrics["oldest_ticket_hours"] = 0.0
+                    else:
+                        metrics["oldest_ticket_hours"] = 0.0
+                else:
+                    metrics["oldest_ticket_hours"] = 0.0
+            except Exception as e:
+                print(f"Warning: Could not calculate oldest ticket hours: {e}")
+                metrics["oldest_ticket_hours"] = 0.0
+        else:
+            metrics["oldest_ticket_hours"] = 0.0
+        
         # Calculate intro capacity and review times
         current_hour = datetime.now().hour
         
@@ -192,6 +218,7 @@ def generate_scoreboard():
         print(f"  Pledged employers: {metrics['pledged_employers']}")
         print(f"  Open tickets: {metrics['open_tickets']}")
         print(f"  Pending acks: {metrics['acks_pending']}")
+        print(f"  Oldest ticket: {metrics['oldest_ticket_hours']:.1f} hours")
         print(f"  Slots today: {metrics['slots_today']}")
         print(f"  Next review: {metrics['next_review']}")
         

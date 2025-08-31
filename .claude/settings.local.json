@@ -6,7 +6,9 @@
       "Bash(git push:*)",
       "Bash(cmd /c:*)",
       "Bash(.\\.venv\\Scripts\\python.exe make_public_jobs.py:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(schtasks:*)",
+      "Bash(powershell:*)"
     ],
     "deny": [],
     "ask": []
