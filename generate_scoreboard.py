@@ -25,6 +25,7 @@ def generate_scoreboard():
         "interview_rate_7d": 0,
         "certified_jobs": 0,
         "pledged_employers": 0,
+        "open_tickets": 0,
         "slots_today": 5,  # Default remaining intro slots
         "next_review": "10:00 / 16:00 ET",  # Default review times
         "last24_apps": 0,
@@ -118,6 +119,21 @@ def generate_scoreboard():
                 print(f"Warning: Could not read public_jobs.csv for pledged employers count: {e}")
                 metrics["pledged_employers"] = 0
         
+        # Count open tickets from triage.csv
+        if os.path.exists('triage.csv'):
+            try:
+                triage_df = pd.read_csv('triage.csv')
+                if 'status' in triage_df.columns:
+                    open_tickets = len(triage_df[triage_df['status'] == 'OPEN'])
+                    metrics["open_tickets"] = int(open_tickets)
+                else:
+                    metrics["open_tickets"] = 0
+            except Exception as e:
+                print(f"Warning: Could not read triage.csv for open tickets count: {e}")
+                metrics["open_tickets"] = 0
+        else:
+            metrics["open_tickets"] = 0
+        
         # Calculate intro capacity and review times
         current_hour = datetime.now().hour
         
@@ -153,6 +169,7 @@ def generate_scoreboard():
         print(f"  7d interview rate: {metrics['interview_rate_7d']}%")
         print(f"  Certified jobs: {metrics['certified_jobs']}")
         print(f"  Pledged employers: {metrics['pledged_employers']}")
+        print(f"  Open tickets: {metrics['open_tickets']}")
         print(f"  Slots today: {metrics['slots_today']}")
         print(f"  Next review: {metrics['next_review']}")
         
