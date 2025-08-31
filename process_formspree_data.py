@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Process form submissions from Formspree and update applicants.csv.
+Process form submissions from Formspree and update applicants.csv and events.csv.
 Handles role and role_custom fields to set target_role.
+Processes outcome form submissions to update interview/hire status.
 """
 
 import pandas as pd
@@ -142,6 +143,96 @@ def process_jobs_data(input_file='jobs.csv', output_file=None):
     except Exception as e:
         print(f"Error processing jobs data: {e}")
         return False
+
+def process_outcome_form_submission(form_data):
+    """Process an outcome form submission and update events.csv"""
+    try:
+        event_id = form_data.get('event_id', '').strip()
+        if not event_id:
+            print("Error: No event_id provided in outcome form")
+            return False
+        
+        # Load events.csv
+        events_file = 'events.csv'
+        if not os.path.exists(events_file):
+            print(f"Error: {events_file} not found")
+            return False
+            
+        df = pd.read_csv(events_file)
+        
+        # Find the row with matching event_id
+        if 'event_id' not in df.columns:
+            print("Error: event_id column not found in events.csv")
+            return False
+            
+        matching_rows = df[df['event_id'] == event_id]
+        if len(matching_rows) == 0:
+            print(f"Warning: No event found with ID {event_id}")
+            return False
+            
+        if len(matching_rows) > 1:
+            print(f"Warning: Multiple events found with ID {event_id}, updating first match")
+        
+        # Get the index of the first matching row
+        idx = matching_rows.index[0]
+        
+        # Extract outcome data
+        outcome = form_data.get('outcome', '').strip()
+        when = form_data.get('when', '').strip()
+        notes = form_data.get('notes', '').strip()
+        
+        # Add columns if they don't exist
+        if 'interview' not in df.columns:
+            df['interview'] = 0
+        if 'hired' not in df.columns:
+            df['hired'] = 0
+        if 'outcome_when' not in df.columns:
+            df['outcome_when'] = ''
+        if 'outcome_notes' not in df.columns:
+            df['outcome_notes'] = ''
+        if 'outcome_updated' not in df.columns:
+            df['outcome_updated'] = ''
+        
+        # Update the event based on outcome
+        if outcome == 'interviewed':
+            df.at[idx, 'interview'] = 1
+            df.at[idx, 'hired'] = 0  # Reset hired if previously set
+        elif outcome == 'hired':
+            df.at[idx, 'interview'] = 1  # Hired implies interviewed
+            df.at[idx, 'hired'] = 1
+        elif outcome == 'not_a_fit':
+            df.at[idx, 'interview'] = 0
+            df.at[idx, 'hired'] = 0
+        
+        # Update additional fields
+        df.at[idx, 'outcome_when'] = when
+        df.at[idx, 'outcome_notes'] = notes
+        df.at[idx, 'outcome_updated'] = datetime.now().isoformat()
+        
+        # Save updated events.csv
+        df.to_csv(events_file, index=False)
+        
+        print(f"Updated event {event_id}: outcome={outcome}")
+        return True
+        
+    except Exception as e:
+        print(f"Error processing outcome form: {e}")
+        return False
+
+def process_formspree_data(form_data):
+    """Main function to process different types of Formspree submissions"""
+    form_type = form_data.get('form_type', '').strip()
+    
+    if form_type == 'outcome':
+        return process_outcome_form_submission(form_data)
+    elif form_type == 'job':
+        # Handle job posting forms (if needed in the future)
+        print("Job form processing not implemented in this function")
+        return False
+    else:
+        # Default: treat as applicant form (backward compatibility)
+        print("Processing as applicant form (no form_type specified)")
+        return True
 
 if __name__ == '__main__':
     # Process both applicants and jobs data

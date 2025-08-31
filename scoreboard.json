@@ -1,15 +1,17 @@
 {
   "median_reply_hours_24h": 0,
   "reply_rate_24h": 0,
-  "interview_rate_7d": 0.0,
+  "interview_rate_7d": 33.3,
   "certified_jobs": 0,
   "pledged_employers": 2,
+  "open_tickets": 2,
+  "acks_pending": 0,
+  "oldest_ticket_hours": 2.567958408611111,
+  "intro_interview_rate": 33.3,
+  "intro_hire_rate": 0.0,
   "slots_today": 3,
   "next_review": "10:00 / 16:00 ET",
   "last24_apps": 0,
   "last24_replied": 0,
-  "last_updated": "2025-08-31T08:47:51.179312",
-  "open_tickets": 2,
-  "acks_pending": 0,
-  "oldest_ticket_hours": 2.3516148219444446
+  "last_updated": "2025-08-31T09:00:49.998211"
 }

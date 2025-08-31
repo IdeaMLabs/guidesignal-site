@@ -28,6 +28,8 @@ def generate_scoreboard():
         "open_tickets": 0,
         "acks_pending": 0,
         "oldest_ticket_hours": 0.0,
+        "intro_interview_rate": 0.0,
+        "intro_hire_rate": 0.0,
         "slots_today": 5,  # Default remaining intro slots
         "next_review": "10:00 / 16:00 ET",  # Default review times
         "last24_apps": 0,
@@ -181,6 +183,36 @@ def generate_scoreboard():
         else:
             metrics["oldest_ticket_hours"] = 0.0
         
+        # Calculate intro→interview and intro→hire rates from events.csv
+        if os.path.exists('events.csv'):
+            try:
+                events_df = pd.read_csv('events.csv')
+                if 'interview' in events_df.columns and 'hired' in events_df.columns:
+                    # Count total intros (any row in events.csv represents an introduction)
+                    total_intros = len(events_df)
+                    
+                    if total_intros > 0:
+                        # Count successful interviews and hires
+                        interviews = events_df['interview'].sum() if events_df['interview'].notna().any() else 0
+                        hires = events_df['hired'].sum() if events_df['hired'].notna().any() else 0
+                        
+                        # Calculate percentages
+                        metrics["intro_interview_rate"] = round((interviews / total_intros) * 100, 1)
+                        metrics["intro_hire_rate"] = round((hires / total_intros) * 100, 1)
+                    else:
+                        metrics["intro_interview_rate"] = 0.0
+                        metrics["intro_hire_rate"] = 0.0
+                else:
+                    metrics["intro_interview_rate"] = 0.0
+                    metrics["intro_hire_rate"] = 0.0
+            except Exception as e:
+                print(f"Warning: Could not calculate intro rates: {e}")
+                metrics["intro_interview_rate"] = 0.0
+                metrics["intro_hire_rate"] = 0.0
+        else:
+            metrics["intro_interview_rate"] = 0.0
+            metrics["intro_hire_rate"] = 0.0
+        
         # Calculate intro capacity and review times
         current_hour = datetime.now().hour
         
@@ -219,6 +251,8 @@ def generate_scoreboard():
         print(f"  Open tickets: {metrics['open_tickets']}")
         print(f"  Pending acks: {metrics['acks_pending']}")
         print(f"  Oldest ticket: {metrics['oldest_ticket_hours']:.1f} hours")
+        print(f"  Intro-Interview rate: {metrics['intro_interview_rate']:.1f}%")
+        print(f"  Intro-Hire rate: {metrics['intro_hire_rate']:.1f}%")
         print(f"  Slots today: {metrics['slots_today']}")
         print(f"  Next review: {metrics['next_review']}")
         
