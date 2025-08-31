@@ -1,1 +1,4 @@
-employer,job_title,job_city,job_pay_min,job_pay_max,musts,nice,fast_reply_certified,featured,job_status
+employer,job_title,job_city,job_pay_min,job_pay_max,musts,nice,fast_reply_certified,featured,job_status,pledged_48h
+Northstar MSP,Help Desk Technician,Worcester,21,26,"help desk, windows, ticketing","o365, zendesk, azure",False,False,active,True
+LogiCo,Warehouse Associate,Shrewsbury,18,22,"warehouse, forklift","rf scanner, sap",False,False,active,False
+DataHands,Support Analyst (SQL + CS),Remote,24,30,"sql, support","excel, python",False,False,active,True

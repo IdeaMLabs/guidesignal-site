@@ -125,6 +125,28 @@
             letter-spacing: 0.5px;
         }
 
+        .pledge-48h-badge {
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .pledged-counter {
+            display: inline-block;
+            margin-left: 15px;
+            color: #28a745;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
         .job-title {
             font-size: 24px;
             font-weight: 500;
@@ -238,7 +260,7 @@
                 <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo">
             </div>
             <h1>Fast-Reply Jobs</h1>
-            <p class="subtitle">Employers certified for quick responses</p>
+            <p class="subtitle">Employers certified for quick responses <span id="pledged-counter" class="pledged-counter"></span></p>
             <a href="index.html" class="nav-link">← Back to Home</a>
             <a href="how.html" class="nav-link">How it Works</a>
             <a href="faq.html" class="nav-link">FAQ</a>
@@ -340,6 +362,7 @@
             return `
                 <div class="job-card">
                     <div class="fast-reply-badge">Fast-Reply Certified</div>
+                    ${job.pledged_48h ? '<div class="pledge-48h-badge">48h Reply Pledge</div>' : ''}
                     <h3 class="job-title">${job.job_title}</h3>
                     <div class="job-employer">${job.employer}</div>
                     <div class="job-location">📍 ${job.job_city}</div>
@@ -380,6 +403,15 @@
                 } else {
                     containerEl.innerHTML = certifiedJobs.map(createJobCard).join('');
                     containerEl.style.display = 'grid';
+                }
+
+                // Update pledged employers counter
+                const pledgedCount = jobs.filter(job => 
+                    job.pledged_48h === 'True' || job.pledged_48h === 'true' || job.pledged_48h === true
+                ).length;
+                const counterEl = document.getElementById('pledged-counter');
+                if (counterEl && pledgedCount > 0) {
+                    counterEl.textContent = `• Pledged employers: ${pledgedCount}`;
                 }
 
             } catch (error) {
