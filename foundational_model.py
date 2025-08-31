@@ -34,7 +34,9 @@
 
 
 import argparse
+import json
 import math
+import os
 import sys
 from typing import List, Tuple
 
@@ -56,6 +58,38 @@ try:
     _USE_KMEANS = True
 except Exception:
     _USE_KMEANS = False
+
+def load_weights():
+    """Load scoring weights from weights.json if available, otherwise use defaults"""
+    default_weights = {
+        'sem_weight': 0.05,      # Semantic similarity (was 0.05)
+        'req_weight': 0.30,      # Required skills (was 0.30) 
+        'pay_weight': 0.05,      # Pay fit (was 0.05)
+        'fast_reply_weight': 0.35, # Fast reply (was 0.35)
+        'load_penalty_weight': 0.05, # Load penalty (was 0.05)
+        'interview_weight': 0.25  # Interview proxy (was 0.25)
+    }
+    
+    if os.path.exists('weights.json'):
+        try:
+            with open('weights.json', 'r') as f:
+                weights_data = json.load(f)
+            
+            if 'weights' in weights_data:
+                learned_weights = weights_data['weights']
+                print(f"Loaded learned weights from weights.json")
+                
+                # Use learned weights, fallback to defaults for missing keys
+                weights = {}
+                for key in default_weights:
+                    weights[key] = learned_weights.get(key, default_weights[key])
+                
+                return weights
+        except Exception as e:
+            print(f"Error loading weights.json: {e}, using defaults")
+    
+    print("Using default scoring weights")
+    return default_weights
 
 
 def _norm_text(x: str) -> str:
@@ -299,6 +333,9 @@ def main():
     ap.add_argument("--out", default="top_matches.csv")
     args = ap.parse_args()
 
+    # Load scoring weights (learned or default)
+    weights = load_weights()
+
     apps = pd.read_csv(args.applicants)
     jobs = pd.read_csv(args.jobs)
 
@@ -364,15 +401,14 @@ def main():
             # Prioritize must-haves over semantic similarity
             interview = max(0.0, min(1.0, 0.8 * req + 0.2 * sem))
 
-            # Final score (transparent weights) - apply base scoring first
-            # Prioritize skills + must-haves over title matching (semantic similarity as soft signal)
+            # Final score using learned weights
             base_score = (
-                0.35 * fast +
-                0.25 * interview +
-                0.30 * req +     # Increased from 0.20 - prioritize must-have skills
-                0.05 * sem +     # Decreased from 0.10 - title as soft signal only
-                0.05 * pay -
-                0.05 * load_pen
+                weights['fast_reply_weight'] * fast +
+                weights['interview_weight'] * interview +
+                weights['req_weight'] * req +
+                weights['sem_weight'] * sem +
+                weights['pay_weight'] * pay -
+                weights['load_penalty_weight'] * load_pen
             )
             
             # Apply targeting boost after calibration (additive)
