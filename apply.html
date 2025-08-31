@@ -57,7 +57,7 @@
       <input type="hidden" name="ref">
       <label style="display:none">Leave this empty <input name="website"></label>
       <label><input type="checkbox" name="consent" required> I agree to the <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.</label>
-      <button>Submit</button>
+      <button type="submit">Submit</button>
       <p id="formNote"><small>We'll email you when we've found a fast-reply match.</small></p>
     </form>
   </div>
@@ -83,7 +83,7 @@
   const f = document.getElementById('fastReplyForm');
   f.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const btn = f.querySelector('button[type="submit"]');
+    const btn = f.querySelector('button');
     btn.disabled = true; btn.textContent = 'Sending…';
     const res = await fetch(f.action, { method: 'POST', body: new FormData(f), headers: { 'Accept': 'application/json' }});
     if (res.ok) { f.innerHTML = '<h3>Thanks — you're in.</h3><p><small>We'll route your one best application ASAP.</small></p>'; }
