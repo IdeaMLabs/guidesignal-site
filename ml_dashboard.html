@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Dashboard - GuideSignal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #1e3a5f;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #1e3a5f;
+            margin-bottom: 10px;
+        }
+
+        .header .nav {
+            margin-top: 20px;
+        }
+
+        .header .nav a {
+            color: #4a9eff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+        }
+
+        .header .nav a:hover {
+            text-decoration: underline;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e9ecef;
+        }
+
+        .card h2 {
+            color: #1e3a5f;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+
+        .ml-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .ml-status.learning {
+            background: #28a745;
+            color: white;
+        }
+
+        .ml-status.default {
+            background: #6c757d;
+            color: white;
+        }
+
+        .weights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .weight-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .weight-label {
+            font-size: 11px;
+            color: #6c757d;
+            margin-bottom: 4px;
+        }
+
+        .weight-value {
+            font-weight: 600;
+            color: #1e3a5f;
+            font-size: 14px;
+        }
+
+        .learning-info {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            border: 1px solid #4a9eff;
+            color: #1565c0;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>GuideSignal ML Dashboard</h1>
+            <p>Machine Learning Metrics & Performance Tracking</p>
+            <div class="nav">
+                <a href="index.html">← Home</a>
+                <a href="jobs.html">Fast-Reply Jobs</a>
+                <a href="dashboard.html">A/B Dashboard</a>
+                <a href="how.html">How it Works</a>
+                <a href="faq.html">FAQ</a>
+            </div>
+        </div>
+
+        <div class="learning-info" id="learning-summary">
+            Loading ML status...
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Training Status Card -->
+            <div class="card">
+                <h2>📊 Training Status</h2>
+                <div class="metric-row">
+                    <span class="metric-label">Training Events</span>
+                    <span class="metric-value" id="training-events">-</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Last Trained</span>
+                    <span class="metric-value" id="last-trained">-</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">ML Status</span>
+                    <span class="metric-value">
+                        <span class="ml-status" id="ml-status">Loading</span>
+                    </span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Min Events for Training</span>
+                    <span class="metric-value">20</span>
+                </div>
+            </div>
+
+            <!-- Performance Metrics Card -->
+            <div class="card">
+                <h2>📈 Performance Metrics</h2>
+                <div class="metric-row">
+                    <span class="metric-label">Intro→Interview Rate</span>
+                    <span class="metric-value" id="intro-interview-rate">-%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Intro→Hire Rate</span>
+                    <span class="metric-value" id="intro-hire-rate">-%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Total Introductions</span>
+                    <span class="metric-value" id="total-intros">-</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Successful Outcomes</span>
+                    <span class="metric-value" id="successful-outcomes">-</span>
+                </div>
+            </div>
+
+            <!-- Current Weights Card -->
+            <div class="card">
+                <h2>⚖️ Scoring Weights</h2>
+                <div class="weights-grid" id="weights-grid">
+                    <div class="weight-item">
+                        <div class="weight-label">Semantic</div>
+                        <div class="weight-value" id="weight-sem">-</div>
+                    </div>
+                    <div class="weight-item">
+                        <div class="weight-label">Required</div>
+                        <div class="weight-value" id="weight-req">-</div>
+                    </div>
+                    <div class="weight-item">
+                        <div class="weight-label">Pay</div>
+                        <div class="weight-value" id="weight-pay">-</div>
+                    </div>
+                    <div class="weight-item">
+                        <div class="weight-label">Fast Reply</div>
+                        <div class="weight-value" id="weight-fr">-</div>
+                    </div>
+                    <div class="weight-item">
+                        <div class="weight-label">Load Penalty</div>
+                        <div class="weight-value" id="weight-load">-</div>
+                    </div>
+                    <div class="weight-item">
+                        <div class="weight-label">Interview</div>
+                        <div class="weight-value" id="weight-interview">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Health Card -->
+            <div class="card">
+                <h2>🔧 System Health</h2>
+                <div class="metric-row">
+                    <span class="metric-label">Open Tickets</span>
+                    <span class="metric-value" id="open-tickets">-</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Pending Acks</span>
+                    <span class="metric-value" id="pending-acks">-</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Pledged Employers</span>
+                    <span class="metric-value" id="pledged-employers">-</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Last Updated</span>
+                    <span class="metric-value" id="last-updated">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Format date for display
+        function formatDate(isoString) {
+            if (!isoString) return 'Never';
+            try {
+                const date = new Date(isoString);
+                return date.toLocaleString();
+            } catch {
+                return 'Invalid date';
+            }
+        }
+
+        // Format weight as percentage
+        function formatWeight(weight) {
+            return (weight * 100).toFixed(1) + '%';
+        }
+
+        // Load and display ML dashboard data
+        async function loadDashboard() {
+            try {
+                const response = await fetch(`scoreboard.json?ts=${Date.now()}`);
+                if (!response.ok) throw new Error('Failed to fetch data');
+                
+                const data = await response.json();
+                
+                // Training Status
+                document.getElementById('training-events').textContent = data.training_events || 0;
+                document.getElementById('last-trained').textContent = formatDate(data.last_trained);
+                
+                // ML Status
+                const trainingEvents = data.training_events || 0;
+                const statusEl = document.getElementById('ml-status');
+                if (trainingEvents >= 20) {
+                    statusEl.textContent = 'Learning';
+                    statusEl.className = 'ml-status learning';
+                } else {
+                    statusEl.textContent = 'Default';
+                    statusEl.className = 'ml-status default';
+                }
+                
+                // Performance Metrics  
+                document.getElementById('intro-interview-rate').textContent = (data.intro_interview_rate || 0).toFixed(1) + '%';
+                document.getElementById('intro-hire-rate').textContent = (data.intro_hire_rate || 0).toFixed(1) + '%';
+                
+                // Calculate total intros and successful outcomes
+                const totalIntros = Math.max(1, data.training_events || 1); // Avoid division by zero
+                const successfulOutcomes = Math.round((data.intro_interview_rate || 0) * totalIntros / 100);
+                document.getElementById('total-intros').textContent = totalIntros;
+                document.getElementById('successful-outcomes').textContent = successfulOutcomes;
+                
+                // Weights
+                const weights = data.ml_weights || {};
+                document.getElementById('weight-sem').textContent = formatWeight(weights.sem_weight || 0);
+                document.getElementById('weight-req').textContent = formatWeight(weights.req_weight || 0);
+                document.getElementById('weight-pay').textContent = formatWeight(weights.pay_weight || 0);
+                document.getElementById('weight-fr').textContent = formatWeight(weights.fast_reply_weight || 0);
+                document.getElementById('weight-load').textContent = formatWeight(weights.load_penalty_weight || 0);
+                document.getElementById('weight-interview').textContent = formatWeight(weights.interview_weight || 0);
+                
+                // System Health
+                document.getElementById('open-tickets').textContent = data.open_tickets || 0;
+                document.getElementById('pending-acks').textContent = data.acks_pending || 0;
+                document.getElementById('pledged-employers').textContent = data.pledged_employers || 0;
+                document.getElementById('last-updated').textContent = formatDate(data.last_updated);
+                
+                // Learning Summary
+                const summaryEl = document.getElementById('learning-summary');
+                if (trainingEvents >= 20) {
+                    summaryEl.innerHTML = `
+                        <strong>Learning:</strong> ${trainingEvents} labeled outcomes • 
+                        Last trained: ${formatDate(data.last_trained)} • 
+                        Weights: Sem ${formatWeight(weights.sem_weight || 0)}, Req ${formatWeight(weights.req_weight || 0)}, 
+                        Pay ${formatWeight(weights.pay_weight || 0)}, FR ${formatWeight(weights.fast_reply_weight || 0)}
+                    `;
+                } else {
+                    const needed = 20 - trainingEvents;
+                    summaryEl.innerHTML = `
+                        <strong>Learning:</strong> ${trainingEvents} labeled outcomes (need ${needed} more for ML training) • 
+                        Using default weights • 
+                        Weights: Sem ${formatWeight(weights.sem_weight || 0)}, Req ${formatWeight(weights.req_weight || 0)}, 
+                        Pay ${formatWeight(weights.pay_weight || 0)}, FR ${formatWeight(weights.fast_reply_weight || 0)}
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                document.getElementById('learning-summary').innerHTML = 'Error loading ML metrics';
+            }
+        }
+
+        // Load dashboard on page load
+        document.addEventListener('DOMContentLoaded', loadDashboard);
+        
+        // Auto-refresh every 30 seconds
+        setInterval(loadDashboard, 30000);
+    </script>
+</body>
+</html>

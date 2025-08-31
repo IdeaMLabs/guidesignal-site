@@ -30,6 +30,9 @@ def generate_scoreboard():
         "oldest_ticket_hours": 0.0,
         "intro_interview_rate": 0.0,
         "intro_hire_rate": 0.0,
+        "training_events": 0,
+        "last_trained": None,
+        "ml_weights": {},
         "slots_today": 5,  # Default remaining intro slots
         "next_review": "10:00 / 16:00 ET",  # Default review times
         "last24_apps": 0,
@@ -213,6 +216,47 @@ def generate_scoreboard():
             metrics["intro_interview_rate"] = 0.0
             metrics["intro_hire_rate"] = 0.0
         
+        # Count training events (events with interview or hire outcomes)
+        if os.path.exists('events.csv'):
+            try:
+                events_df = pd.read_csv('events.csv')
+                if 'interview' in events_df.columns and 'hired' in events_df.columns:
+                    # Count events that have been labeled (interviewed=1 OR hired=1)
+                    training_mask = ((events_df['interview'] == 1) | (events_df['hired'] == 1))
+                    training_count = training_mask.sum()
+                    metrics["training_events"] = int(training_count)
+                else:
+                    metrics["training_events"] = 0
+            except Exception as e:
+                print(f"Warning: Could not count training events: {e}")
+                metrics["training_events"] = 0
+        else:
+            metrics["training_events"] = 0
+        
+        # Get last trained timestamp and weights from weights.json
+        if os.path.exists('weights.json'):
+            try:
+                # Get file modification time
+                mtime = os.path.getmtime('weights.json')
+                last_trained_dt = datetime.fromtimestamp(mtime)
+                metrics["last_trained"] = last_trained_dt.isoformat()
+                
+                # Load weights
+                with open('weights.json', 'r') as f:
+                    weights_data = json.load(f)
+                
+                if 'weights' in weights_data:
+                    metrics["ml_weights"] = weights_data['weights']
+                else:
+                    metrics["ml_weights"] = {}
+            except Exception as e:
+                print(f"Warning: Could not load weights info: {e}")
+                metrics["last_trained"] = None
+                metrics["ml_weights"] = {}
+        else:
+            metrics["last_trained"] = None
+            metrics["ml_weights"] = {}
+        
         # Calculate intro capacity and review times
         current_hour = datetime.now().hour
         
@@ -253,6 +297,8 @@ def generate_scoreboard():
         print(f"  Oldest ticket: {metrics['oldest_ticket_hours']:.1f} hours")
         print(f"  Intro-Interview rate: {metrics['intro_interview_rate']:.1f}%")
         print(f"  Intro-Hire rate: {metrics['intro_hire_rate']:.1f}%")
+        print(f"  Training events: {metrics['training_events']}")
+        print(f"  Last trained: {metrics['last_trained'] or 'Never'}")
         print(f"  Slots today: {metrics['slots_today']}")
         print(f"  Next review: {metrics['next_review']}")
         

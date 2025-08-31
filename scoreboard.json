@@ -6,12 +6,22 @@
   "pledged_employers": 2,
   "open_tickets": 2,
   "acks_pending": 0,
-  "oldest_ticket_hours": 2.952744668333333,
+  "oldest_ticket_hours": 3.214095893611111,
   "intro_interview_rate": 33.3,
   "intro_hire_rate": 0.0,
+  "training_events": 1,
+  "last_trained": "2025-08-31T09:39:04.488099",
+  "ml_weights": {
+    "sem_weight": 0.25,
+    "req_weight": 0.3,
+    "pay_weight": 0.15,
+    "fast_reply_weight": 0.15,
+    "load_penalty_weight": 0.05,
+    "interview_weight": 0.1
+  },
   "slots_today": 3,
   "next_review": "10:00 / 16:00 ET",
   "last24_apps": 0,
   "last24_replied": 0,
-  "last_updated": "2025-08-31T09:23:55.227713"
+  "last_updated": "2025-08-31T09:39:36.094122"
 }
