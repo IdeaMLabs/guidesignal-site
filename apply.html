@@ -34,10 +34,10 @@
       <label>City / ZIP<input name="location" required></label>
       <label>Target role
         <select name="role" onchange="toggleCustomRole()">
-          <option>Help Desk / Desktop Support</option>
-          <option>Warehouse Associate</option>
-          <option>Customer Support</option>
-          <option>Operations / Dispatcher</option>
+          <option value="Help Desk / Desktop Support">Help Desk / Desktop Support</option>
+          <option value="Warehouse Associate">Warehouse Associate</option>
+          <option value="Customer Support">Customer Support</option>
+          <option value="Operations / Dispatcher">Operations / Dispatcher</option>
           <option value="Other">Other (type your role)</option>
         </select>
       </label>
@@ -68,12 +68,16 @@
     const customRoleLabel = document.getElementById('custom-role-label');
     const customRoleInput = document.querySelector('input[name="role_custom"]');
     
+    console.log('toggleCustomRole called, value:', roleSelect.value); // Debug log
+    
     if (roleSelect.value === 'Other') {
+      console.log('Showing custom role input'); // Debug log
       customRoleLabel.style.display = 'block';
       customRoleInput.required = true;
       // Focus the input on mobile devices for better UX
       setTimeout(() => customRoleInput.focus(), 100);
     } else {
+      console.log('Hiding custom role input'); // Debug log
       customRoleLabel.style.display = 'none';
       customRoleInput.required = false;
       customRoleInput.value = '';
