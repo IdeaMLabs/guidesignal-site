@@ -24,6 +24,7 @@ def generate_scoreboard():
         "reply_rate_24h": 0,
         "interview_rate_7d": 0,
         "certified_jobs": 0,
+        "pledged_employers": 0,
         "last24_apps": 0,
         "last24_replied": 0,
         "last_updated": datetime.now().isoformat()
@@ -104,6 +105,17 @@ def generate_scoreboard():
             certified_jobs = jobs_df['fast_reply_certified'].sum()
             metrics["certified_jobs"] = int(certified_jobs)
         
+        # Count pledged employers from public_jobs.csv
+        if os.path.exists('public_jobs.csv'):
+            try:
+                public_jobs_df = pd.read_csv('public_jobs.csv')
+                if 'pledged_48h' in public_jobs_df.columns:
+                    pledged_count = public_jobs_df['pledged_48h'].sum()
+                    metrics["pledged_employers"] = int(pledged_count)
+            except Exception as e:
+                print(f"Warning: Could not read public_jobs.csv for pledged employers count: {e}")
+                metrics["pledged_employers"] = 0
+        
         # Write scoreboard.json
         with open('scoreboard.json', 'w') as f:
             json.dump(metrics, f, indent=2)
@@ -115,6 +127,7 @@ def generate_scoreboard():
         print(f"  24h reply rate: {metrics['reply_rate_24h']}%")
         print(f"  7d interview rate: {metrics['interview_rate_7d']}%")
         print(f"  Certified jobs: {metrics['certified_jobs']}")
+        print(f"  Pledged employers: {metrics['pledged_employers']}")
         
     except Exception as e:
         print(f"Error generating scoreboard: {e}")

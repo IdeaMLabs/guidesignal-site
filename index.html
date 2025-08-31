@@ -471,7 +471,7 @@
 
     <!-- Mini Stats Line -->
     <div class="mini-stats" id="mini-stats">
-        This week: <span id="stat-replies">0</span>/<span id="stat-apps">0</span> replies &lt;24h • Real candidates: <span id="candidateCount">-</span> • Updated: <span id="lastUpdated">-</span>
+        This week: <span id="stat-replies">0</span>/<span id="stat-apps">0</span> replies &lt;24h • Real candidates: <span id="candidateCount">-</span> • Pledged employers: <span id="pledged-employers">0</span> • Updated: <span id="lastUpdated">-</span>
     </div>
 
     <!-- Join CTA (when < 5 candidates) -->
@@ -628,6 +628,7 @@
                 // Update mini stats line
                 document.getElementById('stat-replies').textContent = data.last24_replied || '0';
                 document.getElementById('stat-apps').textContent = data.last24_apps || '0';
+                document.getElementById('pledged-employers').textContent = data.pledged_employers || '0';
                 
             } catch (error) {
                 console.log('Scoreboard data not available:', error.message);
