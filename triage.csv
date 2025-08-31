@@ -1,3 +1,3 @@
-ticket_id,priority,status,received_date,company,roles,openings,name,work_email,urgency,pledge_48h,question,assigned_date,closed_date,notes,subject
-GS-20250830001,HIGH,OPEN,2025-08-31T08:26:45.363942,TechCorp Solutions,"Help Desk Technician, IT Support",2,Sarah Johnson,sarah.johnson@techcorp.com,high,True,Looking for candidates with Windows and ticketing experience,,,,[HIGH] Introduction Request GS-20250830001
-GS-20250830002,NORMAL,OPEN,2025-08-31T06:26:45.363942,Local Business Inc,Customer Support Representative,1,Mike Chen,mike@localbusiness.com,medium,False,Need someone who can start within 2 weeks,,,,[NORMAL] Introduction Request GS-20250830002
+ticket_id,priority,status,received_date,company,roles,openings,name,work_email,urgency,pledge_48h,question,assigned_date,closed_date,notes,subject,ack_sent
+GS-20250830001,HIGH,OPEN,2025-08-31T08:26:45.363942,TechCorp Solutions,"Help Desk Technician, IT Support",2,Sarah Johnson,sarah.johnson@techcorp.com,high,True,Looking for candidates with Windows and ticketing experience,,,,[HIGH] Introduction Request GS-20250830001,2025-08-31T08:35:40.246827
+GS-20250830002,NORMAL,OPEN,2025-08-31T06:26:45.363942,Local Business Inc,Customer Support Representative,1,Mike Chen,mike@localbusiness.com,medium,False,Need someone who can start within 2 weeks,,,,[NORMAL] Introduction Request GS-20250830002,2025-08-31T08:35:40.246827

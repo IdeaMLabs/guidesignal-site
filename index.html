@@ -499,7 +499,7 @@
 
     <!-- Mini Stats Line -->
     <div class="mini-stats" id="mini-stats">
-        This week: <span id="stat-replies">0</span>/<span id="stat-apps">0</span> replies &lt;24h • Real candidates: <span id="candidateCount">-</span> • Pledged employers: <span id="pledged-employers">0</span> • Open requests: <span id="open-tickets">0</span> • Updated: <span id="lastUpdated">-</span>
+        This week: <span id="stat-replies">0</span>/<span id="stat-apps">0</span> replies &lt;24h • Real candidates: <span id="candidateCount">-</span> • Pledged employers: <span id="pledged-employers">0</span> • Open requests: <span id="open-tickets">0</span> • Pending acks: <span id="acks-pending">0</span> • Updated: <span id="lastUpdated">-</span>
     </div>
 
     <!-- Capacity Notice -->
@@ -663,6 +663,7 @@
                 document.getElementById('stat-apps').textContent = data.last24_apps || '0';
                 document.getElementById('pledged-employers').textContent = data.pledged_employers || '0';
                 document.getElementById('open-tickets').textContent = data.open_tickets || '0';
+                document.getElementById('acks-pending').textContent = data.acks_pending || '0';
                 
                 // Update capacity bar
                 const slotsToday = data.slots_today || 0;
