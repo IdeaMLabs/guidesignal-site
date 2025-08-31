@@ -72,6 +72,33 @@ def process_applicants_data(input_file='applicants.csv', output_file=None):
         print(f"Error processing applicants data: {e}")
         return False
 
+def process_job_form_submission(form_data):
+    """Process a job form submission and return a job row"""
+    # Extract pledge information using the specified logic
+    pledge = (form_data.get('reply_pledge_48h','').strip().lower() in {'true','on','1','yes'})
+    
+    row = {
+        'id': f"J{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}",  # Generate unique ID
+        'employer_name': form_data.get('company', ''),
+        'title': form_data.get('job_title', ''),
+        'city': form_data.get('job_city', ''),
+        'pay_min': form_data.get('job_pay_min', 0),
+        'pay_max': form_data.get('job_pay_max', 0),
+        'must_have_skills': form_data.get('musts', '').replace(',', ';'),
+        'nice_to_have': form_data.get('nice', '').replace(',', ';'),
+        'description': '',  # Can be derived from other fields if needed
+        'response_fast_prob': 0.8,  # Default fast response probability
+        'response_median_reply_hours': 2.0,  # Default median reply time
+        'active_apps_last_24h': 0,
+        'capacity_per_day': 5,
+        'fast_reply_certified': False,  # Will be updated based on actual performance
+        'contact_email': form_data.get('contact_email', ''),
+        'contact_name': form_data.get('contact_name', ''),
+        'reply_pledge_48h': pledge
+    }
+    
+    return row
+
 def process_jobs_data(input_file='jobs.csv', output_file=None):
     """Process jobs data to add reply_pledge_48h field"""
     
@@ -95,17 +122,12 @@ def process_jobs_data(input_file='jobs.csv', output_file=None):
         if 'reply_pledge_48h' not in df.columns:
             df['reply_pledge_48h'] = False
         
-        # Process each row to ensure reply_pledge_48h is boolean
+        # Process each row to ensure reply_pledge_48h is boolean using the same logic as form processing
         for idx, row in df.iterrows():
-            pledge_value = row.get('reply_pledge_48h', False)
+            pledge_value = str(row.get('reply_pledge_48h', '')).strip().lower()
             
-            # Convert various representations to boolean
-            if isinstance(pledge_value, str):
-                pledge_bool = pledge_value.lower() in ['true', '1', 'yes', 'on', 'checked']
-            elif pd.isna(pledge_value):
-                pledge_bool = False
-            else:
-                pledge_bool = bool(pledge_value)
+            # Use the same logic as form processing: {'true','on','1','yes'}
+            pledge_bool = pledge_value in {'true', 'on', '1', 'yes'}
             
             df.at[idx, 'reply_pledge_48h'] = pledge_bool
         
