@@ -6,93 +6,58 @@
     
     <url>
         <loc>https://ideamlabs.github.io/guidesignal-site/</loc>
-        <lastmod>2024-08-30T10:30:00Z</lastmod>
+        <lastmod>2025-09-01T10:30:00Z</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     
     <url>
         <loc>https://ideamlabs.github.io/guidesignal-site/jobs.html</loc>
-        <lastmod>2024-08-30T10:30:00Z</lastmod>
+        <lastmod>2025-09-01T10:30:00Z</lastmod>
         <changefreq>hourly</changefreq>
         <priority>0.9</priority>
     </url>
     
     <url>
-        <loc>https://ideamlabs.github.io/guidesignal-site/apply.html</loc>
-        <lastmod>2024-08-30T10:30:00Z</lastmod>
-        <changefreq>weekly</changefreq>
+        <loc>https://ideamlabs.github.io/guidesignal-site/how.html</loc>
+        <lastmod>2025-09-01T10:30:00Z</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
         <loc>https://ideamlabs.github.io/guidesignal-site/post.html</loc>
-        <lastmod>2024-08-30T10:30:00Z</lastmod>
+        <lastmod>2025-09-01T10:30:00Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
-        <loc>https://ideamlabs.github.io/guidesignal-site/how.html</loc>
-        <lastmod>2024-08-30T10:30:00Z</lastmod>
-        <changefreq>monthly</changefreq>
+        <loc>https://ideamlabs.github.io/guidesignal-site/apply.html</loc>
+        <lastmod>2025-09-01T10:30:00Z</lastmod>
+        <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     
     <url>
         <loc>https://ideamlabs.github.io/guidesignal-site/faq.html</loc>
-        <lastmod>2024-08-30T10:30:00Z</lastmod>
+        <lastmod>2025-09-01T10:30:00Z</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <url>
-        <loc>https://ideamlabs.github.io/guidesignal-site/cohort.html</loc>
-        <lastmod>2024-08-30T12:00:00Z</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>https://ideamlabs.github.io/guidesignal-site/enhanced_index.html</loc>
-        <lastmod>2024-08-30T12:00:00Z</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-    
-    <url>
-        <loc>https://ideamlabs.github.io/guidesignal-site/advanced_dashboard.html</loc>
-        <lastmod>2024-08-30T10:30:00Z</lastmod>
-        <changefreq>daily</changefreq>
         <priority>0.6</priority>
     </url>
     
     <url>
-        <loc>https://ideamlabs.github.io/guidesignal-site/feature.html</loc>
-        <lastmod>2024-08-30T12:00:00Z</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <url>
         <loc>https://ideamlabs.github.io/guidesignal-site/privacy.html</loc>
-        <lastmod>2024-08-30T10:30:00Z</lastmod>
+        <lastmod>2025-09-01T10:30:00Z</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
     </url>
     
     <url>
         <loc>https://ideamlabs.github.io/guidesignal-site/terms.html</loc>
-        <lastmod>2024-08-30T10:30:00Z</lastmod>
+        <lastmod>2025-09-01T10:30:00Z</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
-    </url>
-    
-    <url>
-        <loc>https://ideamlabs.github.io/guidesignal-site/thanks.html</loc>
-        <lastmod>2024-08-30T10:30:00Z</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.2</priority>
     </url>
     
 </urlset>
