@@ -3,7 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo: 60-Second Hiring Flow - GuideSignal</title>
+    <meta name="description" content="Interactive demo of GuideSignal's complete hiring flow. See how employers post jobs, receive curated candidate intros, and earn Fast-Reply badges.">
+    <meta name="keywords" content="demo, GuideSignal demo, hiring platform demo, fast reply jobs demo">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://ideamlabs.github.io/guidesignal-site/demo.html">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    
+    <title>GuideSignal Demo - Interactive Experience</title>
     <style>
         * {
             margin: 0;
@@ -20,162 +32,47 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 0 20px;
         }
 
         .demo-header {
+            background: linear-gradient(135deg, #1e3a5f, #4a9eff);
+            color: white;
+            padding: 40px 0;
             text-align: center;
-            margin-bottom: 40px;
-            padding: 30px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.15);
         }
 
-        .demo-title {
-            font-size: 32px;
+        .demo-header h1 {
+            font-size: 36px;
             font-weight: 300;
-            color: #1e3a5f;
-            margin-bottom: 10px;
-        }
-
-        .demo-subtitle {
-            font-size: 18px;
-            color: #6c757d;
-            margin-bottom: 20px;
-        }
-
-        .demo-badge {
-            display: inline-block;
-            padding: 8px 16px;
-            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
-            color: white;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .step {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
-            opacity: 0.5;
-            transition: all 0.3s ease;
-        }
-
-        .step.active {
-            opacity: 1;
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(30, 58, 95, 0.15);
-        }
-
-        .step.completed {
-            opacity: 0.8;
-            background: #f8f9fa;
-        }
-
-        .step-number {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            background: #4a9eff;
-            color: white;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 40px;
-            font-weight: 600;
-            margin-right: 15px;
-        }
-
-        .step-number.completed {
-            background: #28a745;
-        }
-
-        .step-title {
-            display: inline-block;
-            font-size: 24px;
-            font-weight: 500;
-            color: #1e3a5f;
-            vertical-align: middle;
-        }
-
-        .step-content {
-            margin-top: 20px;
-            padding-left: 55px;
-        }
-
-        .demo-form {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 12px;
-            margin: 15px 0;
-        }
-
-        .demo-input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #dbe1ea;
-            border-radius: 8px;
             margin-bottom: 15px;
-            font-size: 16px;
+            letter-spacing: -1px;
         }
 
-        .demo-button {
-            background: #1e3a5f;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .demo-button:hover {
-            background: #2c4a6f;
-            transform: translateY(-2px);
-        }
-
-        .demo-button:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .timer {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-weight: 600;
+        .demo-header p {
             font-size: 18px;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-            z-index: 1000;
+            opacity: 0.9;
+            margin-bottom: 25px;
         }
 
-        .success-message {
-            background: linear-gradient(135deg, #e8f5e8, #f0f9ff);
-            border: 2px solid #4ade80;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            color: #166534;
-            text-align: center;
+        .demo-notice {
+            background: linear-gradient(135deg, #fff3cd, #ffeeba);
+            border: 2px solid #ffc107;
+            color: #856404;
+            padding: 12px 20px;
+            border-radius: 8px;
             font-weight: 600;
+            text-align: center;
+            margin: 0 auto;
+            max-width: 400px;
         }
 
         .nav-links {
             text-align: center;
-            margin-bottom: 30px;
+            margin: 20px 0;
         }
 
         .nav-links a {
@@ -189,202 +86,646 @@
             color: #1e3a5f;
         }
 
+        .demo-content {
+            padding: 40px 0;
+        }
+
+        .step-container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+            display: none;
+        }
+
+        .step-container.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
+            color: white;
+            border-radius: 50%;
+            line-height: 50px;
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .step-title {
+            font-size: 28px;
+            font-weight: 500;
+            color: #1e3a5f;
+            margin-bottom: 10px;
+        }
+
+        .step-description {
+            color: #6c757d;
+            font-size: 16px;
+        }
+
+        /* Form Styles */
+        .demo-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #1e3a5f;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #4a9eff;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            background: #1e3a5f;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background: #2c4a6f;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.3);
+        }
+
+        .btn-center {
+            display: block;
+            margin: 30px auto;
+            text-align: center;
+        }
+
+        /* Success Screen Styles */
+        .success-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            font-size: 32px;
+            font-weight: 500;
+            color: #1e3a5f;
+            margin-bottom: 15px;
+        }
+
+        .success-message {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+
+        .schedule-info {
+            background: #e8f5e8;
+            border: 2px solid #28a745;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .schedule-time {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 5px;
+        }
+
+        .schedule-note {
+            color: #495057;
+            font-size: 14px;
+        }
+
+        /* Candidate Card Styles */
+        .candidate-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .candidate-card:hover {
+            border-color: #4a9eff;
+            box-shadow: 0 8px 30px rgba(74, 158, 255, 0.15);
+        }
+
+        .proof-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .candidate-header {
+            margin-bottom: 20px;
+        }
+
+        .candidate-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 8px;
+        }
+
+        .candidate-title {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .candidate-spotlight {
+            background: #f8f9fa;
+            border-left: 4px solid #4a9eff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .spotlight-title {
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 10px;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .skill-tag {
+            background: #e9ecef;
+            color: #495057;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .proof-links {
+            margin: 20px 0;
+        }
+
+        .proof-links a {
+            color: #4a9eff;
+            text-decoration: none;
+            margin-right: 20px;
+            font-weight: 500;
+        }
+
+        .proof-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Job Card Styles */
+        .job-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .job-card:hover {
+            border-color: #4a9eff;
+            box-shadow: 0 8px 30px rgba(74, 158, 255, 0.15);
+        }
+
+        .job-badges {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .fast-reply-badge {
+            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pledge-48h-badge {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .job-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 8px;
+            padding-right: 120px;
+        }
+
+        .job-company {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .job-pay {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 15px;
+        }
+
+        .job-location {
+            color: #495057;
+            margin-bottom: 20px;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1e3a5f;
+            border: 2px solid #4a9eff;
+        }
+
+        .btn-secondary:hover {
+            background: #4a9eff;
+            color: white;
+        }
+
+        .restart-demo {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .restart-demo a {
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .restart-demo a:hover {
+            color: #1e3a5f;
+            text-decoration: underline;
+        }
+
         @media (max-width: 768px) {
-            .container {
-                padding: 20px 10px;
+            .demo-header h1 {
+                font-size: 28px;
             }
             
-            .step {
-                padding: 20px;
+            .step-container {
+                padding: 30px 20px;
             }
             
-            .step-content {
-                padding-left: 0;
-                margin-top: 15px;
+            .form-row {
+                grid-template-columns: 1fr;
             }
             
-            .step-number {
-                display: block;
-                margin: 0 auto 15px;
+            .candidate-card, .job-card {
+                padding: 25px 20px;
             }
             
-            .step-title {
-                display: block;
-                text-align: center;
+            .job-title {
+                padding-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .job-badges {
+                position: relative;
+                top: 0;
+                right: 0;
+                flex-direction: row;
+                margin-bottom: 15px;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="timer" id="timer">60s</div>
-    
-    <div class="container">
-        <div class="nav-links">
-            <a href="index.html">← Home</a>
-            <a href="jobs.html">Fast-Reply Jobs</a>
-            <a href="how.html">How it Works</a>
-            <a href="faq.html">FAQ</a>
+    <header class="demo-header">
+        <div class="container">
+            <h1>GuideSignal Demo</h1>
+            <p>Experience the complete hiring flow in 60 seconds</p>
+            <div class="demo-notice">
+                🎬 Demo — No emails sent
+            </div>
         </div>
-        
-        <div class="demo-header">
-            <h1 class="demo-title">60-Second Hiring Flow Demo</h1>
-            <p class="demo-subtitle">Experience our streamlined process with sample data</p>
-            <div class="demo-badge">Interactive Demo</div>
-        </div>
+    </header>
 
-        <!-- Step 1: Post Role -->
-        <div class="step active" id="step1">
-            <div class="step-number" id="step1-number">1</div>
-            <h2 class="step-title">Post Your Role</h2>
-            <div class="step-content">
-                <p>Let's start by posting a sample role. In the real flow, this takes 30 seconds.</p>
-                <div class="demo-form">
-                    <input type="text" class="demo-input" value="Help Desk Technician" readonly>
-                    <textarea class="demo-input" rows="2" readonly>windows, ticketing, customer service</textarea>
-                    <input type="text" class="demo-input" value="$18-25/hr" readonly>
-                    <input type="email" class="demo-input" value="hiring@techcorp.com" readonly>
-                    <label><input type="checkbox" checked disabled> 48h reply pledge</label>
+    <nav class="nav-links">
+        <a href="index.html">← Home</a>
+        <a href="how.html">How it Works</a>
+        <a href="jobs.html">Fast-Reply Jobs</a>
+        <a href="apply.html">Apply</a>
+        <a href="faq.html">FAQ</a>
+    </nav>
+
+    <main class="demo-content">
+        <div class="container">
+            <!-- Step 1: Post Job Form -->
+            <div class="step-container active" id="step1">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h2 class="step-title">Post Your Role</h2>
+                    <p class="step-description">Tell us what you need: role, must-have skills, and pay range</p>
                 </div>
-                <button class="demo-button" onclick="completeStep(1)">Submit Job Post</button>
-            </div>
-        </div>
 
-        <!-- Step 2: AI Matching -->
-        <div class="step" id="step2">
-            <div class="step-number" id="step2-number">2</div>
-            <h2 class="step-title">AI Finds Matches</h2>
-            <div class="step-content">
-                <p>Our AI instantly scans qualified candidates based on your requirements.</p>
-                <div class="demo-form">
-                    <div style="padding: 20px; background: white; border-radius: 8px; margin: 10px 0;">
-                        <strong>🎯 Matching in progress...</strong><br>
-                        • Scanning 247 candidates<br>
-                        • Skills compatibility: 94%<br>
-                        • Pay range match: ✓<br>
-                        • Location preference: ✓
+                <form class="demo-form" id="jobForm">
+                    <div class="form-group">
+                        <label for="jobTitle">Job Title</label>
+                        <input type="text" id="jobTitle" name="jobTitle" value="Help Desk Technician" readonly>
                     </div>
+
+                    <div class="form-group">
+                        <label for="musts">3-5 Must-Haves</label>
+                        <textarea id="musts" name="musts" rows="3" readonly>help desk experience, windows troubleshooting, ticketing systems</textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="payMin">Pay Min (hourly)</label>
+                            <input type="number" id="payMin" name="payMin" value="18" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="payMax">Pay Max (hourly)</label>
+                            <input type="number" id="payMax" name="payMax" value="25" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Work Email</label>
+                        <input type="email" id="email" name="email" value="hiring@techcorp.com" readonly>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="pledge" name="pledge" checked disabled>
+                        <label for="pledge">48h pledge: We commit to reply to applicants within 48 hours.</label>
+                    </div>
+
+                    <button type="button" class="btn btn-center" onclick="nextStep(2)">Submit Job</button>
+                </form>
+            </div>
+
+            <!-- Step 2: Success & Scheduling -->
+            <div class="step-container" id="step2">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <h2 class="step-title">Job Posted Successfully!</h2>
+                    <p class="step-description">We'll find and send you the best matches</p>
                 </div>
-                <button class="demo-button" onclick="completeStep(2)" disabled id="step2-btn">Finding matches...</button>
-            </div>
-        </div>
 
-        <!-- Step 3: Review Candidates -->
-        <div class="step" id="step3">
-            <div class="step-number" id="step3-number">3</div>
-            <h2 class="step-title">Review Top Matches</h2>
-            <div class="step-content">
-                <p>Review the top 3 candidates selected by our AI.</p>
-                <div class="demo-form">
-                    <div style="background: white; border-radius: 8px; padding: 15px; margin: 10px 0; border-left: 4px solid #4a9eff;">
-                        <strong>Sarah M.</strong> - Help Desk Specialist<br>
-                        <small>3 years exp • Windows, ServiceNow, Active Directory • $19-24/hr</small>
+                <div class="success-screen">
+                    <div class="success-icon">✅</div>
+                    <h3 class="success-title">Thanks — your job is posted.</h3>
+                    <p class="success-message">We'll verify your reply-time pledge and display your <strong>Fast-Reply</strong> badge accordingly.</p>
+                    
+                    <div class="schedule-info">
+                        <div class="schedule-time">Scheduled for 2:30 PM</div>
+                        <div class="schedule-note">We'll send candidate intros at your optimal response time</div>
                     </div>
-                    <div style="background: white; border-radius: 8px; padding: 15px; margin: 10px 0; border-left: 4px solid #4a9eff;">
-                        <strong>Mike R.</strong> - IT Support Technician<br>
-                        <small>2 years exp • Windows, Ticketing, Customer Service • $18-23/hr</small>
-                    </div>
-                    <div style="background: white; border-radius: 8px; padding: 15px; margin: 10px 0; border-left: 4px solid #4a9eff;">
-                        <strong>Lisa K.</strong> - Technical Support<br>
-                        <small>4 years exp • Help Desk, ITIL, Communication • $20-26/hr</small>
-                    </div>
+
+                    <button type="button" class="btn btn-center" onclick="nextStep(3)">Continue to Candidate Intro</button>
                 </div>
-                <button class="demo-button" onclick="completeStep(3)" disabled id="step3-btn">Select candidates to contact</button>
             </div>
-        </div>
 
-        <!-- Step 4: Send Intros -->
-        <div class="step" id="step4">
-            <div class="step-number" id="step4-number">4</div>
-            <h2 class="step-title">Connect & Schedule</h2>
-            <div class="step-content">
-                <p>Candidates are notified and can respond directly to you within 48 hours.</p>
-                <div class="demo-form">
-                    <div style="background: #e8f5e8; border-radius: 8px; padding: 15px; margin: 10px 0;">
-                        <strong>✅ Introductions sent!</strong><br>
-                        • 3 candidates notified<br>
-                        • Expected responses: within 24 hours<br>
-                        • Your 48h reply pledge is active
-                    </div>
+            <!-- Step 3: Candidate Introduction -->
+            <div class="step-container" id="step3">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <h2 class="step-title">Candidate Introduction</h2>
+                    <p class="step-description">Here's your top match with proof of skills</p>
                 </div>
-                <button class="demo-button" onclick="completeStep(4)" disabled id="step4-btn">Complete setup</button>
-            </div>
-        </div>
 
-        <div class="success-message" id="success" style="display: none;">
-            <h3>🎉 Demo Complete!</h3>
-            <p>Total time: <strong><span id="final-time">60</span> seconds</strong></p>
-            <p>In the real flow, you'd now start receiving candidate responses within 48 hours.</p>
-            <div style="margin-top: 20px;">
-                <a href="post.html" class="demo-button" style="margin-right: 10px; text-decoration: none;">Try it for real</a>
-                <a href="index.html" class="demo-button" style="background: #6c757d; text-decoration: none;">Back to home</a>
+                <div class="candidate-card">
+                    <div class="proof-badge">Proof-First</div>
+                    
+                    <div class="candidate-header">
+                        <h3 class="candidate-name">Sarah Chen</h3>
+                        <p class="candidate-title">IT Support Specialist</p>
+                    </div>
+
+                    <div class="candidate-spotlight">
+                        <div class="spotlight-title">📝 Spotlight</div>
+                        <p>5+ years in help desk support with expertise in Windows environments and ITIL processes. Recently led implementation of ServiceNow ticketing system for 200+ users, reducing average resolution time by 40%. Strong communication skills with experience training non-technical staff on new systems and procedures.</p>
+                    </div>
+
+                    <div class="skills-list">
+                        <span class="skill-tag">Help Desk</span>
+                        <span class="skill-tag">Windows 10/11</span>
+                        <span class="skill-tag">ServiceNow</span>
+                        <span class="skill-tag">Active Directory</span>
+                        <span class="skill-tag">ITIL</span>
+                    </div>
+
+                    <div class="proof-links">
+                        <strong>🔗 Proof Links:</strong><br>
+                        <a href="#" onclick="return false;">LinkedIn: ServiceNow Implementation Case Study</a><br>
+                        <a href="#" onclick="return false;">Portfolio: Help Desk Process Documentation</a>
+                    </div>
+
+                    <button type="button" class="btn btn-center" onclick="nextStep(4)">View Job Listing</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Job Card with Badges -->
+            <div class="step-container" id="step4">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <h2 class="step-title">Your Job Listing</h2>
+                    <p class="step-description">How candidates see your Fast-Reply certified position</p>
+                </div>
+
+                <div class="job-card">
+                    <div class="job-badges">
+                        <div class="fast-reply-badge">Fast-Reply Certified</div>
+                        <div class="pledge-48h-badge">48h Reply Pledge</div>
+                    </div>
+                    
+                    <h3 class="job-title">Help Desk Technician</h3>
+                    <div class="job-company">TechCorp Solutions</div>
+                    <div class="job-pay">$18–$25/hr</div>
+                    <div class="job-location">📍 Remote / Austin, TX</div>
+                    
+                    <div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <strong>Must-haves:</strong> help desk experience, windows troubleshooting, ticketing systems
+                    </div>
+
+                    <button type="button" class="btn btn-center">Request intros</button>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="restartDemo()">Restart Demo</button>
+                    <a href="post.html" class="btn">Post Real Job</a>
+                </div>
             </div>
         </div>
+    </main>
+
+    <div class="restart-demo">
+        <a href="#" onclick="restartDemo(); return false;">🔄 Restart Demo</a>
     </div>
 
     <script>
-        let currentStep = 1;
-        let startTime = Date.now();
-        let timerInterval;
-        
-        // Start 60-second timer
-        function startTimer() {
-            timerInterval = setInterval(() => {
-                const elapsed = Math.floor((Date.now() - startTime) / 1000);
-                const remaining = Math.max(0, 60 - elapsed);
-                document.getElementById('timer').textContent = remaining + 's';
-                
-                if (remaining === 0) {
-                    clearInterval(timerInterval);
-                    document.getElementById('timer').textContent = 'Done!';
-                    document.getElementById('timer').style.background = '#28a745';
-                }
-            }, 100);
-        }
-
-        function completeStep(stepNum) {
-            // Mark current step as completed
-            const currentStepEl = document.getElementById(`step${stepNum}`);
-            const currentNumberEl = document.getElementById(`step${stepNum}-number`);
+        function nextStep(stepNumber) {
+            // Hide all steps
+            document.querySelectorAll('.step-container').forEach(step => {
+                step.classList.remove('active');
+            });
             
-            currentStepEl.classList.remove('active');
-            currentStepEl.classList.add('completed');
-            currentNumberEl.classList.add('completed');
-            currentNumberEl.textContent = '✓';
-
-            if (stepNum < 4) {
-                // Activate next step after a delay
-                setTimeout(() => {
-                    const nextStepEl = document.getElementById(`step${stepNum + 1}`);
-                    nextStepEl.classList.add('active');
-                    
-                    // Enable button after another delay
-                    setTimeout(() => {
-                        const nextBtn = document.getElementById(`step${stepNum + 1}-btn`);
-                        if (nextBtn) {
-                            nextBtn.disabled = false;
-                            nextBtn.textContent = stepNum === 1 ? 'Review matches' : 
-                                                stepNum === 2 ? 'Contact selected candidates' : 
-                                                'Finish demo';
-                        }
-                    }, stepNum === 1 ? 3000 : 2000);
-                }, 1000);
-            } else {
-                // Show completion
-                setTimeout(() => {
-                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
-                    document.getElementById('final-time').textContent = elapsed;
-                    document.getElementById('success').style.display = 'block';
-                    clearInterval(timerInterval);
-                    document.getElementById('timer').style.background = '#28a745';
-                    document.getElementById('timer').textContent = 'Complete!';
-                }, 1000);
-            }
+            // Show target step with delay for animation
+            setTimeout(() => {
+                document.getElementById('step' + stepNumber).classList.add('active');
+                // Scroll to top of new step
+                document.getElementById('step' + stepNumber).scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }, 300);
         }
 
-        // Start the demo
-        document.addEventListener('DOMContentLoaded', () => {
-            startTimer();
+        function restartDemo() {
+            // Hide all steps
+            document.querySelectorAll('.step-container').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Show first step
+            setTimeout(() => {
+                document.getElementById('step1').classList.add('active');
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 300);
+        }
+
+        // Prevent form submission
+        document.getElementById('jobForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            nextStep(2);
         });
+
+        // Auto-advance demo for presentation mode (optional)
+        let autoAdvance = false;
+        if (window.location.hash === '#auto') {
+            autoAdvance = true;
+            let currentStep = 1;
+            setInterval(() => {
+                if (currentStep < 4) {
+                    currentStep++;
+                    nextStep(currentStep);
+                } else {
+                    restartDemo();
+                    currentStep = 1;
+                }
+            }, 5000);
+        }
     </script>
 </body>
 </html>
