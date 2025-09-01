@@ -1,7 +1,13 @@
 <!doctype html>
+<html lang="en">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Post a Fast-Reply Job</title>
+<meta name="description" content="Post a job on GuideSignal and get matched with qualified candidates. Commit to fast replies and earn our Fast-Reply Certified badge for better visibility.">
+<meta name="keywords" content="post job, hire talent, fast reply employers, job posting, recruitment">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ideamlabs.github.io/guidesignal-site/post.html">
+<title>Post a Fast-Reply Job - GuideSignal</title>
 <style>
   body{margin:0;background:#F7F9FC;font:15px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#0F172A}
   main{max-width:760px;margin:28px auto;padding:0 16px}
@@ -15,7 +21,8 @@
   button{margin-top:14px;padding:12px 16px;border-radius:12px;border:1px solid #0F172A;background:#0F172A;color:#fff;font-weight:700;cursor:pointer}
   small.note{color:#64748b;display:block;margin-top:10px}
 </style>
-
+</head>
+<body>
 <main>
   <div style="text-align:center;margin-bottom:20px">
     <a href="index.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">← Home</a>
@@ -29,25 +36,28 @@
 
     <form id="jobForm" action="https://formspree.io/f/xvgbzwav" method="POST">
       <!-- Essential fields -->
-      <label>Role
-        <input name="job_title" required placeholder="Help Desk Technician">
+      <label for="job_title">Role
+        <input id="job_title" name="job_title" required placeholder="Help Desk Technician" aria-describedby="job-title-help">
+        <small id="job-title-help" style="color: #64748b;">Enter the job title you're hiring for</small>
       </label>
       
-      <label>3–5 Must-haves
-        <textarea name="musts" rows="3" required placeholder="help desk, windows, ticketing"></textarea>
+      <label for="musts">3–5 Must-haves
+        <textarea id="musts" name="musts" rows="3" required placeholder="help desk, windows, ticketing" aria-describedby="musts-help"></textarea>
+        <small id="musts-help" style="color: #64748b;">List the essential skills and requirements</small>
       </label>
       
       <div class="row">
-        <label>Pay min (hourly)
-          <input type="number" step="0.01" name="job_pay_min" required placeholder="15">
+        <label for="job_pay_min">Pay min (hourly)
+          <input id="job_pay_min" type="number" step="0.01" name="job_pay_min" required placeholder="15" min="0" max="999">
         </label>
-        <label>Pay max (hourly)
-          <input type="number" step="0.01" name="job_pay_max" required placeholder="25">
+        <label for="job_pay_max">Pay max (hourly)
+          <input id="job_pay_max" type="number" step="0.01" name="job_pay_max" required placeholder="25" min="0" max="999">
         </label>
       </div>
       
-      <label>Work email
-        <input type="email" name="contact_email" required placeholder="your.email@company.com" id="contact_email">
+      <label for="contact_email">Work email
+        <input type="email" name="contact_email" required placeholder="your.email@company.com" id="contact_email" aria-describedby="email-help">
+        <small id="email-help" style="color: #64748b;">Use your company email for verification</small>
         <small id="email-warning" style="color: #dc3545; display: none; margin-top: 5px;">Please use your company email</small>
       </label>
       
@@ -113,6 +123,8 @@
     </form>
   </div>
 </main>
+</body>
+</html>
 
 <script>
   // Email domain validation

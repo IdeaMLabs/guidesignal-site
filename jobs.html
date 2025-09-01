@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse fast-reply certified job opportunities at GuideSignal. Employers guaranteed to respond within 48 hours. Find your next role with transparent pay and quick responses.">
+    <meta name="keywords" content="fast reply jobs, certified employers, quick response jobs, job opportunities, hiring, employment">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://ideamlabs.github.io/guidesignal-site/jobs.html">
     <title>Fast-Reply Certified Jobs - GuideSignal</title>
     <style>
         * {
@@ -286,13 +290,13 @@
     <header>
         <div class="container">
             <div class="logo">
-                <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo">
+                <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo - Fast Reply Jobs" width="72" height="72">
             </div>
             <h1>Fast-Reply Jobs</h1>
             <p class="subtitle">Employers certified for quick responses <span id="pledged-counter" class="pledged-counter"></span></p>
-            <a href="index.html" class="nav-link">← Back to Home</a>
-            <a href="how.html" class="nav-link">How it Works</a>
-            <a href="faq.html" class="nav-link">FAQ</a>
+            <a href="index.html" class="nav-link" title="Return to GuideSignal homepage">← Back to Home</a>
+            <a href="how.html" class="nav-link" title="Learn how GuideSignal works">How it Works</a>
+            <a href="faq.html" class="nav-link" title="Frequently asked questions">FAQ</a>
         </div>
     </header>
 
@@ -393,10 +397,18 @@
             `;
         }
 
-        // Load and display jobs
+        // Load and display jobs with improved performance
         async function loadJobs() {
             try {
-                const response = await fetch(`public_jobs.csv?ts=${Date.now()}`);
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+                
+                const response = await fetch(`public_jobs.csv?ts=${Date.now()}`, {
+                    signal: controller.signal,
+                    cache: 'no-cache'
+                });
+                clearTimeout(timeoutId);
+                
                 if (!response.ok) throw new Error('Could not load jobs data');
                 
                 const csvText = await response.text();

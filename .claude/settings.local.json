@@ -8,7 +8,8 @@
       "Bash(.\\.venv\\Scripts\\python.exe make_public_jobs.py:*)",
       "Bash(python:*)",
       "Bash(schtasks:*)",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []

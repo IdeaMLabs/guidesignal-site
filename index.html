@@ -3,6 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GuideSignal connects job seekers with fast-reply employers. Get responses within 48 hours from verified companies. Free for candidates, transparent pay ranges, AI-powered matching.">
+    <meta name="keywords" content="job search, fast reply jobs, hiring platform, AI matching, employment, quick responses, salary transparency">
+    <meta name="author" content="GuideSignal">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ideamlabs.github.io/guidesignal-site/">
+    <meta property="og:title" content="GuideSignal - Professional Hiring Platform">
+    <meta property="og:description" content="GuideSignal connects job seekers with fast-reply employers. Get responses within 48 hours from verified companies.">
+    <meta property="og:image" content="https://ideamlabs.github.io/guidesignal-site/assets/GuideSignalLogo.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://ideamlabs.github.io/guidesignal-site/">
+    <meta property="twitter:title" content="GuideSignal - Professional Hiring Platform">
+    <meta property="twitter:description" content="GuideSignal connects job seekers with fast-reply employers. Get responses within 48 hours from verified companies.">
+    <meta property="twitter:image" content="https://ideamlabs.github.io/guidesignal-site/assets/GuideSignalLogo.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://ideamlabs.github.io/guidesignal-site/">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4a9eff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="GuideSignal">
+    <link rel="apple-touch-icon" href="assets/GuideSignalLogo.png">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    
     <title>GuideSignal - Professional Hiring Platform</title>
     <style>
         * {
@@ -473,6 +510,86 @@
             .section-title {
                 font-size: 28px;
             }
+            
+            .logo {
+                width: 120px;
+                height: 120px;
+                margin-bottom: 20px;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .steps {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            .pricing-cards {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            .mini-stats {
+                font-size: 12px;
+                padding: 6px 0;
+                text-align: left;
+                white-space: nowrap;
+                overflow-x: auto;
+            }
+            
+            .hero-section {
+                padding: 60px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 28px;
+                line-height: 1.2;
+            }
+            
+            .hero-description {
+                font-size: 18px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+            
+            .logo {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .stat-number {
+                font-size: 36px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .mini-stats {
+                font-size: 11px;
+                padding: 5px;
+            }
         }
     </style>
 </head>
@@ -490,7 +607,7 @@
         </div>
         <div class="container">
             <div class="logo">
-                <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo">
+                <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo - Professional Hiring Platform" width="180" height="180">
             </div>
             <h1>GuideSignal</h1>
             <p class="subtitle">Guiding talent to opportunity with precision and speed</p>
@@ -643,7 +760,7 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2024 GuideSignal. Guiding talent to opportunity.</p>
+            <p>&copy; 2025 GuideSignal. Guiding talent to opportunity.</p>
             <p>
                 <a href="privacy.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">Privacy Policy</a>
                 <a href="terms.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">Terms of Service</a>
@@ -656,10 +773,18 @@
     </footer>
 
     <script>
-        // Load and display scoreboard stats
+        // Load and display scoreboard stats with improved error handling
         async function loadScoreboard() {
             try {
-                const response = await fetch(`scoreboard.json?ts=${Date.now()}`);
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+                
+                const response = await fetch(`scoreboard.json?ts=${Date.now()}`, {
+                    signal: controller.signal,
+                    cache: 'no-cache'
+                });
+                clearTimeout(timeoutId);
+                
                 if (!response.ok) throw new Error('Scoreboard data not available');
                 
                 const data = await response.json();
@@ -735,9 +860,17 @@
                 // Keep default placeholder values
             }
             
-            // Load cohort stats
+            // Load cohort stats with timeout
             try {
-                const cohortResponse = await fetch(`public_cohort.csv?ts=${Date.now()}`);
+                const cohortController = new AbortController();
+                const cohortTimeoutId = setTimeout(() => cohortController.abort(), 8000);
+                
+                const cohortResponse = await fetch(`public_cohort.csv?ts=${Date.now()}`, {
+                    signal: cohortController.signal,
+                    cache: 'no-cache'
+                });
+                clearTimeout(cohortTimeoutId);
+                
                 if (cohortResponse.ok) {
                     const csvText = await cohortResponse.text();
                     const lines = csvText.trim().split('\n');
@@ -773,6 +906,40 @@
         
         // Refresh scoreboard every 5 minutes
         setInterval(loadScoreboard, 5 * 60 * 1000);
+    </script>
+
+    <!-- Structured Data / JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "GuideSignal",
+        "description": "Professional hiring platform connecting job seekers with fast-reply employers",
+        "url": "https://ideamlabs.github.io/guidesignal-site/",
+        "logo": "https://ideamlabs.github.io/guidesignal-site/assets/GuideSignalLogo.png",
+        "sameAs": [],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "email": "ideamlabs@gmail.com"
+        },
+        "offers": [
+            {
+                "@type": "Offer",
+                "name": "Job Posting",
+                "description": "Post jobs and connect with qualified candidates",
+                "price": "0",
+                "priceCurrency": "USD"
+            },
+            {
+                "@type": "Offer",
+                "name": "Featured Job Posting",
+                "description": "Premium job posting with priority placement",
+                "price": "25",
+                "priceCurrency": "USD"
+            }
+        ]
+    }
     </script>
 </body>
 </html>
