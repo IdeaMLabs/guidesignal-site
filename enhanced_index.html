@@ -20,28 +20,32 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e3a5f">
     
-    <!-- Preconnect to external resources -->
+    <!-- Critical Resource Preconnects -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="dns-prefetch" href="https://ideamlabs.github.io">
     
+    <!-- Critical CSS First -->
+    <link rel="stylesheet" href="assets/optimized.css">
+    
+    <!-- Font Loading with Performance Optimization -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"></noscript>
+    
+    <!-- Inline Critical CSS for Above-the-fold -->
     <style>
+        /* Critical above-the-fold styles only */
         :root {
             --primary: #1e3a5f;
-            --secondary: #4a9eff;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --error: #ef4444;
+            --primary-500: #4a9eff;
+            --primary-600: #1e3a5f;
             --gray-50: #f9fafb;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-300: #d1d5db;
-            --gray-400: #9ca3af;
-            --gray-500: #6b7280;
             --gray-600: #4b5563;
-            --gray-700: #374151;
-            --gray-800: #1f2937;
             --gray-900: #111827;
+            --space-4: 1rem;
+            --space-6: 1.5rem;
+            --radius-xl: 1.5rem;
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
         }
         
         * {
@@ -59,7 +63,7 @@
             overflow-x: hidden;
         }
 
-        /* Advanced Header */
+        /* Optimized Header */
         .header {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
@@ -67,7 +71,12 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease;
+            will-change: transform;
+        }
+        
+        .header.hidden {
+            transform: translateY(-100%);
         }
 
         .header-content {
@@ -158,14 +167,24 @@
         }
 
         .hero-title {
-            font-size: clamp(3rem, 8vw, 5rem);
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-500) 100%);
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 1.5rem;
+            margin-bottom: var(--space-6);
             line-height: 1.1;
+            letter-spacing: -0.025em;
+        }
+        
+        /* Performance optimization for gradient text */
+        @supports not (background-clip: text) {
+            .hero-title {
+                color: var(--primary-600);
+                background: none;
+                -webkit-text-fill-color: initial;
+            }
         }
 
         .hero-subtitle {
@@ -557,7 +576,7 @@
             }
         }
 
-        /* Loading Animation */
+        /* Optimized Loading Animation */
         .loading {
             display: inline-block;
             width: 20px;
@@ -565,11 +584,26 @@
             border: 2px solid rgba(255,255,255,.3);
             border-radius: 50%;
             border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
+            animation: spin 1s linear infinite;
+            will-change: transform;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+        
+        /* Reduce animations on slow devices */
+        @media (prefers-reduced-motion: reduce) {
+            .loading {
+                animation: none;
+                border: 2px solid var(--primary-500);
+            }
+            
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
 
         /* Notification System */
@@ -598,6 +632,17 @@
             background: var(--error);
         }
     </style>
+    
+    <!-- Non-critical CSS loaded asynchronously -->
+    <script>
+        // Load non-critical CSS after initial page load
+        window.addEventListener('load', () => {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'assets/non-critical.css';
+            document.head.appendChild(link);
+        });
+    </script>
 </head>
 <body>
     <!-- Header -->

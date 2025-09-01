@@ -3,11 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Browse fast-reply certified job opportunities at GuideSignal. Employers guaranteed to respond within 48 hours. Find your next role with transparent pay and quick responses.">
-    <meta name="keywords" content="fast reply jobs, certified employers, quick response jobs, job opportunities, hiring, employment">
-    <meta name="robots" content="index, follow">
+    <meta name="description" content="AI-powered job matching with guaranteed 48h responses. Browse certified fast-reply employers with transparent pay. Superior matching accuracy vs LinkedIn & Indeed.">
+    <meta name="keywords" content="fast reply jobs, AI job matching, certified employers, ML recruitment, guaranteed responses, transparent pay, superior to linkedin indeed">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    
+    <!-- Enhanced Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ideamlabs.github.io/guidesignal-site/jobs.html">
+    <meta property="og:title" content="Fast-Reply AI Job Matching - GuideSignal">
+    <meta property="og:description" content="AI-powered job matching with guaranteed 48h responses. Browse certified employers with transparent pay.">
+    <meta property="og:image" content="https://ideamlabs.github.io/guidesignal-site/assets/GuideSignalLogo.png">
+    <meta property="og:site_name" content="GuideSignal">
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Fast-Reply AI Job Matching - GuideSignal">
+    <meta name="twitter:description" content="AI-powered job matching with guaranteed 48h responses. Browse certified employers.">
+    <meta name="twitter:image" content="https://ideamlabs.github.io/guidesignal-site/assets/GuideSignalLogo.png">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://ideamlabs.github.io">
+    <link rel="dns-prefetch" href="https://ideamlabs.github.io">
+    
     <link rel="canonical" href="https://ideamlabs.github.io/guidesignal-site/jobs.html">
-    <title>Fast-Reply Certified Jobs - GuideSignal</title>
+    <title>Fast-Reply AI Job Matching | Certified Employers - GuideSignal</title>
     <style>
         * {
             margin: 0;
@@ -646,22 +665,49 @@
             }
         }
 
-        // Load and display jobs with improved performance
-        async function loadJobs() {
+        // Enhanced error handling and performance monitoring
+        const jobsPerformance = {
+            startTime: performance.now(),
+            loadAttempts: 0,
+            lastSuccessfulLoad: null
+        };
+        
+        // Load and display jobs with improved performance and error handling
+        async function loadJobs(retryCount = 0) {
+            const loadStart = performance.now();
+            jobsPerformance.loadAttempts++;
+            
             try {
+                // Show loading state with better UX
+                updateLoadingState('Loading latest job opportunities...', true);
+                
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 8000);
+                const timeoutId = setTimeout(() => controller.abort(), 6000); // Reduced timeout
                 
                 const response = await fetch(`public_jobs.csv?ts=${Date.now()}`, {
                     signal: controller.signal,
-                    cache: 'no-cache'
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache'
+                    }
                 });
                 clearTimeout(timeoutId);
                 
-                if (!response.ok) throw new Error('Could not load jobs data');
+                if (!response.ok) {
+                    throw new Error(`Jobs HTTP ${response.status}: ${response.statusText}`);
+                }
                 
                 const csvText = await response.text();
+                if (!csvText.trim()) {
+                    throw new Error('Empty jobs data received');
+                }
+                
                 const jobs = parseCSV(csvText);
+                const loadTime = performance.now() - loadStart;
+                
+                jobsPerformance.lastSuccessfulLoad = new Date();
+                console.log(`Jobs loaded successfully in ${loadTime.toFixed(2)}ms`);
                 
                 // Generate JobPosting schema after loading jobs data
                 generateJobPostingSchema(jobs);
@@ -714,13 +760,157 @@
 
             } catch (error) {
                 console.error('Error loading jobs:', error);
-                document.getElementById('loading').innerHTML = 
-                    '<h3>Error loading jobs</h3><p>Please try again later</p>';
+                
+                // Implement retry logic with exponential backoff
+                if (retryCount < 3) {
+                    const delay = 1000 * Math.pow(2, retryCount); // 1s, 2s, 4s
+                    console.log(`Retrying job load in ${delay}ms (attempt ${retryCount + 1}/3)`);
+                    
+                    updateLoadingState(
+                        `Connection issue. Retrying in ${delay/1000}s... (${retryCount + 1}/3)`,
+                        true
+                    );
+                    
+                    setTimeout(() => loadJobs(retryCount + 1), delay);
+                } else {
+                    // Show user-friendly error with contact info
+                    updateLoadingState(
+                        `Unable to load jobs. Please refresh the page or <a href="mailto:ideamlabs@gmail.com">contact us</a> if the issue persists.`,
+                        false
+                    );
+                    
+                    // Log for debugging
+                    console.error('Final job loading failure after retries:', {
+                        error: error.message,
+                        attempts: jobsPerformance.loadAttempts,
+                        lastSuccess: jobsPerformance.lastSuccessfulLoad
+                    });
+                }
             }
         }
+        
+        // Enhanced loading state management
+        function updateLoadingState(message, isLoading) {
+            const loadingEl = document.getElementById('loading');
+            if (loadingEl) {
+                loadingEl.innerHTML = isLoading ? 
+                    `<h3>🔄 ${message}</h3><div class="loading-spinner"></div>` :
+                    `<h3>⚠️ ${message}</h3>`;
+                loadingEl.style.display = 'block';
+            }
+        }
+        
+        // Add loading spinner CSS if not present
+        if (!document.querySelector('#loading-spinner-styles')) {
+            const style = document.createElement('style');
+            style.id = 'loading-spinner-styles';
+            style.textContent = `
+                .loading-spinner {
+                    border: 3px solid #f3f3f3;
+                    border-top: 3px solid #4a9eff;
+                    border-radius: 50%;
+                    width: 30px;
+                    height: 30px;
+                    animation: spin 1s linear infinite;
+                    margin: 20px auto;
+                }
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
 
-        // Load jobs when page loads
-        document.addEventListener('DOMContentLoaded', loadJobs);
+        // Enhanced page load with performance monitoring
+        document.addEventListener('DOMContentLoaded', () => {
+            // Track performance
+            performance.mark('jobs-dom-loaded');
+            
+            // Load jobs with better UX
+            loadJobs();
+            
+            // Add accessibility improvements
+            enhanceAccessibility();
+            
+            // Track page performance
+            window.addEventListener('load', () => {
+                performance.mark('jobs-page-loaded');
+                const loadTime = performance.now() - jobsPerformance.startTime;
+                
+                if (loadTime > 4000) {
+                    showJobsNotification(
+                        'Slow connection detected. Jobs may take longer to load.',
+                        'warning'
+                    );
+                }
+            });
+        });
+        
+        // Enhanced notifications for jobs page
+        function showJobsNotification(message, type = 'info', duration = 5000) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 10000;
+                padding: 12px 20px; border-radius: 8px; color: white;
+                font-weight: 600; max-width: 350px; word-wrap: break-word;
+                transform: translateX(400px); transition: transform 0.3s ease;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            `;
+            
+            const colors = {
+                info: '#4a9eff',
+                success: '#10b981',
+                warning: '#f59e0b',
+                error: '#ef4444'
+            };
+            
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.style.transform = 'translateX(0)', 100);
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, duration);
+        }
+        
+        // Accessibility enhancements
+        function enhanceAccessibility() {
+            // Add ARIA labels to job cards
+            const jobCards = document.querySelectorAll('.job-card');
+            jobCards.forEach((card, index) => {
+                card.setAttribute('role', 'article');
+                card.setAttribute('aria-label', `Job opportunity ${index + 1}`);
+            });
+            
+            // Enhance button accessibility
+            const buttons = document.querySelectorAll('.apply-btn, .btn');
+            buttons.forEach(button => {
+                if (!button.getAttribute('aria-label')) {
+                    button.setAttribute('aria-label', button.textContent.trim());
+                }
+            });
+            
+            // Add skip link for keyboard navigation
+            if (!document.querySelector('.skip-link')) {
+                const skipLink = document.createElement('a');
+                skipLink.className = 'skip-link';
+                skipLink.href = '#jobs-container';
+                skipLink.textContent = 'Skip to job listings';
+                skipLink.style.cssText = `
+                    position: absolute; top: -40px; left: 6px; z-index: 10001;
+                    background: #4a9eff; color: white; padding: 8px;
+                    text-decoration: none; border-radius: 4px;
+                    transition: top 0.3s;
+                `;
+                skipLink.addEventListener('focus', () => skipLink.style.top = '6px');
+                skipLink.addEventListener('blur', () => skipLink.style.top = '-40px');
+                document.body.insertBefore(skipLink, document.body.firstChild);
+            }
+        }
     </script>
 </body>
 </html>
