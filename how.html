@@ -3,7 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How it Works - GuideSignal</title>
+    <meta name="description" content="Learn how GuideSignal works in 3 simple steps. Post a role, receive curated candidate intros, and respond within 48 hours to earn your Fast-Reply badge.">
+    <meta name="keywords" content="how it works, GuideSignal process, fast reply jobs, hiring process, job posting steps">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://ideamlabs.github.io/guidesignal-site/how.html">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    
+    <title>How GuideSignal Works - 3 Simple Steps</title>
     <style>
         * {
             margin: 0;
@@ -20,18 +32,35 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 0 20px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 60px;
-            padding: 40px;
+            padding: 60px 0 40px;
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+            box-shadow: 0 2px 20px rgba(30, 58, 95, 0.08);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.1);
+        }
+        
+        .logo img {
+            width: 90%;
+            height: 90%;
+            object-fit: contain;
+            background: #ffffff;
         }
 
         .header h1 {
@@ -46,178 +75,152 @@
             font-size: 20px;
             color: #6c757d;
             font-weight: 300;
+            margin-bottom: 30px;
         }
 
         .nav-links {
-            text-align: center;
-            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
         }
 
         .nav-links a {
             color: #4a9eff;
             text-decoration: none;
-            margin: 0 15px;
             font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
         }
 
         .nav-links a:hover {
-            color: #1e3a5f;
+            background: #4a9eff;
+            color: white;
         }
 
-        .section {
+        .main-content {
+            padding: 80px 0;
+        }
+
+        .steps-section {
             background: white;
             border-radius: 16px;
-            padding: 40px;
-            margin-bottom: 30px;
+            padding: 60px;
+            margin-bottom: 40px;
             box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
         }
 
-        .section h2 {
-            font-size: 28px;
-            font-weight: 400;
-            color: #1e3a5f;
-            margin-bottom: 30px;
+        .section-title {
             text-align: center;
+            font-size: 36px;
+            font-weight: 300;
+            color: #1e3a5f;
+            margin-bottom: 60px;
+            letter-spacing: -1px;
         }
 
         .steps {
             display: grid;
-            gap: 30px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 50px;
+            margin-bottom: 40px;
         }
 
         .step {
-            display: flex;
-            align-items: flex-start;
-            gap: 20px;
-            padding: 25px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            border-left: 4px solid #4a9eff;
+            text-align: center;
+            padding: 30px 20px;
         }
 
         .step-number {
-            flex-shrink: 0;
-            width: 50px;
-            height: 50px;
-            background: #4a9eff;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0 auto 30px;
             font-weight: 600;
-            font-size: 18px;
+            font-size: 24px;
+            box-shadow: 0 8px 25px rgba(74, 158, 255, 0.3);
         }
 
-        .step-content h3 {
-            font-size: 20px;
+        .step h3 {
+            font-size: 24px;
             font-weight: 500;
             color: #1e3a5f;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
-        .step-content p {
+        .step p {
             color: #495057;
             font-size: 16px;
+            line-height: 1.7;
         }
 
-        .differences {
-            list-style: none;
-            margin-bottom: 20px;
+        .badge-section {
+            background: linear-gradient(135deg, #e8f5e8, #f0f9ff);
+            border: 2px solid #28a745;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
         }
 
-        .differences li {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            padding: 15px 0;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .differences li:last-child {
-            border-bottom: none;
-        }
-
-        .differences .icon {
-            flex-shrink: 0;
-            width: 30px;
-            height: 30px;
-            background: #28a745;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .differences strong {
+        .badge-section h3 {
+            font-size: 28px;
+            font-weight: 500;
             color: #1e3a5f;
-        }
-
-        .mini-faq {
             margin-bottom: 20px;
         }
 
-        .faq-item {
-            margin-bottom: 20px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-
-        .faq-item h4 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1e3a5f;
-            margin-bottom: 8px;
-        }
-
-        .faq-item p {
+        .badge-section p {
             color: #495057;
-            font-size: 14px;
+            font-size: 16px;
+            margin-bottom: 0;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .badge-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
         }
 
         .cta-section {
-            text-align: center;
-            padding: 40px;
-            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
+            background: linear-gradient(135deg, #1e3a5f, #4a9eff);
             color: white;
             border-radius: 16px;
+            padding: 50px;
+            text-align: center;
         }
 
         .cta-section h3 {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: 400;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .cta-section p {
-            font-size: 16px;
+            font-size: 18px;
             opacity: 0.9;
-            margin-bottom: 30px;
-        }
-
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+            margin-bottom: 40px;
         }
 
         .btn {
             display: inline-block;
-            padding: 14px 28px;
+            padding: 18px 36px;
             text-decoration: none;
             border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
+            font-size: 18px;
+            font-weight: 600;
             transition: all 0.3s ease;
             border: none;
             cursor: pointer;
-            min-width: 160px;
+            min-width: 180px;
         }
 
         .btn-primary {
@@ -231,147 +234,180 @@
             box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
         }
 
-        .btn-secondary {
-            background: transparent;
+        .footer {
+            background: #1e3a5f;
             color: white;
-            border: 2px solid white;
+            padding: 40px 0;
+            text-align: center;
         }
 
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
+        .footer p {
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+
+        .footer a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            margin: 0 15px;
+        }
+
+        .footer a:hover {
+            color: white;
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 20px 10px;
-            }
-            
-            .section {
-                padding: 25px;
+            .header {
+                padding: 40px 0 30px;
             }
             
             .header h1 {
                 font-size: 32px;
             }
             
-            .step {
-                flex-direction: column;
-                text-align: center;
-                gap: 15px;
+            .header p {
+                font-size: 18px;
             }
             
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
+            .steps-section {
+                padding: 40px 30px;
+            }
+            
+            .section-title {
+                font-size: 28px;
+            }
+            
+            .steps {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .step-number {
+                width: 60px;
+                height: 60px;
+                font-size: 20px;
+            }
+            
+            .step h3 {
+                font-size: 22px;
+            }
+            
+            .badge-section {
+                padding: 30px 20px;
+            }
+            
+            .badge-section h3 {
+                font-size: 24px;
+            }
+            
+            .cta-section {
+                padding: 40px 30px;
+            }
+            
+            .cta-section h3 {
+                font-size: 26px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .steps-section {
+                padding: 30px 20px;
+            }
+            
+            .badge-section {
+                padding: 25px 15px;
+            }
+            
+            .cta-section {
+                padding: 35px 20px;
             }
             
             .btn {
                 width: 100%;
-                max-width: 300px;
+                max-width: 280px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="nav-links">
-            <a href="index.html">← Home</a>
-            <a href="jobs.html">Fast-Reply Jobs</a>
-            <a href="faq.html">FAQ</a>
-            <a href="demo.html">Demo</a>
-        </div>
-        
-        <div class="header">
-            <h1>How it Works</h1>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo - How it Works" width="72" height="72">
+            </div>
+            <h1>How GuideSignal Works</h1>
             <p>Simple, fast, and focused on real results</p>
+            <nav class="nav-links">
+                <a href="index.html">← Home</a>
+                <a href="jobs.html">Fast-Reply Jobs</a>
+                <a href="apply.html">Apply</a>
+                <a href="post.html">Post Job</a>
+                <a href="faq.html">FAQ</a>
+            </nav>
         </div>
+    </header>
 
-        <!-- Three Steps -->
-        <div class="section">
-            <h2>Three Simple Steps</h2>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
+    <main class="main-content">
+        <div class="container">
+            <section class="steps-section">
+                <h2 class="section-title">Three Simple Steps</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
                         <h3>Post Your Role</h3>
                         <p>Share your job requirements in 60 seconds. Tell us what you need: role, must-have skills, pay range, and commit to our 48-hour reply pledge.</p>
                     </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
                         <h3>We Send ≤3 Proof-First Intros</h3>
                         <p>Our AI finds the best matches and sends you up to 3 qualified candidates at your optimal reply time. Each intro includes proof of their skills and experience.</p>
                     </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h3>You Reply Within 48 Hours</h3>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>You Respond Within 48 Hours</h3>
                         <p>Keep your pledge and respond to candidates within 48 hours. This builds trust and earns you our Fast-Reply Certified badge for future posts.</p>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- Why It's Different -->
-        <div class="section">
-            <h2>Why It's Different</h2>
-            <ul class="differences">
-                <li>
-                    <div class="icon">✓</div>
-                    <div>
-                        <strong>Fewer Messages:</strong> You get maximum 3 carefully chosen candidates instead of hundreds of random applications to sort through.
-                    </div>
-                </li>
-                <li>
-                    <div class="icon">⚡</div>
-                    <div>
-                        <strong>Pledge Badge:</strong> Employers who consistently reply fast get certified with our Fast-Reply badge, attracting better candidates.
-                    </div>
-                </li>
-                <li>
-                    <div class="icon">🎯</div>
-                    <div>
-                        <strong>Outcome Learning:</strong> Our system learns from hiring outcomes to send you increasingly better matches over time.
-                    </div>
-                </li>
-            </ul>
-        </div>
+            <section class="badge-section">
+                <div class="badge-icon">⚡</div>
+                <h3>Fast-Reply Certified Badge</h3>
+                <p>Employers who consistently respond within their pledged timeframe earn our Fast-Reply Certified badge. This badge is displayed prominently on your job posts, attracting higher-quality candidates who value responsive employers. The badge is earned through measured performance data and can be revoked if reply times slip, ensuring authenticity and trust in our platform.</p>
+            </section>
 
-        <!-- Mini FAQ -->
-        <div class="section">
-            <h2>Quick Questions</h2>
-            <div class="mini-faq">
-                <div class="faq-item">
-                    <h4>Is my information private?</h4>
-                    <p>Yes. We only share what's needed for introductions. Employer contact details are encrypted and never sold. See our <a href="privacy.html" style="color: #4a9eff;">Privacy Policy</a> for details.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h4>How do you prevent spam?</h4>
-                    <p>We limit intros to 3 per role per week, verify all candidates manually, and require employers to maintain their 48-hour reply pledge to stay certified.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h4>What does it cost?</h4>
-                    <p>Posting jobs is free. Candidates use the service free. Optional job featuring costs $25 for priority placement and guaranteed Fast-Reply badge.</p>
-                </div>
-            </div>
+            <section class="cta-section">
+                <h3>Ready to Get Started?</h3>
+                <p>Join employers who get better results with fewer applications</p>
+                <a href="post.html" class="btn btn-primary">Post Free</a>
+            </section>
         </div>
+    </main>
 
-        <!-- Final CTA -->
-        <div class="cta-section">
-            <h3>Ready to Find Great Candidates?</h3>
-            <p>Join employers who get better results with fewer applications</p>
-            <div class="cta-buttons">
-                <a href="post.html" class="btn btn-primary">Post Role</a>
-                <a href="jobs.html" class="btn btn-secondary">See Jobs</a>
-            </div>
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 GuideSignal. Guiding talent to opportunity.</p>
+            <p>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="faq.html">FAQ</a>
+                <a href="index.html">Home</a>
+            </p>
         </div>
-    </div>
+    </footer>
 </body>
 </html>
