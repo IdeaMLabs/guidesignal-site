@@ -10,7 +10,9 @@
       "Bash(schtasks:*)",
       "Bash(powershell:*)",
       "Bash(curl:*)",
-      "WebFetch(domain:search.google.com)"
+      "WebFetch(domain:search.google.com)",
+      "WebFetch(domain:ideamlabs.github.io)",
+      "WebFetch(domain:validator.schema.org)"
     ],
     "deny": [],
     "ask": []

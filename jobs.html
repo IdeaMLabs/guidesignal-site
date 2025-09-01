@@ -497,6 +497,14 @@
                 role: job.job_title
             });
             const introUrl = `intro.html?${params.toString()}`;
+            
+            // Create job detail page URL - simplified mapping
+            const jobIdMap = {
+                'Northstar MSP': 'northstar-help-desk',
+                'LogiCo': 'logico-warehouse', 
+                'DataHands': 'datahands-support'
+            };
+            const detailUrl = `jobs/${jobIdMap[job.employer]}.html`;
 
             return `
                 <div class="job-card">
@@ -505,7 +513,10 @@
                     <h3 class="job-title">${job.job_title}</h3>
                     <div class="job-pay">${formatPay(job.job_pay_min, job.job_pay_max)}</div>
                     <div class="job-location">📍 ${job.job_city}</div>
-                    <a href="${introUrl}" class="apply-btn">Request intros</a>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <a href="${detailUrl}" class="apply-btn" style="background: #4a9eff;">View Details</a>
+                        <a href="${introUrl}" class="apply-btn">Request intros</a>
+                    </div>
                 </div>
             `;
         }
