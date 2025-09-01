@@ -397,6 +397,126 @@
             `;
         }
 
+        // Generate JobPosting structured data schema
+        function generateJobPostingSchema(jobs) {
+            try {
+                const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+                const jobPostings = [];
+                
+                jobs.forEach(job => {
+                    // Only include active jobs (not "open" but "active" based on CSV)
+                    if (job.job_status !== 'active') return;
+                    
+                    // Build description from musts and nice fields
+                    let description = job.job_title || 'Job Opportunity';
+                    if (job.musts) {
+                        description += `\n\nRequired Skills: ${job.musts}`;
+                    }
+                    if (job.nice) {
+                        description += `\n\nPreferred Skills: ${job.nice}`;
+                    }
+                    if (job.pledged_48h === 'True' || job.pledged_48h === true) {
+                        description += '\n\nFast-Reply Certified: We respond within 48 hours.';
+                    }
+                    
+                    // Determine location
+                    let jobLocation = {};
+                    let jobLocationType = null;
+                    
+                    if (job.job_city && job.job_city.toLowerCase().includes('remote')) {
+                        jobLocationType = "TELECOMMUTE";
+                    } else if (job.job_city) {
+                        jobLocation = {
+                            "@type": "Place",
+                            "address": {
+                                "@type": "PostalAddress",
+                                "addressLocality": job.job_city
+                            }
+                        };
+                    } else {
+                        jobLocationType = "TELECOMMUTE"; // Fallback to remote
+                    }
+                    
+                    // Build salary information
+                    let baseSalary = null;
+                    if (job.job_pay_min && job.job_pay_max) {
+                        baseSalary = {
+                            "@type": "MonetaryAmount",
+                            "currency": "USD",
+                            "value": {
+                                "@type": "QuantitativeValue",
+                                "minValue": parseFloat(job.job_pay_min),
+                                "maxValue": parseFloat(job.job_pay_max),
+                                "unitText": "HOUR"
+                            }
+                        };
+                    }
+                    
+                    // Build JobPosting object
+                    const jobPosting = {
+                        "@context": "https://schema.org",
+                        "@type": "JobPosting",
+                        "title": job.job_title || 'Job Opportunity',
+                        "description": description.trim(),
+                        "datePosted": today,
+                        "validThrough": new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+                        "employmentType": job.employment_type || "FULL_TIME",
+                        "hiringOrganization": {
+                            "@type": "Organization",
+                            "name": job.employer || "GuideSignal Partner Company",
+                            "sameAs": "https://ideamlabs.github.io/guidesignal-site/"
+                        },
+                        "identifier": {
+                            "@type": "PropertyValue",
+                            "name": "GuideSignal Job ID",
+                            "value": job.id || `job-${job.employer}-${job.job_title}`.replace(/\s+/g, '-').toLowerCase()
+                        }
+                    };
+                    
+                    // Add location information
+                    if (jobLocationType) {
+                        jobPosting.jobLocationType = jobLocationType;
+                    } else if (Object.keys(jobLocation).length > 0) {
+                        jobPosting.jobLocation = jobLocation;
+                    }
+                    
+                    // Add salary if available
+                    if (baseSalary) {
+                        jobPosting.baseSalary = baseSalary;
+                    }
+                    
+                    // Add special properties for certified jobs
+                    if (job.pledged_48h === 'True' || job.pledged_48h === true) {
+                        jobPosting.specialCommitments = "Fast-Reply Certified";
+                    }
+                    
+                    jobPostings.push(jobPosting);
+                });
+                
+                // Remove any existing JobPosting schema
+                const existingSchema = document.getElementById('job-posting-schema');
+                if (existingSchema) {
+                    existingSchema.remove();
+                }
+                
+                // Add new schema to DOM if we have jobs
+                if (jobPostings.length > 0) {
+                    const schemaScript = document.createElement('script');
+                    schemaScript.type = 'application/ld+json';
+                    schemaScript.id = 'job-posting-schema';
+                    schemaScript.textContent = JSON.stringify(jobPostings, null, 2);
+                    document.head.appendChild(schemaScript);
+                    
+                    console.log(`Generated JobPosting schema for ${jobPostings.length} jobs`);
+                } else {
+                    console.log('No jobs available for schema generation');
+                }
+                
+            } catch (error) {
+                console.error('Error generating JobPosting schema:', error);
+            }
+        }
+
         // Load and display jobs with improved performance
         async function loadJobs() {
             try {
@@ -413,6 +533,9 @@
                 
                 const csvText = await response.text();
                 const jobs = parseCSV(csvText);
+                
+                // Generate JobPosting schema after loading jobs data
+                generateJobPostingSchema(jobs);
                 
                 // All jobs in public_jobs.csv are already filtered for certified & open jobs
                 const certifiedJobs = jobs.filter(job => 

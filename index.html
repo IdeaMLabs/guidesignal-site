@@ -932,36 +932,56 @@
 
     <!-- Structured Data / JSON-LD -->
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "GuideSignal",
-        "description": "Professional hiring platform connecting job seekers with fast-reply employers",
-        "url": "https://ideamlabs.github.io/guidesignal-site/",
-        "logo": "https://ideamlabs.github.io/guidesignal-site/assets/GuideSignalLogo.png",
-        "sameAs": [],
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "contactType": "customer service",
-            "email": "ideamlabs@gmail.com"
-        },
-        "offers": [
-            {
-                "@type": "Offer",
-                "name": "Job Posting",
-                "description": "Post jobs and connect with qualified candidates",
-                "price": "0",
-                "priceCurrency": "USD"
+    [
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "GuideSignal",
+            "description": "Professional hiring platform connecting job seekers with fast-reply employers",
+            "url": "https://ideamlabs.github.io/guidesignal-site/",
+            "logo": "https://ideamlabs.github.io/guidesignal-site/assets/GuideSignalLogo.png",
+            "sameAs": [],
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "customer service",
+                "email": "ideamlabs@gmail.com"
             },
-            {
-                "@type": "Offer",
-                "name": "Featured Job Posting",
-                "description": "Premium job posting with priority placement",
-                "price": "25",
-                "priceCurrency": "USD"
-            }
-        ]
-    }
+            "offers": [
+                {
+                    "@type": "Offer",
+                    "name": "Job Posting",
+                    "description": "Post jobs and connect with qualified candidates",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                },
+                {
+                    "@type": "Offer",
+                    "name": "Featured Job Posting",
+                    "description": "Premium job posting with priority placement",
+                    "price": "25",
+                    "priceCurrency": "USD"
+                }
+            ]
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "GuideSignal",
+            "url": "https://ideamlabs.github.io/guidesignal-site/",
+            "description": "Professional hiring platform connecting job seekers with fast-reply employers. Get responses within 48 hours from verified companies.",
+            "publisher": {
+                "@type": "Organization",
+                "name": "GuideSignal"
+            },
+            "potentialAction": [
+                {
+                    "@type": "SearchAction",
+                    "target": "https://ideamlabs.github.io/guidesignal-site/jobs.html?search={search_term_string}",
+                    "query-input": "required name=search_term_string"
+                }
+            ]
+        }
+    ]
     </script>
 </body>
 </html>
