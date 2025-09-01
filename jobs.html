@@ -452,7 +452,7 @@
                         };
                     }
                     
-                    // Build JobPosting object
+                    // Build JobPosting object with all required fields
                     const jobPosting = {
                         "@context": "https://schema.org",
                         "@type": "JobPosting",
@@ -464,12 +464,17 @@
                         "hiringOrganization": {
                             "@type": "Organization",
                             "name": job.employer || "GuideSignal Partner Company",
-                            "sameAs": "https://ideamlabs.github.io/guidesignal-site/"
+                            "sameAs": "https://ideamlabs.github.io/guidesignal-site/",
+                            "logo": "https://ideamlabs.github.io/guidesignal-site/assets/GuideSignalLogo.png"
                         },
                         "identifier": {
                             "@type": "PropertyValue",
                             "name": "GuideSignal Job ID",
                             "value": job.id || `job-${job.employer}-${job.job_title}`.replace(/\s+/g, '-').toLowerCase()
+                        },
+                        "applicantLocationRequirements": {
+                            "@type": "Country",
+                            "name": "United States"
                         }
                     };
                     

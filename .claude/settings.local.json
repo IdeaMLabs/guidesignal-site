@@ -9,7 +9,8 @@
       "Bash(python:*)",
       "Bash(schtasks:*)",
       "Bash(powershell:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "WebFetch(domain:search.google.com)"
     ],
     "deny": [],
     "ask": []
