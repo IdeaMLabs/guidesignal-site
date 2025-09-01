@@ -654,6 +654,11 @@
             <div class="proof-strip" id="proof-strip" style="display: none; margin-top: 40px; padding: 20px; background: linear-gradient(135deg, #e8f5e8, #f0f9ff); border: 1px solid #4ade80; border-radius: 12px; color: #166534; font-weight: 600; font-size: 18px; text-align: center;">
                 <span id="proof-content">Live this week: 0 intros → 0 interviews (7d)</span>
             </div>
+            
+            <!-- Demo Conversions Strip -->
+            <div class="demo-conversions" id="demo-conversions" style="display: none; margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #e3f2fd, #f0f9ff); border: 1px solid #4a9eff; border-radius: 12px; color: #1976d2; font-weight: 600; font-size: 16px; text-align: center;">
+                <span id="demo-content">From demo today: 0</span>
+            </div>
         </div>
     </section>
 
@@ -858,6 +863,18 @@
                     proofStripEl.style.display = 'block';
                 } else {
                     proofStripEl.style.display = 'none';
+                }
+                
+                // Handle demo conversions display
+                const demoConversions = data.demo_conversions_today || 0;
+                const demoStripEl = document.getElementById('demo-conversions');
+                const demoContentEl = document.getElementById('demo-content');
+                
+                if (demoConversions > 0) {
+                    demoContentEl.textContent = `From demo today: ${demoConversions}`;
+                    demoStripEl.style.display = 'block';
+                } else {
+                    demoStripEl.style.display = 'none';
                 }
                 
             } catch (error) {

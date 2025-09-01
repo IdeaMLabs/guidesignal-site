@@ -37,6 +37,7 @@ def generate_scoreboard():
         "next_review": "10:00 / 16:00 ET",  # Default review times
         "last24_apps": 0,
         "last24_replied": 0,
+        "demo_conversions_today": 0,  # Demo to conversion count in last 24h
         "last_updated": datetime.now().isoformat()
     }
     
@@ -280,6 +281,44 @@ def generate_scoreboard():
         else:
             metrics["next_review"] = "Tomorrow 10:00 / 16:00 ET"
         
+        # Calculate demo conversions in last 24h
+        demo_conversions = 0
+        
+        # Check applicants.csv for demo conversions
+        if os.path.exists('applicants.csv'):
+            try:
+                applicants_df = pd.read_csv('applicants.csv')
+                if 'utm_source' in applicants_df.columns and 'created_at' in applicants_df.columns:
+                    # Convert created_at to datetime
+                    applicants_df['created_at'] = pd.to_datetime(applicants_df['created_at'], errors='coerce')
+                    
+                    # Count demo conversions in last 24h
+                    demo_apps_24h = applicants_df[
+                        (applicants_df['utm_source'] == 'demo') & 
+                        (applicants_df['created_at'] >= time_24h)
+                    ]
+                    demo_conversions += len(demo_apps_24h)
+            except Exception as e:
+                print(f"Warning: Could not process applicants.csv for demo conversions: {e}")
+        
+        # Check jobs.csv for demo conversions
+        if os.path.exists('jobs.csv'):
+            try:
+                if 'utm_source' in jobs_df.columns and 'created_at' in jobs_df.columns:
+                    # Convert created_at to datetime
+                    jobs_df['created_at'] = pd.to_datetime(jobs_df['created_at'], errors='coerce')
+                    
+                    # Count demo job postings in last 24h
+                    demo_jobs_24h = jobs_df[
+                        (jobs_df['utm_source'] == 'demo') & 
+                        (jobs_df['created_at'] >= time_24h)
+                    ]
+                    demo_conversions += len(demo_jobs_24h)
+            except Exception as e:
+                print(f"Warning: Could not process jobs.csv for demo conversions: {e}")
+        
+        metrics["demo_conversions_today"] = int(demo_conversions)
+        
         # Write scoreboard.json
         with open('scoreboard.json', 'w') as f:
             json.dump(metrics, f, indent=2)
@@ -301,6 +340,7 @@ def generate_scoreboard():
         print(f"  Last trained: {metrics['last_trained'] or 'Never'}")
         print(f"  Slots today: {metrics['slots_today']}")
         print(f"  Next review: {metrics['next_review']}")
+        print(f"  Demo conversions today: {metrics['demo_conversions_today']}")
         
     except Exception as e:
         print(f"Error generating scoreboard: {e}")

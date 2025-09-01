@@ -1,2 +1,2 @@
-id,name,email,city,target_pay_min,skills_text,skills_tags,certs,resume_text,consent,target_role
-A1,TestUser,YOUREMAIL@example.com,Worcester,22,help desk windows o365 ticketing,help desk;windows;office 365;ticketing,CompTIA A+,troubleshot o365 and zendesk tickets,False,
+id,name,email,city,target_pay_min,skills_text,skills_tags,certs,resume_text,consent,target_role,utm_source,utm_medium,utm_campaign,created_at
+A1,TestUser,YOUREMAIL@example.com,Worcester,22,help desk windows o365 ticketing,help desk;windows;office 365;ticketing,CompTIA A+,troubleshot o365 and zendesk tickets,False,,,,,2025-08-31T22:36:01.892650

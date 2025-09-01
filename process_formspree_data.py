@@ -40,7 +40,7 @@ def infer_target_role_from_skills(skills_text, skills_tags):
         return 'General'
 
 def process_applicants_data(input_file='applicants.csv', output_file=None):
-    """Process applicants data to add target_role field"""
+    """Process applicants data to add target_role field and UTM fields"""
     
     if output_file is None:
         output_file = input_file
@@ -53,6 +53,16 @@ def process_applicants_data(input_file='applicants.csv', output_file=None):
         if 'target_role' not in df.columns:
             df['target_role'] = ''
         
+        # Add UTM columns if they don't exist
+        if 'utm_source' not in df.columns:
+            df['utm_source'] = ''
+        if 'utm_medium' not in df.columns:
+            df['utm_medium'] = ''
+        if 'utm_campaign' not in df.columns:
+            df['utm_campaign'] = ''
+        if 'created_at' not in df.columns:
+            df['created_at'] = ''
+        
         # Process each row
         for idx, row in df.iterrows():
             # Get target_role from role/role_custom fields (returns role_custom or role or "")
@@ -60,12 +70,17 @@ def process_applicants_data(input_file='applicants.csv', output_file=None):
             
             # Update the target_role field
             df.at[idx, 'target_role'] = target_role
+            
+            # Add created_at if missing (for existing records)
+            if pd.isna(df.at[idx, 'created_at']) or df.at[idx, 'created_at'] == '':
+                df.at[idx, 'created_at'] = datetime.now().isoformat()
         
         # Save the updated data
         df.to_csv(output_file, index=False)
         
         print(f"Processed {len(df)} applicant records")
         print(f"Updated target_role field based on role/role_custom preferences")
+        print(f"Added UTM tracking fields for conversion analysis")
         
         return True
         
@@ -105,7 +120,11 @@ def process_job_form_submission(form_data):
         'reply_pledge_48h': pledge,
         'work_email_ok': work_email_ok,
         'priority': priority,
-        'needs_verification': needs_verification
+        'needs_verification': needs_verification,
+        'utm_source': form_data.get('utm_source', ''),
+        'utm_medium': form_data.get('utm_medium', ''),
+        'utm_campaign': form_data.get('utm_campaign', ''),
+        'created_at': datetime.now().isoformat()
     }
     
     return row
@@ -133,6 +152,16 @@ def process_jobs_data(input_file='jobs.csv', output_file=None):
         if 'reply_pledge_48h' not in df.columns:
             df['reply_pledge_48h'] = False
         
+        # Add UTM columns if they don't exist
+        if 'utm_source' not in df.columns:
+            df['utm_source'] = ''
+        if 'utm_medium' not in df.columns:
+            df['utm_medium'] = ''
+        if 'utm_campaign' not in df.columns:
+            df['utm_campaign'] = ''
+        if 'created_at' not in df.columns:
+            df['created_at'] = ''
+        
         # Process each row to ensure reply_pledge_48h is boolean using the same logic as form processing
         for idx, row in df.iterrows():
             pledge_value = str(row.get('reply_pledge_48h', '')).strip().lower()
@@ -141,6 +170,10 @@ def process_jobs_data(input_file='jobs.csv', output_file=None):
             pledge_bool = pledge_value in {'true', 'on', '1', 'yes'}
             
             df.at[idx, 'reply_pledge_48h'] = pledge_bool
+            
+            # Add created_at if missing (for existing records)
+            if pd.isna(df.at[idx, 'created_at']) or df.at[idx, 'created_at'] == '':
+                df.at[idx, 'created_at'] = datetime.now().isoformat()
         
         # Save the updated data
         df.to_csv(output_file, index=False)
