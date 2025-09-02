@@ -62,7 +62,7 @@
     <meta name="color-scheme" content="light dark">
     <meta name="accessibility" content="WCAG AA compliant">"
     
-    <title>GuideSignal - AI-Powered Job Matching | Superior to LinkedIn & Indeed</title>
+    <title>GuideSignal - AI-Powered Job Matching | Fast, focused job matching</title>
     <style>
         * {
             margin: 0;
@@ -621,7 +621,7 @@
 <body>
     <!-- Employer Banner -->
     <div class="employer-banner">
-        Employers pledge 48-hour replies — post today, get fast matches: <a href="post.html">Post free</a> or <a href="#feature-checkout">Feature Your Job for $25</a>
+        Employers pledge 48-hour replies — post today, get fast matches: <a href="post.html">Post free</a> or <a href="/my-jobs">Feature Your Job for $25</a>
     </div>
     
     <header>
@@ -629,6 +629,19 @@
             <a href="jobs.html" class="nav-link">Fast-Reply Jobs</a>
             <a href="how.html" class="nav-link">How it Works</a>
             <a href="faq.html" class="nav-link">FAQ</a>
+            
+            <!-- Auth buttons for non-authenticated users -->
+            <div id="auth-buttons" class="auth-buttons">
+                <a href="auth.html" class="nav-link">Sign In</a>
+                <a href="auth.html" class="nav-link" style="background: #4a9eff; color: white; border-radius: 6px;">Sign Up</a>
+            </div>
+            
+            <!-- User menu for authenticated users -->
+            <div id="user-menu" class="user-menu" style="display: none;">
+                <span class="user-name" id="header-user-name">User</span>
+                <a href="#" class="nav-link" id="dashboard-link">Dashboard</a>
+                <button class="nav-link" id="signout-btn" style="background: none; border: none; cursor: pointer; font: inherit;">Sign Out</button>
+            </div>
         </div>
         <div class="container">
             <div class="logo">
@@ -1231,6 +1244,51 @@
             ]
         }
     ]
+    </script>
+
+    <!-- Firebase Authentication Integration -->
+    <script type="module">
+        import { authFunctions, utils, USER_ROLES } from './firebase-config.js';
+
+        // Check authentication state on page load
+        authFunctions.onAuthStateChanged(async (user) => {
+            const authButtons = document.getElementById('auth-buttons');
+            const userMenu = document.getElementById('user-menu');
+            const headerUserName = document.getElementById('header-user-name');
+            const dashboardLink = document.getElementById('dashboard-link');
+
+            if (user) {
+                // User is authenticated
+                authButtons.style.display = 'none';
+                userMenu.style.display = 'flex';
+                
+                // Get user data to determine role
+                const userData = await utils.getUserRole(user.uid);
+                if (userData) {
+                    headerUserName.textContent = user.displayName || user.email;
+                    
+                    // Set dashboard link based on role
+                    if (userData === USER_ROLES.STUDENT) {
+                        dashboardLink.href = '/student-dashboard.html';
+                    } else if (userData === USER_ROLES.RECRUITER) {
+                        dashboardLink.href = '/recruiter-dashboard.html';
+                    }
+                }
+            } else {
+                // User is not authenticated
+                authButtons.style.display = 'flex';
+                userMenu.style.display = 'none';
+            }
+        });
+
+        // Sign out functionality
+        document.getElementById('signout-btn').addEventListener('click', async () => {
+            const result = await authFunctions.signOutUser();
+            if (result.success) {
+                utils.showNotification('Signed out successfully', 'success');
+                // Page will update automatically due to auth state change
+            }
+        });
     </script>
 </body>
 </html>

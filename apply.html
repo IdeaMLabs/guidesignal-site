@@ -6,7 +6,7 @@
 <meta name="description" content="Apply for fast-reply job matches at GuideSignal. Get matched with employers who respond within 48 hours. Free application process.">
 <meta name="keywords" content="job application, fast reply jobs, apply for jobs, job matching">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://ideamlabs.github.io/guidesignal-site/apply.html">
+<link rel="canonical" href="https://www.guide-signal.com/apply.html">
 <title>Apply for Fast-Reply Job Matches - GuideSignal</title>
 <style>
   body{margin:0;background:#F7F9FC;font:15px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
@@ -33,7 +33,14 @@
     <a href="how.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">How it Works</a>
     <a href="faq.html" style="color:#4a9eff;text-decoration:none">FAQ</a>
   </div>
-  <div class="card">
+  <!-- Authentication required message -->
+  <div id="auth-required" class="card" style="display: none; text-align: center;">
+    <h2>Please Sign In</h2>
+    <p>You need to create an account or sign in to apply for jobs.</p>
+    <a href="auth.html" style="background: #4a9eff; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block; margin-top: 16px;">Sign In / Sign Up</a>
+  </div>
+  
+  <div id="application-form" class="card" style="display: none;">
     <div id="targeting-banner" class="targeting-banner" style="display:none"></div>
     <h1 style="margin:0 0 8px">Get a Fast-Reply Match</h1>
     <p><small>We optimize for real replies, not clicks.</small></p>
@@ -60,7 +67,7 @@
       </label>
       <input type="hidden" name="_subject">
       <input type="hidden" name="source">
-      <input type="hidden" name="_redirect" value="https://ideamlabs.github.io/guidesignal-site/thanks.html">
+      <input type="hidden" name="_redirect" value="https://www.guide-signal.com/thanks.html">
       <!-- UTM tracking -->
       <input type="hidden" name="utm_source">
       <input type="hidden" name="utm_medium">
@@ -75,17 +82,106 @@
   </div>
 </main>
 </body>
-</html>
+
+<script type="module">
+import { authFunctions, dbFunctions, utils, USER_ROLES } from './firebase-config.js';
+
+let currentUser = null;
+
+// Check authentication state
+authFunctions.onAuthStateChanged(async (user) => {
+  const authRequired = document.getElementById('auth-required');
+  const applicationForm = document.getElementById('application-form');
+  
+  if (user) {
+    currentUser = user;
+    
+    // Check if user is a student
+    const userRole = await utils.getUserRole(user.uid);
+    if (userRole !== USER_ROLES.STUDENT) {
+      // Redirect non-students
+      utils.showNotification('Only students can apply for jobs', 'warning');
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2000);
+      return;
+    }
+    
+    authRequired.style.display = 'none';
+    applicationForm.style.display = 'block';
+    
+    // Pre-fill user information
+    const userData = await dbFunctions.getUserData(user.uid);
+    if (userData.success) {
+      // Pre-populate form with user data if available
+      if (userData.data.skills && userData.data.skills.length > 0) {
+        document.querySelector('textarea[name="skills"]').value = userData.data.skills.join(', ');
+      }
+    }
+  } else {
+    authRequired.style.display = 'block';
+    applicationForm.style.display = 'none';
+  }
+});
+</script>
+
 <script>
 
   const f = document.getElementById('fastReplyForm');
   f.addEventListener('submit', async (e) => {
     e.preventDefault();
+    
+    // Check if user is authenticated
+    if (!currentUser) {
+      utils.showNotification('Please sign in to apply', 'error');
+      return;
+    }
+    
     const btn = f.querySelector('button');
     btn.disabled = true; btn.textContent = 'Sending…';
-    const res = await fetch(f.action, { method: 'POST', body: new FormData(f), headers: { 'Accept': 'application/json' }});
-    if (res.ok) { f.innerHTML = '<h3>Thanks — you're in.</h3><p><small>We'll route your one best application ASAP.</small></p>'; }
-    else { btn.disabled = false; btn.textContent = 'Submit'; document.getElementById('formNote').textContent = 'Something went wrong. Please try again.'; }
+    
+    try {
+      // Collect form data
+      const formData = new FormData(f);
+      const applicationData = {
+        userId: currentUser.uid,
+        applicantName: currentUser.displayName,
+        applicantEmail: currentUser.email,
+        role: formData.get('role'),
+        spotlight: formData.get('spotlight'),
+        skills: formData.get('skills'),
+        link1: formData.get('link1'),
+        link2: formData.get('link2'),
+        source: formData.get('source'),
+        utmSource: formData.get('utm_source'),
+        utmMedium: formData.get('utm_medium'),
+        utmCampaign: formData.get('utm_campaign'),
+        ref: formData.get('ref')
+      };
+      
+      // Save to Firebase first
+      const firebaseResult = await dbFunctions.submitApplication(applicationData);
+      
+      if (!firebaseResult.success) {
+        throw new Error('Failed to save application');
+      }
+      
+      // Also submit to Formspree for backup/notification
+      const res = await fetch(f.action, { method: 'POST', body: formData, headers: { 'Accept': 'application/json' }});
+      
+      if (res.ok || firebaseResult.success) { 
+        f.innerHTML = '<h3>Thanks — you're in.</h3><p><small>We'll route your one best application ASAP.</small></p>'; 
+        utils.showNotification('Application submitted successfully!', 'success');
+      } else { 
+        throw new Error('Submission failed');
+      }
+    } catch (error) {
+      console.error('Application submission error:', error);
+      btn.disabled = false; 
+      btn.textContent = 'Submit'; 
+      document.getElementById('formNote').textContent = 'Something went wrong. Please try again.';
+      utils.showNotification('Failed to submit application. Please try again.', 'error');
+    }
   });
 
   // Parse URL parameters and prefill form

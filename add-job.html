@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Post a new job on GuideSignal - Connect with qualified candidates who get fast replies">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Add Job - GuideSignal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #1e3a5f;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .back-link {
+            color: #4a9eff;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 300;
+            color: #1e3a5f;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #6c757d;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4a9eff;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            background: #4a9eff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: #2c8afc;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a9eff;
+            border: 2px solid #4a9eff;
+        }
+
+        .btn-secondary:hover {
+            background: #4a9eff;
+            color: white;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .auth-required {
+            text-align: center;
+            background: white;
+            border-radius: 16px;
+            padding: 60px 40px;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+        }
+
+        .auth-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .form-card {
+                padding: 30px 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/my-jobs.html" class="back-link">← Back to My Jobs</a>
+            <h1 class="page-title">Add New Job</h1>
+            <p class="page-subtitle">Post a job and connect with qualified candidates</p>
+        </div>
+
+        <!-- Authentication required message -->
+        <div id="auth-required" class="auth-required" style="display: none;">
+            <div class="auth-icon">🔒</div>
+            <h2>Authentication Required</h2>
+            <p>You need to sign in as a recruiter to post jobs.</p>
+            <a href="/auth.html" class="btn" style="margin-top: 20px;">Sign In / Sign Up</a>
+        </div>
+
+        <!-- Job form -->
+        <div id="job-form-container" class="form-card" style="display: none;">
+            <div id="error-message" class="error-message" style="display: none;"></div>
+            <div id="success-message" class="success-message" style="display: none;"></div>
+
+            <form id="job-form">
+                <div class="form-group">
+                    <label class="form-label" for="title">Job Title *</label>
+                    <input type="text" id="title" name="title" class="form-input" required 
+                           placeholder="e.g., Senior Software Engineer">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="company">Company Name *</label>
+                        <input type="text" id="company" name="company" class="form-input" required 
+                               placeholder="Your company name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="location">Location *</label>
+                        <input type="text" id="location" name="location" class="form-input" required 
+                               placeholder="e.g., San Francisco, CA or Remote">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="type">Job Type *</label>
+                        <select id="type" name="type" class="form-select" required>
+                            <option value="">Select job type</option>
+                            <option value="full-time">Full-time</option>
+                            <option value="part-time">Part-time</option>
+                            <option value="contract">Contract</option>
+                            <option value="internship">Internship</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="salary">Salary Range</label>
+                        <input type="text" id="salary" name="salary" class="form-input" 
+                               placeholder="e.g., $80k - $120k or $25 - $35/hour">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="description">Job Description *</label>
+                    <textarea id="description" name="description" class="form-input form-textarea" required 
+                              placeholder="Describe the role, responsibilities, and what you're looking for..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="requirements">Requirements *</label>
+                    <textarea id="requirements" name="requirements" class="form-input form-textarea" required 
+                              placeholder="List the required skills, experience, and qualifications..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="benefits">Benefits & Perks</label>
+                    <textarea id="benefits" name="benefits" class="form-input" 
+                              placeholder="Health insurance, remote work, flexible hours, etc."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Contact Email *</label>
+                        <input type="email" id="email" name="email" class="form-input" required 
+                               placeholder="hiring@company.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="website">Company Website</label>
+                        <input type="url" id="website" name="website" class="form-input" 
+                               placeholder="https://company.com">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/my-jobs.html" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn" id="submit-btn">
+                        <span class="btn-text">Post Job</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { authFunctions, dbFunctions, utils, USER_ROLES } from './firebase-config.js';
+
+        let currentUser = null;
+        let userData = null;
+
+        // Initialize page
+        async function initPage() {
+            authFunctions.onAuthStateChanged(async (user) => {
+                const authRequired = document.getElementById('auth-required');
+                const jobFormContainer = document.getElementById('job-form-container');
+
+                if (user) {
+                    currentUser = user;
+                    const userDataResult = await dbFunctions.getUserData(user.uid);
+                    
+                    if (userDataResult.success) {
+                        userData = userDataResult.data;
+                        
+                        // Check if user is a recruiter
+                        if (userData.role !== USER_ROLES.RECRUITER) {
+                            utils.showNotification('Only recruiters can post jobs', 'warning');
+                            setTimeout(() => {
+                                window.location.href = '/';
+                            }, 2000);
+                            return;
+                        }
+                        
+                        authRequired.style.display = 'none';
+                        jobFormContainer.style.display = 'block';
+                        
+                        // Pre-fill company name if available
+                        if (userData.company) {
+                            document.getElementById('company').value = userData.company;
+                        }
+                        document.getElementById('email').value = user.email;
+                    }
+                } else {
+                    authRequired.style.display = 'block';
+                    jobFormContainer.style.display = 'none';
+                }
+            });
+        }
+
+        // Form submission
+        document.getElementById('job-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showError('Please sign in to post jobs');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            
+            // Set loading state
+            submitBtn.disabled = true;
+            btnText.innerHTML = '<span class="loading"></span>Posting...';
+            hideMessages();
+            
+            try {
+                // Collect form data
+                const formData = new FormData(e.target);
+                const jobData = {
+                    employerId: currentUser.uid,
+                    employerEmail: currentUser.email,
+                    title: formData.get('title'),
+                    companyName: formData.get('company'),
+                    location: formData.get('location'),
+                    type: formData.get('type'),
+                    salary: formData.get('salary'),
+                    description: formData.get('description'),
+                    requirements: formData.get('requirements'),
+                    benefits: formData.get('benefits'),
+                    contactEmail: formData.get('email'),
+                    website: formData.get('website'),
+                    fastReply: true // GuideSignal jobs are fast-reply by default
+                };
+                
+                // Create job in Firebase
+                const result = await dbFunctions.createJob(jobData);
+                
+                if (result.success) {
+                    showSuccess('Job posted successfully!');
+                    
+                    // Update user's job count
+                    const currentJobsPosted = userData.jobsPosted || 0;
+                    await dbFunctions.updateUserData(currentUser.uid, {
+                        jobsPosted: currentJobsPosted + 1,
+                        company: jobData.companyName // Update company name
+                    });
+                    
+                    // Redirect to my jobs after success
+                    setTimeout(() => {
+                        window.location.href = '/my-jobs.html';
+                    }, 2000);
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Job posting error:', error);
+                showError('Failed to post job. Please try again.');
+                
+                // Reset button
+                submitBtn.disabled = false;
+                btnText.textContent = 'Post Job';
+            }
+        });
+
+        // Utility functions
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        function hideMessages() {
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        // Initialize page
+        initPage();
+    </script>
+</body>
+</html>

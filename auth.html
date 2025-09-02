@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sign in or sign up for GuideSignal - Connect students with fast-reply employers">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Sign In - GuideSignal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #1e3a5f;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 40px rgba(30, 58, 95, 0.15);
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            padding: 10px;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.1);
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 300;
+            color: #1e3a5f;
+            margin-top: 15px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #6c757d;
+            transition: all 0.2s ease;
+        }
+
+        .auth-tab.active {
+            background: white;
+            color: #1e3a5f;
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #1e3a5f;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4a9eff;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .role-option {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .role-option:hover {
+            border-color: #4a9eff;
+        }
+
+        .role-option.selected {
+            border-color: #4a9eff;
+            background: #f0f8ff;
+        }
+
+        .role-title {
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 5px;
+        }
+
+        .role-desc {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #4a9eff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #2c8afc;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            color: #6c757d;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #4a9eff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+            
+            .role-selector {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <a href="/" class="back-link">← Back to Home</a>
+        
+        <div class="logo">
+            <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo">
+            <h1>GuideSignal</h1>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchTab('signin')">Sign In</button>
+            <button class="auth-tab" onclick="switchTab('signup')">Sign Up</button>
+        </div>
+
+        <div id="error-message" class="error-message" style="display: none;"></div>
+        <div id="success-message" class="success-message" style="display: none;"></div>
+
+        <!-- Sign In Form -->
+        <form id="signin-form" class="auth-form">
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" id="signin-email" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" id="signin-password" required>
+            </div>
+            
+            <button type="submit" class="btn" id="signin-btn">
+                <span class="btn-text">Sign In</span>
+            </button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signup-form" class="auth-form" style="display: none;">
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-input" id="signup-name" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" id="signup-email" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" id="signup-password" required minlength="6">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">I am a...</label>
+                <div class="role-selector">
+                    <div class="role-option" data-role="student">
+                        <div class="role-title">🎓 Student</div>
+                        <div class="role-desc">Looking for jobs and internships</div>
+                    </div>
+                    <div class="role-option" data-role="recruiter">
+                        <div class="role-title">🏢 Recruiter</div>
+                        <div class="role-desc">Posting jobs and hiring talent</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn" id="signup-btn" disabled>
+                <span class="btn-text">Create Account</span>
+            </button>
+        </form>
+    </div>
+
+    <script type="module">
+        import { authFunctions, utils, USER_ROLES } from './firebase-config.js';
+
+        // State management
+        let currentTab = 'signin';
+        let selectedRole = null;
+
+        // Tab switching
+        window.switchTab = function(tab) {
+            currentTab = tab;
+            
+            // Update tab buttons
+            document.querySelectorAll('.auth-tab').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide forms
+            document.getElementById('signin-form').style.display = tab === 'signin' ? 'block' : 'none';
+            document.getElementById('signup-form').style.display = tab === 'signup' ? 'block' : 'none';
+            
+            // Clear messages
+            hideMessages();
+        };
+
+        // Role selection
+        document.querySelectorAll('.role-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selection from all options
+                document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
+                
+                // Add selection to clicked option
+                this.classList.add('selected');
+                selectedRole = this.dataset.role;
+                
+                // Enable signup button
+                document.getElementById('signup-btn').disabled = false;
+            });
+        });
+
+        // Form submissions
+        document.getElementById('signin-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('signin-email').value;
+            const password = document.getElementById('signin-password').value;
+            
+            setLoading('signin-btn', true);
+            hideMessages();
+            
+            const result = await authFunctions.signInUser(email, password);
+            
+            if (result.success) {
+                showSuccess('Sign in successful! Redirecting...');
+                
+                // Get user role and redirect
+                setTimeout(async () => {
+                    const role = await utils.getUserRole(result.user.uid);
+                    utils.redirectToDashboard(role);
+                }, 1500);
+            } else {
+                showError(result.error);
+                setLoading('signin-btn', false);
+            }
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!selectedRole) {
+                showError('Please select your role (Student or Recruiter)');
+                return;
+            }
+            
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            
+            setLoading('signup-btn', true);
+            hideMessages();
+            
+            const additionalData = {
+                profileComplete: false
+            };
+            
+            // Add role-specific data
+            if (selectedRole === USER_ROLES.STUDENT) {
+                additionalData.skills = [];
+                additionalData.experience = '';
+                additionalData.education = '';
+            } else if (selectedRole === USER_ROLES.RECRUITER) {
+                additionalData.company = '';
+                additionalData.jobsPosted = 0;
+                additionalData.verified = false;
+            }
+            
+            const result = await authFunctions.registerUser(email, password, name, selectedRole, additionalData);
+            
+            if (result.success) {
+                showSuccess('Account created successfully! Redirecting...');
+                
+                // Redirect to dashboard
+                setTimeout(() => {
+                    utils.redirectToDashboard(selectedRole);
+                }, 1500);
+            } else {
+                showError(result.error);
+                setLoading('signup-btn', false);
+            }
+        });
+
+        // Utility functions
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        function hideMessages() {
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        function setLoading(btnId, loading) {
+            const btn = document.getElementById(btnId);
+            const btnText = btn.querySelector('.btn-text');
+            
+            if (loading) {
+                btn.disabled = true;
+                btnText.innerHTML = '<span class="loading"></span>Processing...';
+            } else {
+                btn.disabled = false;
+                btnText.textContent = btnId.includes('signin') ? 'Sign In' : 'Create Account';
+            }
+        }
+
+        // Check if user is already authenticated
+        authFunctions.onAuthStateChanged(async (user) => {
+            if (user) {
+                const role = await utils.getUserRole(user.uid);
+                if (role) {
+                    utils.redirectToDashboard(role);
+                }
+            }
+        });
+
+        console.log('Auth page loaded successfully');
+    </script>
+</body>
+</html>

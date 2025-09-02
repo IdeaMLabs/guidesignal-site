@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Recruiter Dashboard - Manage your job postings and applications on GuideSignal">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Recruiter Dashboard - GuideSignal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #1e3a5f;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(30, 58, 95, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e3a5f;
+            text-decoration: none;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: #1e3a5f;
+        }
+
+        .btn-logout {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .btn-logout:hover {
+            background: #c82333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .welcome-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+        }
+
+        .welcome-title {
+            font-size: 32px;
+            font-weight: 300;
+            color: #1e3a5f;
+            margin-bottom: 10px;
+        }
+
+        .welcome-subtitle {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+            border: 1px solid #e9ecef;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 200;
+            color: #4a9eff;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 500;
+            color: #1e3a5f;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #4a9eff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #2c8afc;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a9eff;
+            border: 2px solid #4a9eff;
+        }
+
+        .btn-secondary:hover {
+            background: #4a9eff;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .job-card {
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .job-card:hover {
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .job-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 5px;
+        }
+
+        .job-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .job-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: #e8f5e8;
+            color: #166534;
+        }
+
+        .status-featured {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status-paused {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .action-card {
+            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+            color: white;
+        }
+
+        .action-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .action-desc {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e9ecef;
+            border-top: 4px solid #4a9eff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .application-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .applicant-info h4 {
+            color: #1e3a5f;
+            margin-bottom: 5px;
+        }
+
+        .applicant-meta {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .feature-highlight {
+            background: linear-gradient(135deg, #fff3cd, #ffeeba);
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .feature-text {
+            color: #856404;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .welcome-title {
+                font-size: 24px;
+            }
+
+            .job-header {
+                flex-direction: column;
+            }
+
+            .job-actions {
+                justify-content: flex-start;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">GuideSignal</a>
+            <div class="user-menu">
+                <span class="user-name" id="user-name">Loading...</span>
+                <button class="btn-logout" onclick="logout()">Sign Out</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title" id="welcome-title">Welcome back!</h1>
+            <p class="welcome-subtitle">Manage your job postings and connect with top talent</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="jobs-count">-</div>
+                    <div class="stat-label">Active Jobs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="applications-count">-</div>
+                    <div class="stat-label">Total Applications</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="featured-count">-</div>
+                    <div class="stat-label">Featured Jobs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="reply-rate">-%</div>
+                    <div class="stat-label">Reply Rate</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Quick Actions</h2>
+            </div>
+            <div class="quick-actions">
+                <a href="/post.html" class="action-card">
+                    <div class="action-title">📝 Post New Job</div>
+                    <div class="action-desc">Create a new job posting and start receiving applications</div>
+                </a>
+                <a href="/my-jobs.html" class="action-card">
+                    <div class="action-title">⭐ Feature Jobs</div>
+                    <div class="action-desc">Feature your jobs for 3x more visibility and priority placement</div>
+                </a>
+                <a href="#" class="action-card" onclick="viewAnalytics()">
+                    <div class="action-title">📊 View Analytics</div>
+                    <div class="action-desc">Track performance and optimize your job postings</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">My Jobs</h2>
+                <a href="/post.html" class="btn">Post New Job</a>
+            </div>
+            
+            <div id="jobs-loading" class="loading">
+                <div class="spinner"></div>
+            </div>
+            
+            <div id="jobs-container" style="display: none;">
+                <!-- Jobs will be loaded here -->
+            </div>
+            
+            <div id="jobs-empty" class="empty-state" style="display: none;">
+                <div class="empty-icon">💼</div>
+                <h3>No jobs posted yet</h3>
+                <p>Start by posting your first job to connect with qualified candidates</p>
+                <a href="/post.html" class="btn" style="margin-top: 20px;">Post Your First Job</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Recent Applications</h2>
+                <a href="#" class="btn btn-secondary" onclick="viewAllApplications()">View All</a>
+            </div>
+            
+            <div id="applications-loading" class="loading">
+                <div class="spinner"></div>
+            </div>
+            
+            <div id="applications-container" style="display: none;">
+                <!-- Applications will be loaded here -->
+            </div>
+            
+            <div id="applications-empty" class="empty-state" style="display: none;">
+                <div class="empty-icon">📄</div>
+                <h3>No applications yet</h3>
+                <p>Applications will appear here once candidates start applying to your jobs</p>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { authFunctions, dbFunctions, utils, USER_ROLES } from './firebase-config.js';
+
+        let currentUser = null;
+        let userData = null;
+
+        // Initialize dashboard
+        async function initDashboard() {
+            // Check authentication
+            authFunctions.onAuthStateChanged(async (user) => {
+                if (user) {
+                    currentUser = user;
+                    const userDataResult = await dbFunctions.getUserData(user.uid);
+                    
+                    if (userDataResult.success) {
+                        userData = userDataResult.data;
+                        
+                        // Check if user is a recruiter
+                        if (userData.role !== USER_ROLES.RECRUITER) {
+                            utils.redirectToDashboard(userData.role);
+                            return;
+                        }
+                        
+                        // Load dashboard content
+                        loadDashboard();
+                    } else {
+                        console.error('Error loading user data:', userDataResult.error);
+                        window.location.href = '/auth.html';
+                    }
+                } else {
+                    window.location.href = '/auth.html';
+                }
+            });
+        }
+
+        // Load dashboard content
+        async function loadDashboard() {
+            // Update UI with user info
+            document.getElementById('user-name').textContent = userData.displayName;
+            document.getElementById('welcome-title').textContent = `Welcome back, ${userData.displayName.split(' ')[0]}!`;
+            
+            // Load jobs and applications
+            await loadJobs();
+            await loadRecentApplications();
+            
+            // Update stats
+            updateStats();
+        }
+
+        // Load recruiter's jobs
+        async function loadJobs() {
+            const jobsResult = await dbFunctions.getJobs({ employerId: currentUser.uid });
+            
+            document.getElementById('jobs-loading').style.display = 'none';
+            
+            if (jobsResult.success && jobsResult.jobs.length > 0) {
+                displayJobs(jobsResult.jobs);
+                document.getElementById('jobs-container').style.display = 'block';
+            } else {
+                document.getElementById('jobs-empty').style.display = 'block';
+            }
+        }
+
+        // Display jobs
+        function displayJobs(jobs) {
+            const container = document.getElementById('jobs-container');
+            container.innerHTML = '';
+            
+            jobs.forEach(job => {
+                const card = document.createElement('div');
+                card.className = 'job-card';
+                
+                const statusClass = job.featured ? 'featured' : (job.status === 'active' ? 'active' : 'paused');
+                const statusText = job.featured ? 'Featured' : job.status;
+                
+                card.innerHTML = `
+                    <div class="job-header">
+                        <div>
+                            <div class="job-title">${job.title}</div>
+                            <div class="job-meta">
+                                <span>📍 ${job.location}</span>
+                                <span>💼 ${job.type}</span>
+                                <span>📅 Posted ${utils.formatDate(job.createdAt)}</span>
+                                ${job.salary ? `<span style="background: #e8f5e8; color: #166534; padding: 4px 8px; border-radius: 4px;">$${job.salary}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="job-status status-${statusClass}">${statusText}</div>
+                    </div>
+                    <div class="job-meta">
+                        <span>👥 ${job.applications || 0} applications</span>
+                        <span>👁️ ${job.views || 0} views</span>
+                    </div>
+                    <div class="job-actions">
+                        <button class="btn btn-secondary" onclick="viewJob('${job.id}')">View</button>
+                        <button class="btn btn-secondary" onclick="editJob('${job.id}')">Edit</button>
+                        ${!job.featured ? 
+                            `<a href="https://buy.stripe.com/8x25kC7gS1zz6AxeFk5Rm00?client_reference_id=${job.id}" 
+                               class="btn btn-success" target="_blank" rel="noopener">Feature for $25</a>` : 
+                            '<span class="btn" style="background: #6c757d; cursor: not-allowed;">Featured</span>'
+                        }
+                        <button class="btn btn-secondary" onclick="toggleJobStatus('${job.id}', '${job.status}')">
+                            ${job.status === 'active' ? 'Pause' : 'Activate'}
+                        </button>
+                    </div>
+                    ${!job.featured ? `
+                        <div class="feature-highlight">
+                            <div class="feature-text">💡 Feature this job to get 3x more visibility and priority placement</div>
+                        </div>
+                    ` : ''}
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Load recent applications
+        async function loadRecentApplications() {
+            const applicationsResult = await dbFunctions.getApplications({ 
+                employerId: currentUser.uid 
+            });
+            
+            document.getElementById('applications-loading').style.display = 'none';
+            
+            if (applicationsResult.success && applicationsResult.applications.length > 0) {
+                displayRecentApplications(applicationsResult.applications.slice(0, 5)); // Show last 5
+                document.getElementById('applications-container').style.display = 'block';
+            } else {
+                document.getElementById('applications-empty').style.display = 'block';
+            }
+        }
+
+        // Display recent applications
+        function displayRecentApplications(applications) {
+            const container = document.getElementById('applications-container');
+            container.innerHTML = '';
+            
+            applications.forEach(application => {
+                const item = document.createElement('div');
+                item.className = 'application-item';
+                item.innerHTML = `
+                    <div class="applicant-info">
+                        <h4>${application.applicantName || 'Anonymous Applicant'}</h4>
+                        <div class="applicant-meta">
+                            Applied to: ${application.jobTitle} • ${utils.formatDate(application.createdAt)}
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-secondary" onclick="viewApplication('${application.id}')">Review</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Update stats
+        async function updateStats() {
+            const jobsResult = await dbFunctions.getJobs({ employerId: currentUser.uid });
+            const applicationsResult = await dbFunctions.getApplications({ employerId: currentUser.uid });
+            
+            if (jobsResult.success) {
+                const jobs = jobsResult.jobs;
+                const activeJobs = jobs.filter(job => job.status === 'active').length;
+                const featuredJobs = jobs.filter(job => job.featured).length;
+                
+                document.getElementById('jobs-count').textContent = activeJobs;
+                document.getElementById('featured-count').textContent = featuredJobs;
+            }
+            
+            if (applicationsResult.success) {
+                document.getElementById('applications-count').textContent = applicationsResult.applications.length;
+                
+                // Calculate reply rate (mock data for now)
+                const replyRate = applicationsResult.applications.length > 0 ? 85 : 0;
+                document.getElementById('reply-rate').textContent = replyRate + '%';
+            }
+        }
+
+        // Global functions
+        window.logout = async function() {
+            const result = await authFunctions.signOutUser();
+            if (result.success) {
+                window.location.href = '/';
+            }
+        };
+
+        window.viewJob = function(jobId) {
+            utils.showNotification('Job details coming soon!', 'info');
+        };
+
+        window.editJob = function(jobId) {
+            window.location.href = `/post.html?edit=${jobId}`;
+        };
+
+        window.toggleJobStatus = async function(jobId, currentStatus) {
+            const newStatus = currentStatus === 'active' ? 'paused' : 'active';
+            const result = await dbFunctions.updateJob(jobId, { status: newStatus });
+            
+            if (result.success) {
+                utils.showNotification(`Job ${newStatus}!`, 'success');
+                loadJobs(); // Reload jobs
+            } else {
+                utils.showNotification('Error updating job status', 'error');
+            }
+        };
+
+        window.viewApplication = function(applicationId) {
+            utils.showNotification('Application details coming soon!', 'info');
+        };
+
+        window.viewAllApplications = function() {
+            utils.showNotification('Applications management coming soon!', 'info');
+        };
+
+        window.viewAnalytics = function() {
+            utils.showNotification('Analytics dashboard coming soon!', 'info');
+        };
+
+        // Initialize when page loads
+        initDashboard();
+    </script>
+</body>
+</html>
