@@ -229,17 +229,64 @@
             border-radius: 8px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             background: white;
+            position: relative;
         }
 
         .role-option:hover {
             border-color: #4a9eff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.15);
         }
 
         .role-option.selected {
             border-color: #4a9eff;
-            background: #f0f8ff;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(74, 158, 255, 0.25);
+        }
+
+        .role-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #4a9eff;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .terms-accepted {
+            border-color: #10b981 !important;
+            background: #f0fdf4 !important;
+        }
+
+        .terms-rejected {
+            border-color: #ef4444 !important;
+            background: #fef2f2 !important;
+        }
+
+        .form-valid {
+            position: relative;
+        }
+
+        .form-valid::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981 0%, #4a9eff 100%);
+            border-radius: 16px 16px 0 0;
         }
 
         .role-title {
@@ -354,6 +401,10 @@
             animation: slideUp 0.5s ease-out;
         }
 
+        .auth-form {
+            transition: opacity 0.3s ease;
+        }
+
         @keyframes slideUp {
             from {
                 opacity: 0;
@@ -363,6 +414,36 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        .signup-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            padding: 10px 5px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #6c757d;
+            background: #f8f9fa;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            background: #4a9eff;
+            color: white;
+        }
+
+        .progress-step.completed {
+            background: #10b981;
+            color: white;
         }
 
         .divider {
@@ -569,10 +650,17 @@
                 </div>
             </div>
             
+            <!-- Progress indicator -->
+            <div class="signup-progress" id="signup-progress" style="display: none;">
+                <div class="progress-step" data-step="1">Info</div>
+                <div class="progress-step" data-step="2">Role</div>
+                <div class="progress-step" data-step="3">Terms</div>
+            </div>
+            
             <div class="form-group" style="margin-top: 10px;">
-                <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #6c757d;">
-                    <input type="checkbox" id="terms-agreement" required>
-                    I agree to the <a href="/terms.html" target="_blank" style="color: #4a9eff;">Terms of Service</a> and <a href="/privacy.html" target="_blank" style="color: #4a9eff;">Privacy Policy</a>
+                <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #6c757d; line-height: 1.4;">
+                    <input type="checkbox" id="terms-agreement" required style="margin-top: 2px; flex-shrink: 0;">
+                    <span>I agree to the <a href="/terms.html" target="_blank" style="color: #4a9eff; text-decoration: none;">Terms of Service</a> and <a href="/privacy.html" target="_blank" style="color: #4a9eff; text-decoration: none;">Privacy Policy</a></span>
                 </label>
             </div>
             
@@ -614,37 +702,80 @@
             // Save current form data
             saveFormData(currentTab);
             
+            const previousTab = currentTab;
             currentTab = tab;
             
-            // Update tab buttons
+            // Update tab buttons with animation
             document.querySelectorAll('.auth-tab').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Show/hide forms
-            document.getElementById('signin-form').style.display = tab === 'signin' ? 'block' : 'none';
-            document.getElementById('signup-form').style.display = tab === 'signup' ? 'block' : 'none';
+            // Animate form transition
+            const currentForm = document.getElementById(previousTab + '-form');
+            const newForm = document.getElementById(tab + '-form');
             
-            // Restore form data
-            restoreFormData(tab);
+            if (currentForm) {
+                currentForm.style.opacity = '0';
+                setTimeout(() => {
+                    currentForm.style.display = 'none';
+                    if (newForm) {
+                        newForm.style.display = 'block';
+                        newForm.style.opacity = '0';
+                        setTimeout(() => {
+                            newForm.style.opacity = '1';
+                        }, 50);
+                    }
+                }, 150);
+            }
+            
+            // Restore form data after animation
+            setTimeout(() => {
+                restoreFormData(tab);
+                
+                // Re-run validations for signup form
+                if (tab === 'signup') {
+                    validateSignUpButton();
+                    checkFormValidity();
+                    
+                    // Restore role selection visual state
+                    if (selectedRole) {
+                        const roleOption = document.querySelector(`[data-role="${selectedRole}"]`);
+                        if (roleOption) {
+                            roleOption.classList.add('selected');
+                        }
+                    }
+                }
+            }, 200);
             
             // Clear messages
             hideMessages();
         };
 
-        // Form data management
+        // Enhanced form data management
         function saveFormData(tab) {
             if (tab === 'signin') {
+                const emailEl = document.getElementById('signin-email');
+                const passwordEl = document.getElementById('signin-password');
+                const rememberEl = document.getElementById('remember-me');
+                
                 formData.signin = {
-                    email: document.getElementById('signin-email')?.value || '',
-                    password: document.getElementById('signin-password')?.value || '',
-                    rememberMe: document.getElementById('remember-me')?.checked || false
+                    email: emailEl?.value || '',
+                    password: passwordEl?.value || '',
+                    rememberMe: rememberEl?.checked || false
                 };
             } else if (tab === 'signup') {
+                const nameEl = document.getElementById('signup-name');
+                const emailEl = document.getElementById('signup-email');
+                const passwordEl = document.getElementById('signup-password');
+                const confirmEl = document.getElementById('signup-password-confirm');
+                const termsEl = document.getElementById('terms-agreement');
+                
                 formData.signup = {
-                    name: document.getElementById('signup-name')?.value || '',
-                    email: document.getElementById('signup-email')?.value || '',
-                    password: document.getElementById('signup-password')?.value || '',
-                    passwordConfirm: document.getElementById('signup-password-confirm')?.value || ''
+                    name: nameEl?.value || '',
+                    email: emailEl?.value || '',
+                    password: passwordEl?.value || '',
+                    passwordConfirm: confirmEl?.value || '',
+                    termsAccepted: termsEl?.checked || false,
+                    selectedRole: selectedRole
                 };
             }
         }
@@ -652,48 +783,167 @@
         function restoreFormData(tab) {
             if (tab === 'signin' && formData.signin) {
                 const data = formData.signin;
-                document.getElementById('signin-email').value = data.email || '';
-                document.getElementById('signin-password').value = data.password || '';
-                document.getElementById('remember-me').checked = data.rememberMe || false;
+                const emailEl = document.getElementById('signin-email');
+                const passwordEl = document.getElementById('signin-password');
+                const rememberEl = document.getElementById('remember-me');
+                
+                if (emailEl) emailEl.value = data.email || '';
+                if (passwordEl) passwordEl.value = data.password || '';
+                if (rememberEl) rememberEl.checked = data.rememberMe || false;
             } else if (tab === 'signup' && formData.signup) {
                 const data = formData.signup;
-                document.getElementById('signup-name').value = data.name || '';
-                document.getElementById('signup-email').value = data.email || '';
-                document.getElementById('signup-password').value = data.password || '';
-                document.getElementById('signup-password-confirm').value = data.passwordConfirm || '';
+                const nameEl = document.getElementById('signup-name');
+                const emailEl = document.getElementById('signup-email');
+                const passwordEl = document.getElementById('signup-password');
+                const confirmEl = document.getElementById('signup-password-confirm');
+                const termsEl = document.getElementById('terms-agreement');
+                
+                if (nameEl) nameEl.value = data.name || '';
+                if (emailEl) emailEl.value = data.email || '';
+                if (passwordEl) passwordEl.value = data.password || '';
+                if (confirmEl) confirmEl.value = data.passwordConfirm || '';
+                if (termsEl) termsEl.checked = data.termsAccepted || false;
+                
+                // Restore role selection
+                if (data.selectedRole) {
+                    selectedRole = data.selectedRole;
+                }
             }
         }
 
-        // Enhanced role selection
-        document.querySelectorAll('.role-option').forEach(option => {
-            option.addEventListener('click', function() {
-                // Remove selection from all options
-                document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
+        // Enhanced role selection with better feedback
+        function setupRoleSelection() {
+            document.querySelectorAll('.role-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    // Animate deselection
+                    document.querySelectorAll('.role-option.selected').forEach(opt => {
+                        opt.classList.add('deselecting');
+                        setTimeout(() => {
+                            opt.classList.remove('selected', 'deselecting');
+                        }, 150);
+                    });
+                    
+                    // Animate selection
+                    setTimeout(() => {
+                        this.classList.add('selected');
+                        selectedRole = this.dataset.role;
+                        
+                        // Show role confirmation
+                        const roleName = this.querySelector('.role-title').textContent;
+                        showRoleConfirmation(`Selected: ${roleName}`);
+                        
+                        // Check if all requirements are met to enable signup button
+                        validateSignUpButton();
+                        checkFormValidity();
+                    }, 150);
+                });
                 
-                // Add selection to clicked option
-                this.classList.add('selected');
-                selectedRole = this.dataset.role;
+                // Add keyboard support
+                option.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
                 
-                // Check if all requirements are met to enable signup button
-                validateSignUpButton();
+                // Make focusable
+                option.setAttribute('tabindex', '0');
             });
-        });
+        }
+        
+        // Show role selection confirmation
+        function showRoleConfirmation(message) {
+            // Remove any existing confirmation
+            const existing = document.querySelector('.role-confirmation');
+            if (existing) {
+                existing.remove();
+            }
+            
+            // Create confirmation element
+            const confirmation = document.createElement('div');
+            confirmation.className = 'role-confirmation';
+            confirmation.style.cssText = `
+                color: #10b981;
+                font-size: 14px;
+                font-weight: 500;
+                margin-top: 10px;
+                text-align: center;
+                animation: fadeInUp 0.3s ease;
+            `;
+            confirmation.textContent = message;
+            
+            // Insert after role selector
+            const roleSelector = document.querySelector('.role-selector');
+            roleSelector.parentNode.insertBefore(confirmation, roleSelector.nextSibling);
+        }
+        
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .role-option.deselecting {
+                transform: scale(0.95);
+                opacity: 0.7;
+            }
+        `;
+        document.head.appendChild(style);
 
         // Enhanced signup button validation
         function validateSignUpButton() {
             const signupBtn = document.getElementById('signup-btn');
             const termsCheckbox = document.getElementById('terms-agreement');
             
-            // Enable button only if role is selected and terms are agreed
-            const shouldEnable = selectedRole && termsCheckbox && termsCheckbox.checked;
+            if (!signupBtn) return;
+            
+            // Check all requirements
+            const hasRole = selectedRole !== null;
+            const hasTerms = termsCheckbox && termsCheckbox.checked;
+            const isOnline = navigator.onLine;
+            
+            // Enable button only if all requirements are met
+            const shouldEnable = hasRole && hasTerms && isOnline;
             signupBtn.disabled = !shouldEnable;
+            
+            // Update button text to show what's missing
+            if (!shouldEnable) {
+                let missing = [];
+                if (!hasRole) missing.push('select role');
+                if (!hasTerms) missing.push('agree to terms');
+                if (!isOnline) missing.push('internet connection');
+                
+                signupBtn.title = `Please ${missing.join(', ')} to continue`;
+            } else {
+                signupBtn.title = 'Create your account';
+            }
         }
 
         // Terms agreement handling
         function setupTermsAgreement() {
             const termsCheckbox = document.getElementById('terms-agreement');
             if (termsCheckbox) {
-                termsCheckbox.addEventListener('change', validateSignUpButton);
+                termsCheckbox.addEventListener('change', () => {
+                    validateSignUpButton();
+                    
+                    // Visual feedback for terms acceptance
+                    const termsGroup = termsCheckbox.closest('.form-group');
+                    if (termsCheckbox.checked) {
+                        termsGroup.classList.add('terms-accepted');
+                        termsGroup.classList.remove('terms-rejected');
+                    } else {
+                        termsGroup.classList.remove('terms-accepted');
+                        termsGroup.classList.add('terms-rejected');
+                    }
+                });
             }
         }
 
@@ -765,24 +1015,42 @@
         document.getElementById('signup-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            if (!selectedRole) {
-                showError('Please select your role (Student or Recruiter)');
-                return;
-            }
-            
-            const name = document.getElementById('signup-name').value;
-            const email = document.getElementById('signup-email').value;
+            // Comprehensive pre-validation
+            const name = document.getElementById('signup-name').value.trim();
+            const email = document.getElementById('signup-email').value.trim().toLowerCase();
             const password = document.getElementById('signup-password').value;
             const passwordConfirm = document.getElementById('signup-password-confirm').value;
+            const termsCheckbox = document.getElementById('terms-agreement');
             
-            // Comprehensive validation
+            // Clear previous errors
+            hideMessages();
+            clearFieldErrors();
+            
+            let hasErrors = false;
+            
+            // Role selection validation
+            if (!selectedRole) {
+                showError('Please select your role (Student or Recruiter)');
+                hasErrors = true;
+            }
+            
+            // Terms agreement validation
+            if (!termsCheckbox || !termsCheckbox.checked) {
+                showError('Please agree to the Terms of Service and Privacy Policy');
+                hasErrors = true;
+            }
+            
+            // Form field validation
             if (!validateSignUpForm(name, email, password, passwordConfirm)) {
+                hasErrors = true;
+            }
+            
+            // Stop if any validation errors
+            if (hasErrors) {
                 return;
             }
             
             setLoading('signup-btn', true);
-            hideMessages();
-            clearFieldErrors();
             
             const additionalData = {
                 profileComplete: false,
@@ -809,14 +1077,30 @@
             );
             
             if (result.success) {
-                showSuccess('Account created successfully! Please check your email for verification. Redirecting...');
+                // Show success message with email verification notice
+                if (result.emailVerificationSent) {
+                    showSuccess('Account created successfully! Please check your email to verify your account before signing in.');
+                } else {
+                    showSuccess('Account created successfully! You can now sign in.');
+                }
                 
                 // Clear form data
                 formData.signup = {};
                 
-                // Redirect to dashboard
+                // Reset form
+                document.getElementById('signup-form').reset();
+                selectedRole = null;
+                document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
+                
+                // Switch to sign-in tab after successful registration
                 setTimeout(() => {
-                    utils.redirectToDashboard(selectedRole);
+                    switchTab('signin');
+                    // Pre-fill email in sign-in form and focus password
+                    document.getElementById('signin-email').value = email;
+                    setTimeout(() => {
+                        document.getElementById('signin-password').focus();
+                    }, 500);
+                    showSuccess('Registration complete! Please sign in with your credentials');
                 }, 2000);
             } else {
                 const friendlyError = getFriendlyErrorMessage(result.error);
@@ -897,22 +1181,38 @@
         function validateSignUpForm(name, email, password, passwordConfirm) {
             let isValid = true;
             
-            if (!validateName(name)) {
-                showFieldError('signup-name', 'Please enter a valid full name (2-50 characters)');
+            // Name validation
+            if (!name || name.length < 2) {
+                showFieldError('signup-name', 'Full name must be at least 2 characters');
+                isValid = false;
+            } else if (!validateName(name)) {
+                showFieldError('signup-name', 'Please enter a valid full name (letters and spaces only)');
                 isValid = false;
             }
             
-            if (!validateEmail(email)) {
+            // Email validation
+            if (!email) {
+                showFieldError('signup-email', 'Email address is required');
+                isValid = false;
+            } else if (!validateEmail(email)) {
                 showFieldError('signup-email', 'Please enter a valid email address');
                 isValid = false;
             }
             
-            if (!validatePassword(password)) {
+            // Password validation
+            if (!password) {
+                showFieldError('signup-password', 'Password is required');
+                isValid = false;
+            } else if (!validatePassword(password)) {
                 showFieldError('signup-password', 'Password must be at least 8 characters with uppercase, lowercase, number, and special character');
                 isValid = false;
             }
             
-            if (password !== passwordConfirm) {
+            // Password confirmation validation
+            if (!passwordConfirm) {
+                showFieldError('signup-password-confirm', 'Please confirm your password');
+                isValid = false;
+            } else if (password !== passwordConfirm) {
                 showFieldError('signup-password-confirm', 'Passwords do not match');
                 isValid = false;
             }
@@ -925,7 +1225,9 @@
         }
 
         function validateName(name) {
-            return validationPatterns.name.test(name);
+            // More flexible name validation - allow apostrophes, hyphens, and international characters
+            const namePattern = /^[a-zA-Z\s'\-À-ÿ]{2,50}$/;
+            return namePattern.test(name.trim());
         }
 
         function validatePassword(password) {
@@ -1234,7 +1536,12 @@
                 const input = document.getElementById(id);
                 if (input) {
                     input.addEventListener('blur', () => validateEmailField(id));
-                    input.addEventListener('input', () => clearFieldError(id));
+                    input.addEventListener('input', () => {
+                        clearFieldError(id);
+                        if (id === 'signup-email') {
+                            checkFormValidity();
+                        }
+                    });
                 }
             });
             
@@ -1242,7 +1549,10 @@
             const nameInput = document.getElementById('signup-name');
             if (nameInput) {
                 nameInput.addEventListener('blur', () => validateNameField());
-                nameInput.addEventListener('input', () => clearFieldError('signup-name'));
+                nameInput.addEventListener('input', () => {
+                    clearFieldError('signup-name');
+                    checkFormValidity();
+                });
             }
             
             // Password validation
@@ -1251,6 +1561,7 @@
                 signupPassword.addEventListener('input', () => {
                     validatePasswordStrength();
                     clearFieldError('signup-password');
+                    checkFormValidity();
                     if (document.getElementById('signup-password-confirm').value) {
                         validatePasswordConfirm();
                     }
@@ -1260,8 +1571,81 @@
             // Password confirmation
             const passwordConfirm = document.getElementById('signup-password-confirm');
             if (passwordConfirm) {
-                passwordConfirm.addEventListener('input', validatePasswordConfirm);
+                passwordConfirm.addEventListener('input', () => {
+                    validatePasswordConfirm();
+                    checkFormValidity();
+                });
                 passwordConfirm.addEventListener('blur', validatePasswordConfirm);
+            }
+        }
+
+        // Check overall form validity for visual feedback
+        function checkFormValidity() {
+            if (currentTab !== 'signup') return;
+            
+            const name = document.getElementById('signup-name')?.value.trim() || '';
+            const email = document.getElementById('signup-email')?.value.trim() || '';
+            const password = document.getElementById('signup-password')?.value || '';
+            const passwordConfirm = document.getElementById('signup-password-confirm')?.value || '';
+            const termsCheckbox = document.getElementById('terms-agreement');
+            
+            // Check individual field validity
+            const nameValid = name.length >= 2 && validateName(name);
+            const emailValid = validateEmail(email);
+            const passwordValid = validatePassword(password);
+            const passwordMatchValid = password === passwordConfirm && passwordConfirm.length > 0;
+            const roleValid = selectedRole !== null;
+            const termsValid = termsCheckbox && termsCheckbox.checked;
+            
+            // Update progress indicator
+            updateSignupProgress(nameValid && emailValid && passwordValid && passwordMatchValid, roleValid, termsValid);
+            
+            const isFormValid = nameValid && emailValid && passwordValid && passwordMatchValid && roleValid && termsValid;
+            
+            // Update form styling based on validity
+            const form = document.getElementById('signup-form');
+            if (form) {
+                if (isFormValid) {
+                    form.classList.add('form-valid');
+                } else {
+                    form.classList.remove('form-valid');
+                }
+            }
+            
+            return isFormValid;
+        }
+        
+        // Update signup progress indicator
+        function updateSignupProgress(infoComplete, roleComplete, termsComplete) {
+            const progressContainer = document.getElementById('signup-progress');
+            if (!progressContainer) return;
+            
+            // Show progress when user starts signup form
+            if (currentTab === 'signup') {
+                progressContainer.style.display = 'flex';
+            }
+            
+            const steps = progressContainer.querySelectorAll('.progress-step');
+            
+            // Update step 1 (Info)
+            const step1 = steps[0];
+            if (step1) {
+                step1.classList.toggle('completed', infoComplete);
+                step1.classList.toggle('active', !infoComplete);
+            }
+            
+            // Update step 2 (Role)
+            const step2 = steps[1];
+            if (step2) {
+                step2.classList.toggle('completed', roleComplete);
+                step2.classList.toggle('active', infoComplete && !roleComplete);
+            }
+            
+            // Update step 3 (Terms)
+            const step3 = steps[2];
+            if (step3) {
+                step3.classList.toggle('completed', termsComplete);
+                step3.classList.toggle('active', infoComplete && roleComplete && !termsComplete);
             }
         }
 
@@ -1273,17 +1657,31 @@
             
             // Restore remembered email
             const rememberedEmail = localStorage.getItem('rememberEmail');
-            if (rememberedEmail) {
-                document.getElementById('signin-email').value = rememberedEmail;
-                document.getElementById('remember-me').checked = true;
+            const signinEmail = document.getElementById('signin-email');
+            const rememberMe = document.getElementById('remember-me');
+            
+            if (rememberedEmail && signinEmail && rememberMe) {
+                signinEmail.value = rememberedEmail;
+                rememberMe.checked = true;
             }
             
             // Check URL parameters
             checkUrlParameters();
             
+            // Initialize form states
+            if (currentTab === 'signup') {
+                validateSignUpButton();
+                checkFormValidity();
+            }
+            
             // Focus first input with delay for better UX
             setTimeout(() => {
-                document.getElementById('signin-email').focus();
+                if (currentTab === 'signin' && signinEmail) {
+                    signinEmail.focus();
+                } else if (currentTab === 'signup') {
+                    const signupName = document.getElementById('signup-name');
+                    if (signupName) signupName.focus();
+                }
             }, 100);
             
             // Hide page loader
@@ -1429,6 +1827,48 @@
         function initializeApp() {
             initializePage();
             setupTermsAgreement();
+            setupRoleSelection();
+            setupAdvancedValidation();
+        }
+        
+        // Advanced validation features
+        function setupAdvancedValidation() {
+            // Email existence check with debouncing
+            let emailCheckTimeout;
+            const signupEmail = document.getElementById('signup-email');
+            
+            if (signupEmail) {
+                signupEmail.addEventListener('input', () => {
+                    clearTimeout(emailCheckTimeout);
+                    emailCheckTimeout = setTimeout(async () => {
+                        const email = signupEmail.value.trim();
+                        if (email && validateEmail(email)) {
+                            await checkEmailAvailability(email);
+                        }
+                    }, 1000); // 1 second debounce
+                });
+            }
+        }
+        
+        // Check if email is already registered
+        async function checkEmailAvailability(email) {
+            try {
+                const result = await authFunctions.checkEmailExists(email);
+                
+                if (result.success) {
+                    if (result.exists) {
+                        showFieldError('signup-email', 'An account with this email already exists');
+                        return false;
+                    } else {
+                        showFieldSuccess('signup-email', 'Email is available');
+                        return true;
+                    }
+                }
+            } catch (error) {
+                console.error('Email check error:', error);
+                // Don't show error to user, just continue
+            }
+            return true;
         }
 
         if (document.readyState === 'loading') {

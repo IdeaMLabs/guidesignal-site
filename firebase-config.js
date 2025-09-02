@@ -1,7 +1,7 @@
 // Firebase Configuration and Utilities for GuideSignal
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendEmailVerification, sendPasswordResetEmail, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs, updateDoc, orderBy, limit, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs, updateDoc, orderBy, limit, serverTimestamp, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -29,61 +29,144 @@ export const authFunctions = {
   // Enhanced user registration with email verification
   async registerUser(email, password, displayName, role, additionalData = {}) {
     try {
+      // Validate input parameters
+      if (!email || !password || !displayName || !role) {
+        return { success: false, error: 'Missing required registration information' };
+      }
+      
+      // Normalize inputs
+      const normalizedEmail = email.toLowerCase().trim();
+      const normalizedName = displayName.trim();
+      
+      // Check if email already exists in our user collection
+      const existingUserQuery = query(collection(db, 'users'), where('email', '==', normalizedEmail));
+      const existingUsers = await getDocs(existingUserQuery);
+      
+      if (!existingUsers.empty) {
+        return { success: false, error: 'An account with this email already exists' };
+      }
+      
       // Create user account
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, normalizedEmail, password);
       const user = userCredential.user;
       
-      // Update display name
-      await updateProfile(user, { displayName });
+      try {
+        // Update display name
+        await updateProfile(user, { displayName: normalizedName });
+        
+        // Send email verification
+        let emailVerificationSent = false;
+        try {
+          await sendEmailVerification(user, {
+            url: window.location.origin + '/auth.html?verified=true',
+            handleCodeInApp: false
+          });
+          emailVerificationSent = true;
+        } catch (emailError) {
+          console.warn('Email verification failed to send:', emailError);
+          // Continue with registration even if email fails
+        }
+        
+        // Create comprehensive user document in Firestore
+        const userData = {
+          uid: user.uid,
+          email: normalizedEmail,
+          displayName: normalizedName,
+          role: role,
+          createdAt: serverTimestamp(),
+          lastLoginAt: serverTimestamp(),
+          emailVerified: false,
+          emailVerificationSent: emailVerificationSent,
+          loginAttempts: 0,
+          lastFailedLogin: null,
+          accountStatus: 'active',
+          profileCompleted: false,
+          securityLevel: 'basic',
+          registrationSource: 'web_form',
+          preferences: {
+            notifications: true,
+            marketing: false,
+            rememberMe: false,
+            theme: 'light'
+          },
+          metadata: {
+            userAgent: navigator.userAgent,
+            registrationDate: new Date().toISOString(),
+            lastActivity: serverTimestamp()
+          },
+          ...additionalData
+        };
+        
+        await setDoc(doc(db, 'users', user.uid), userData);
+        
+        // Log successful registration
+        await this.logSecurityEvent(user.uid, 'account_created', {
+          method: 'email_password',
+          role: role,
+          emailVerificationSent: emailVerificationSent,
+          timestamp: new Date().toISOString()
+        });
+        
+        console.log('User registered successfully:', user.uid);
+        return { 
+          success: true, 
+          user, 
+          userData,
+          emailVerificationSent 
+        };
+        
+      } catch (profileError) {
+        // If profile setup fails, clean up the created user
+        console.error('Profile setup failed, cleaning up user:', profileError);
+        
+        try {
+          await user.delete();
+        } catch (deleteError) {
+          console.error('Failed to delete user after profile error:', deleteError);
+        }
+        
+        return { 
+          success: false, 
+          error: 'Failed to complete account setup. Please try again.' 
+        };
+      }
       
-      // Send email verification
-      await sendEmailVerification(user, {
-        url: window.location.origin + '/auth.html?verified=true',
-        handleCodeInApp: false
-      });
-      
-      // Create comprehensive user document in Firestore
-      await setDoc(doc(db, 'users', user.uid), {
-        uid: user.uid,
-        email: user.email.toLowerCase(),
-        displayName: displayName.trim(),
-        role: role,
-        createdAt: serverTimestamp(),
-        lastLoginAt: serverTimestamp(),
-        emailVerified: false,
-        loginAttempts: 0,
-        lastFailedLogin: null,
-        accountStatus: 'active',
-        profileCompleted: false,
-        securityLevel: 'basic',
-        preferences: {
-          notifications: true,
-          marketing: false,
-          rememberMe: false
-        },
-        ...additionalData
-      });
-      
-      // Log successful registration
-      await this.logSecurityEvent(user.uid, 'account_created', {
-        method: 'email_password',
-        role: role,
-        timestamp: new Date().toISOString()
-      });
-      
-      console.log('User registered successfully:', user.uid);
-      return { success: true, user, emailVerificationSent: true };
     } catch (error) {
       console.error('Registration error:', error);
       
       // Log failed registration attempt
       await this.logSecurityEvent(null, 'registration_failed', {
-        email: email,
-        error: error.code,
+        email: email?.toLowerCase(),
+        error: error.code || error.message,
         timestamp: new Date().toISOString()
       });
       
-      return { success: false, error: error.message };
+      // Return user-friendly error messages
+      let errorMessage = 'Registration failed. Please try again.';
+      
+      if (error.code) {
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            errorMessage = 'An account with this email already exists. Please sign in or use a different email.';
+            break;
+          case 'auth/weak-password':
+            errorMessage = 'Password is too weak. Please choose a stronger password.';
+            break;
+          case 'auth/invalid-email':
+            errorMessage = 'Please enter a valid email address.';
+            break;
+          case 'auth/operation-not-allowed':
+            errorMessage = 'Email/password accounts are not enabled. Please contact support.';
+            break;
+          case 'auth/network-request-failed':
+            errorMessage = 'Network error. Please check your connection and try again.';
+            break;
+          default:
+            errorMessage = error.message || 'Registration failed. Please try again.';
+        }
+      }
+      
+      return { success: false, error: errorMessage };
     }
   },
 
@@ -319,6 +402,77 @@ export const authFunctions = {
       console.error('Error checking email verification:', error);
       return { success: false, error: error.message };
     }
+  },
+
+  // Check if email is already registered
+  async checkEmailExists(email) {
+    try {
+      const normalizedEmail = email.toLowerCase().trim();
+      const usersQuery = query(collection(db, 'users'), where('email', '==', normalizedEmail));
+      const querySnapshot = await getDocs(usersQuery);
+      
+      return { success: true, exists: !querySnapshot.empty };
+    } catch (error) {
+      console.error('Error checking email existence:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  // Validate registration data
+  validateRegistrationData(email, password, displayName, role) {
+    const errors = [];
+    
+    // Email validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!email || !emailRegex.test(email)) {
+      errors.push('Please enter a valid email address');
+    }
+    
+    // Password validation
+    if (!password || password.length < 8) {
+      errors.push('Password must be at least 8 characters long');
+    }
+    
+    const passwordRegex = {
+      uppercase: /[A-Z]/,
+      lowercase: /[a-z]/,
+      number: /\d/,
+      special: /[!@#$%^&*(),.?":{}|<>]/
+    };
+    
+    if (!passwordRegex.uppercase.test(password)) {
+      errors.push('Password must contain at least one uppercase letter');
+    }
+    if (!passwordRegex.lowercase.test(password)) {
+      errors.push('Password must contain at least one lowercase letter');
+    }
+    if (!passwordRegex.number.test(password)) {
+      errors.push('Password must contain at least one number');
+    }
+    if (!passwordRegex.special.test(password)) {
+      errors.push('Password must contain at least one special character');
+    }
+    
+    // Name validation
+    if (!displayName || displayName.trim().length < 2) {
+      errors.push('Full name must be at least 2 characters long');
+    }
+    
+    const nameRegex = /^[a-zA-Z\s'\-À-ÿ]{2,50}$/;
+    if (displayName && !nameRegex.test(displayName.trim())) {
+      errors.push('Full name contains invalid characters');
+    }
+    
+    // Role validation
+    const validRoles = [USER_ROLES.STUDENT, USER_ROLES.RECRUITER];
+    if (!role || !validRoles.includes(role)) {
+      errors.push('Please select a valid role');
+    }
+    
+    return {
+      isValid: errors.length === 0,
+      errors: errors
+    };
   }
 };
 
