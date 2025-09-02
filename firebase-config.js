@@ -328,7 +328,188 @@ export const utils = {
   }
 };
 
+// Enhanced ML/AI functions for intelligent matching
+export const aiMlFunctions = {
+  // Get AI-powered job recommendations for a user
+  async getAIRecommendations(userId, options = {}) {
+    try {
+      const { aiEngine } = await import('./ai-ml-engine.js');
+      const userData = await dbFunctions.getUserData(userId);
+      
+      if (!userData.success) {
+        return { success: false, error: 'User data not found' };
+      }
+      
+      const recommendations = await aiEngine.generateRecommendations(userData.data, options);
+      
+      return { success: true, recommendations };
+    } catch (error) {
+      console.error('AI recommendations error:', error);
+      return { success: false, error: error.message, recommendations: [] };
+    }
+  },
+
+  // Calculate job match score with AI
+  async calculateJobMatchScore(userId, jobId) {
+    try {
+      const { aiEngine } = await import('./ai-ml-engine.js');
+      const userData = await dbFunctions.getUserData(userId);
+      const jobData = await getDoc(doc(db, 'jobs', jobId));
+      
+      if (!userData.success || !jobData.exists()) {
+        return { success: false, error: 'Data not found' };
+      }
+      
+      const matchResult = await aiEngine.calculateJobMatch(
+        userData.data, 
+        { id: jobId, ...jobData.data() }
+      );
+      
+      return { success: true, matchResult };
+    } catch (error) {
+      console.error('Job match calculation error:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  // Rank applications intelligently for recruiters
+  async rankApplicationsAI(jobId, applications) {
+    try {
+      const { aiEngine } = await import('./ai-ml-engine.js');
+      const rankedApps = await aiEngine.rankApplications(jobId, applications);
+      
+      return { success: true, applications: rankedApps };
+    } catch (error) {
+      console.error('Application ranking error:', error);
+      return { success: false, applications, error: error.message };
+    }
+  },
+
+  // Get job success predictions
+  async predictJobSuccess(jobId) {
+    try {
+      const { aiEngine } = await import('./ai-ml-engine.js');
+      const jobData = await getDoc(doc(db, 'jobs', jobId));
+      
+      if (!jobData.exists()) {
+        return { success: false, error: 'Job not found' };
+      }
+      
+      const prediction = await aiEngine.predictJobSuccess({ id: jobId, ...jobData.data() });
+      
+      return { success: true, prediction };
+    } catch (error) {
+      console.error('Job success prediction error:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  // Update ML model with user feedback
+  async updateMLModel(feedback) {
+    try {
+      const { aiEngine } = await import('./ai-ml-engine.js');
+      const updated = await aiEngine.updateModelWeights(feedback);
+      
+      return { success: updated };
+    } catch (error) {
+      console.error('ML model update error:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  // Get ML model performance metrics
+  async getMLMetrics() {
+    try {
+      const { aiEngine } = await import('./ai-ml-engine.js');
+      
+      return {
+        success: true,
+        metrics: {
+          accuracy: aiEngine.getModelAccuracy(),
+          totalPredictions: aiEngine.performanceMetrics.totalPredictions,
+          lastTraining: aiEngine.performanceMetrics.lastTraining,
+          modelWeights: aiEngine.modelWeights,
+          isTraining: aiEngine.isTraining
+        }
+      };
+    } catch (error) {
+      console.error('ML metrics error:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  // Enhanced job search with AI ranking
+  async searchJobsAI(searchQuery, userId, filters = {}) {
+    try {
+      let q = collection(db, 'jobs');
+      
+      // Apply basic filters
+      q = query(q, where('status', '==', 'active'));
+      
+      if (filters.location) {
+        q = query(q, where('location', '==', filters.location));
+      }
+      
+      if (filters.featured !== undefined) {
+        q = query(q, where('featured', '==', filters.featured));
+      }
+      
+      q = query(q, orderBy('createdAt', 'desc'), limit(50));
+      
+      const querySnapshot = await getDocs(q);
+      const jobs = [];
+      querySnapshot.forEach((doc) => {
+        jobs.push({ id: doc.id, ...doc.data() });
+      });
+      
+      // If user is provided, rank jobs by AI match score
+      if (userId) {
+        const { aiEngine } = await import('./ai-ml-engine.js');
+        const userData = await dbFunctions.getUserData(userId);
+        
+        if (userData.success) {
+          const scoredJobs = await Promise.all(
+            jobs.map(async (job) => {
+              const matchResult = await aiEngine.calculateJobMatch(userData.data, job);
+              return {
+                ...job,
+                matchScore: matchResult.matchScore,
+                confidence: matchResult.confidence,
+                reasoning: matchResult.reasoning,
+                aiRecommended: matchResult.matchScore > 0.7
+              };
+            })
+          );
+          
+          // Sort by match score
+          scoredJobs.sort((a, b) => b.matchScore - a.matchScore);
+          
+          return { success: true, jobs: scoredJobs };
+        }
+      }
+      
+      return { success: true, jobs };
+    } catch (error) {
+      console.error('AI job search error:', error);
+      return { success: false, error: error.message, jobs: [] };
+    }
+  },
+
+  // Smart skills extraction from job descriptions
+  async extractSkillsAI(jobDescription) {
+    try {
+      const { aiEngine } = await import('./ai-ml-engine.js');
+      const skills = aiEngine.extractSkills(jobDescription);
+      
+      return { success: true, skills };
+    } catch (error) {
+      console.error('Skills extraction error:', error);
+      return { success: false, skills: [], error: error.message };
+    }
+  }
+};
+
 // Export constants
 export { USER_ROLES, auth, db };
 
-console.log('Firebase initialized successfully for GuideSignal');
+console.log('Firebase initialized successfully for GuideSignal with AI/ML capabilities');

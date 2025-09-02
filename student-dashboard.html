@@ -438,7 +438,7 @@
     </main>
 
     <script type="module">
-        import { authFunctions, dbFunctions, utils, USER_ROLES } from './firebase-config.js';
+        import { authFunctions, dbFunctions, utils, USER_ROLES, aiMlFunctions } from './firebase-config.js';
 
         let currentUser = null;
         let userData = null;
@@ -531,42 +531,89 @@
             });
         }
 
-        // Load recommended jobs
+        // Load AI-powered recommended jobs
         async function loadRecommendations() {
-            const jobsResult = await dbFunctions.getJobs({ limit: 3 });
-            
-            document.getElementById('recommendations-loading').style.display = 'none';
-            
-            if (jobsResult.success && jobsResult.jobs.length > 0) {
-                displayRecommendations(jobsResult.jobs);
-                document.getElementById('recommendations-container').style.display = 'block';
+            try {
+                // First try AI recommendations
+                const aiResult = await aiMlFunctions.getAIRecommendations(currentUser.uid, { limit: 3 });
+                
+                if (aiResult.success && aiResult.recommendations.length > 0) {
+                    displayRecommendations(aiResult.recommendations, true); // true for AI-powered
+                    document.getElementById('recommendations-container').style.display = 'block';
+                } else {
+                    // Fallback to basic job query
+                    const jobsResult = await dbFunctions.getJobs({ limit: 3 });
+                    if (jobsResult.success && jobsResult.jobs.length > 0) {
+                        displayRecommendations(jobsResult.jobs, false);
+                        document.getElementById('recommendations-container').style.display = 'block';
+                    }
+                }
+                
+                document.getElementById('recommendations-loading').style.display = 'none';
+            } catch (error) {
+                console.error('Error loading recommendations:', error);
+                document.getElementById('recommendations-loading').style.display = 'none';
             }
         }
 
-        // Display recommended jobs
-        function displayRecommendations(jobs) {
+        // Display recommended jobs with AI enhancements
+        function displayRecommendations(jobs, isAIPowered = false) {
             const container = document.getElementById('recommendations-container');
             container.innerHTML = '';
+            
+            // Add AI indicator if using AI recommendations
+            if (isAIPowered && jobs.length > 0) {
+                const aiIndicator = document.createElement('div');
+                aiIndicator.style.cssText = 'background: #e8f4fd; border: 1px solid #4a9eff; border-radius: 8px; padding: 12px; margin-bottom: 20px; color: #1976d2; font-size: 14px; text-align: center; font-weight: 500;';
+                aiIndicator.innerHTML = '🤖 AI-Powered Recommendations - Personalized matches based on your profile';
+                container.appendChild(aiIndicator);
+            }
             
             jobs.forEach(job => {
                 const card = document.createElement('div');
                 card.className = 'job-card';
+                
+                // Enhanced job card with AI insights
+                let aiInsights = '';
+                if (job.matchScore) {
+                    const matchPercent = Math.round(job.matchScore * 100);
+                    const matchClass = matchPercent >= 80 ? 'excellent' : matchPercent >= 60 ? 'good' : 'moderate';
+                    const matchColor = matchPercent >= 80 ? '#10b981' : matchPercent >= 60 ? '#4a9eff' : '#f59e0b';
+                    
+                    aiInsights = `
+                        <div style="background: #f8f9fa; border-radius: 6px; padding: 10px; margin-top: 10px; border-left: 4px solid ${matchColor};">
+                            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 5px;">
+                                <strong style="color: ${matchColor};">AI Match: ${matchPercent}%</strong>
+                                <span style="font-size: 12px; color: #6c757d;">Confidence: ${Math.round((job.confidence || 0.7) * 100)}%</span>
+                            </div>
+                            ${job.reasoning && job.reasoning.length > 0 ? 
+                                `<div style="font-size: 13px; color: #6c757d;">• ${job.reasoning[0]}</div>` : ''}
+                        </div>
+                    `;
+                }
+                
                 card.innerHTML = `
                     <div class="job-header">
                         <div>
                             <div class="job-title">${job.title}</div>
                             <div class="job-company">${job.companyName}</div>
                         </div>
-                        ${job.featured ? '<span style="background: #4a9eff; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Featured</span>' : ''}
+                        <div style="display: flex; gap: 5px; align-items: center;">
+                            ${job.featured ? '<span style="background: #4a9eff; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Featured</span>' : ''}
+                            ${job.aiRecommended ? '<span style="background: #10b981; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">🤖 AI Pick</span>' : ''}
+                        </div>
                     </div>
                     <div class="job-meta">
                         <span>📍 ${job.location}</span>
-                        <span>💼 ${job.type}</span>
+                        <span>💼 ${job.type || 'Full-time'}</span>
                         ${job.salary ? `<span class="job-salary">$${job.salary}</span>` : ''}
+                        ${job.fastReply ? '<span style="background: #e8f5e8; color: #166534; padding: 2px 6px; border-radius: 4px; font-size: 11px;">⚡ Fast Reply</span>' : ''}
                     </div>
+                    ${aiInsights}
                     <div style="margin-top: 15px;">
                         <button class="btn" onclick="applyToJob('${job.id}')">Apply Now</button>
                         <button class="btn btn-secondary" onclick="viewJob('${job.id}')" style="margin-left: 10px;">View Details</button>
+                        ${job.interviewProbability ? `<span style="font-size: 12px; color: #6c757d; margin-left: 10px;">📊 ${Math.round(job.interviewProbability * 100)}% interview chance</span>` : ''}
                     </div>
                 `;
                 container.appendChild(card);

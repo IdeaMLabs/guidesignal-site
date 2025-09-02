@@ -291,9 +291,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="requirements">Requirements *</label>
+                    <label class="form-label" for="requirements">Requirements * 
+                        <button type="button" onclick="extractSkillsAI()" class="btn" style="font-size: 12px; padding: 4px 8px; margin-left: 10px; background: #10b981;">🤖 Extract Skills</button>
+                    </label>
                     <textarea id="requirements" name="requirements" class="form-input form-textarea" required 
                               placeholder="List the required skills, experience, and qualifications..."></textarea>
+                    <div id="extracted-skills" style="margin-top: 10px; display: none;">
+                        <div style="font-size: 14px; color: #10b981; font-weight: 500; margin-bottom: 5px;">🤖 AI Extracted Skills:</div>
+                        <div id="skills-list" style="display: flex; flex-wrap: wrap; gap: 5px;"></div>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -326,7 +332,7 @@
     </div>
 
     <script type="module">
-        import { authFunctions, dbFunctions, utils, USER_ROLES } from './firebase-config.js';
+        import { authFunctions, dbFunctions, utils, USER_ROLES, aiMlFunctions } from './firebase-config.js';
 
         let currentUser = null;
         let userData = null;
@@ -457,6 +463,61 @@
             document.getElementById('error-message').style.display = 'none';
             document.getElementById('success-message').style.display = 'none';
         }
+
+        // AI Skills Extraction
+        window.extractSkillsAI = async function() {
+            const requirementsText = document.getElementById('requirements').value;
+            if (!requirementsText.trim()) {
+                utils.showNotification('Please enter job requirements first', 'warning');
+                return;
+            }
+
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '🔄 Extracting...';
+
+            try {
+                const result = await aiMlFunctions.extractSkillsAI(requirementsText);
+                
+                if (result.success && result.skills.length > 0) {
+                    const skillsContainer = document.getElementById('skills-list');
+                    const extractedDiv = document.getElementById('extracted-skills');
+                    
+                    skillsContainer.innerHTML = '';
+                    result.skills.forEach(skill => {
+                        const skillTag = document.createElement('span');
+                        skillTag.style.cssText = 'background: #e8f5e8; color: #166534; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;';
+                        skillTag.textContent = skill;
+                        skillsContainer.appendChild(skillTag);
+                    });
+                    
+                    extractedDiv.style.display = 'block';
+                    utils.showNotification(`Extracted ${result.skills.length} skills using AI`, 'success');
+                } else {
+                    utils.showNotification('No clear skills detected. Try adding more specific requirements.', 'info');
+                }
+            } catch (error) {
+                console.error('Skills extraction error:', error);
+                utils.showNotification('Skills extraction failed. Please try again.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        };
+
+        // Get job success prediction
+        window.predictJobSuccess = async function(jobData) {
+            try {
+                const prediction = await aiMlFunctions.predictJobSuccess(jobData);
+                if (prediction.success) {
+                    return prediction.prediction;
+                }
+            } catch (error) {
+                console.error('Job success prediction error:', error);
+            }
+            return null;
+        };
 
         // Initialize page
         initPage();
