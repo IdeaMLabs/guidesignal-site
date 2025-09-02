@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ideamlabs.github.io/guidesignal-site/sitemap.xml
+Sitemap: https://www.guide-signal.com/sitemap.xml

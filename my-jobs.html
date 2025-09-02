@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage your job postings on GuideSignal - feature jobs for priority placement">
+    <meta name="robots" content="noindex, nofollow">
+    <title>My Jobs - GuideSignal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #1e3a5f;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(30, 58, 95, 0.08);
+            margin-bottom: 40px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e3a5f;
+            text-decoration: none;
+        }
+
+        .nav-links a {
+            color: #4a9eff;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 300;
+            color: #1e3a5f;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+            border: 1px solid #e9ecef;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .job-info h3 {
+            font-size: 24px;
+            font-weight: 500;
+            color: #1e3a5f;
+            margin-bottom: 5px;
+        }
+
+        .job-meta {
+            color: #6c757d;
+            font-size: 16px;
+        }
+
+        .job-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #e8f5e8;
+            color: #166534;
+        }
+
+        .status-featured {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #4a9eff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2c8afc;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1e3a5f;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-secondary:hover {
+            border-color: #4a9eff;
+            color: #4a9eff;
+        }
+
+        .empty-state {
+            text-align: center;
+            background: white;
+            border-radius: 12px;
+            padding: 60px 30px;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            font-size: 24px;
+            font-weight: 500;
+            color: #1e3a5f;
+            margin-bottom: 10px;
+        }
+
+        .empty-message {
+            color: #6c757d;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .feature-highlight {
+            background: linear-gradient(135deg, #fff3cd, #ffeeba);
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .feature-text {
+            color: #856404;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-links {
+                margin-top: 15px;
+            }
+
+            .job-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .job-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">GuideSignal</a>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/jobs.html">Browse Jobs</a>
+                    <a href="/post.html">Post Job</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="page-title">My Jobs</h1>
+        <p class="page-subtitle">Manage your job postings and feature them for better visibility</p>
+
+        <div id="jobs-container">
+            <!-- Sample jobs - this would be dynamically populated -->
+            <div class="job-card">
+                <div class="job-header">
+                    <div class="job-info">
+                        <h3>Senior Software Engineer</h3>
+                        <div class="job-meta">San Francisco, CA • $120k - $180k • Posted 3 days ago</div>
+                    </div>
+                    <div class="job-status status-active">Active</div>
+                </div>
+                <div class="job-actions">
+                    <a href="https://buy.stripe.com/8x25kC7gS1zz6AxeFk5Rm00?client_reference_id=job_1" 
+                       class="btn btn-primary" target="_blank" rel="noopener">
+                        Feature this job for $25
+                    </a>
+                    <a href="/post.html?edit=job_1" class="btn btn-secondary">Edit Job</a>
+                </div>
+                <div class="feature-highlight">
+                    <div class="feature-text">💡 Featured jobs get 3x more visibility and priority placement in search results</div>
+                </div>
+            </div>
+
+            <div class="job-card">
+                <div class="job-header">
+                    <div class="job-info">
+                        <h3>Product Manager</h3>
+                        <div class="job-meta">Remote • $100k - $140k • Posted 1 week ago</div>
+                    </div>
+                    <div class="job-status status-featured">Featured</div>
+                </div>
+                <div class="job-actions">
+                    <span class="btn btn-secondary" style="opacity: 0.6; cursor: not-allowed;">Already Featured</span>
+                    <a href="/post.html?edit=job_2" class="btn btn-secondary">Edit Job</a>
+                </div>
+                <div style="padding: 15px; background: #e8f5e8; border: 1px solid #4ade80; border-radius: 8px; margin-top: 15px;">
+                    <div style="color: #166534; font-weight: 500; font-size: 14px;">✅ This job is featured until Jan 15, 2025</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty state (hidden by default, shown when no jobs) -->
+        <div class="empty-state" id="empty-state" style="display: none;">
+            <div class="empty-icon">⚠️</div>
+            <h2 class="empty-title">You don't have any jobs listed yet.</h2>
+            <p class="empty-message">Start by posting your first job to connect with qualified candidates.</p>
+            <a href="/post.html" class="btn btn-primary">Add a Job Now</a>
+        </div>
+    </main>
+
+    <script>
+        // This would normally check if user has jobs via API
+        // For demo purposes, we show sample jobs above
+        // If no jobs exist, show empty state:
+        
+        function checkUserJobs() {
+            // Mock API call - replace with actual logic
+            const hasJobs = true; // This would come from your backend
+            
+            if (!hasJobs) {
+                document.getElementById('jobs-container').style.display = 'none';
+                document.getElementById('empty-state').style.display = 'block';
+            }
+        }
+
+        // Uncomment to test empty state:
+        // checkUserJobs();
+    </script>
+</body>
+</html>
