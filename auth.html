@@ -569,8 +569,8 @@
         </div>
 
         <div class="auth-tabs">
-            <button class="auth-tab active" onclick="switchTab('signin')">Sign In</button>
-            <button class="auth-tab" onclick="switchTab('signup')">Sign Up</button>
+            <button class="auth-tab active" onclick="switchTab('signin', this)">Sign In</button>
+            <button class="auth-tab" onclick="switchTab('signup', this)">Sign Up</button>
         </div>
 
         <div id="error-message" class="error-message" style="display: none;"></div>
@@ -716,7 +716,7 @@
         };
 
         // Enhanced tab switching with form data preservation
-        window.switchTab = function(tab) {
+        window.switchTab = function(tab, clickedElement) {
             // Save current form data
             saveFormData(currentTab);
             
@@ -725,11 +725,25 @@
             
             // Update tab buttons with animation
             document.querySelectorAll('.auth-tab').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            
+            // If clickedElement is provided, use it; otherwise find the correct button
+            if (clickedElement) {
+                clickedElement.classList.add('active');
+            } else {
+                // Fallback: find the correct button by tab name
+                const targetButton = document.querySelector(`[onclick="switchTab('${tab}')"]`);
+                if (targetButton) {
+                    targetButton.classList.add('active');
+                }
+            }
             
             // Animate form transition
             const currentForm = document.getElementById(previousTab + '-form');
             const newForm = document.getElementById(tab + '-form');
+            
+            console.log('Switching from', previousTab, 'to', tab);
+            console.log('Current form:', currentForm);
+            console.log('New form:', newForm);
             
             if (currentForm) {
                 currentForm.style.opacity = '0';
@@ -743,6 +757,17 @@
                         }, 50);
                     }
                 }, 150);
+            } else {
+                // Direct switching if no current form (initialization)
+                if (newForm) {
+                    // Hide all forms first
+                    document.querySelectorAll('.auth-form').forEach(form => {
+                        form.style.display = 'none';
+                    });
+                    // Show target form
+                    newForm.style.display = 'block';
+                    newForm.style.opacity = '1';
+                }
             }
             
             // Restore form data after animation
@@ -1112,7 +1137,7 @@
                 
                 // Switch to sign-in tab after successful registration
                 setTimeout(() => {
-                    switchTab('signin');
+                    switchTab('signin', null);
                     // Pre-fill email in sign-in form and focus password
                     document.getElementById('signin-email').value = email;
                     setTimeout(() => {

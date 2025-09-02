@@ -12,7 +12,18 @@
       "Bash(curl:*)",
       "WebFetch(domain:search.google.com)",
       "WebFetch(domain:ideamlabs.github.io)",
-      "WebFetch(domain:validator.schema.org)"
+      "WebFetch(domain:validator.schema.org)",
+      "Bash(git rm:*)",
+      "Bash(git reset:*)",
+      "Bash(start index.html)",
+      "Bash(grep:*)",
+      "Bash(git pull:*)",
+      "WebFetch(domain:www.guide-signal.com)",
+      "WebFetch(domain:guide-signal.com)",
+      "Bash(start auth.html)",
+      "Bash(nslookup:*)",
+      "Bash(start how.html)",
+      "Bash(start jobs.html)"
     ],
     "deny": [],
     "ask": []
