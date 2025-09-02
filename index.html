@@ -215,11 +215,48 @@
             padding: 8px 16px;
             border-radius: 20px;
             transition: all 0.3s ease;
+            margin: 0 4px;
         }
 
         .nav-link:hover {
             background: #4a9eff;
             color: white;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-primary-auth {
+            background: #4a9eff;
+            color: white !important;
+            border-radius: 8px;
+            padding: 10px 20px !important;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(74, 158, 255, 0.3);
+            border: 2px solid #4a9eff;
+        }
+
+        .btn-primary-auth:hover {
+            background: #2c8afc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.4);
+        }
+
+        .btn-secondary-auth {
+            background: transparent;
+            color: #4a9eff !important;
+            border: 2px solid #4a9eff;
+            border-radius: 8px;
+            padding: 8px 18px !important;
+            font-weight: 500;
+        }
+
+        .btn-secondary-auth:hover {
+            background: #4a9eff;
+            color: white !important;
         }
 
         .logo {
@@ -653,8 +690,8 @@
             
             <!-- Auth buttons for non-authenticated users -->
             <div id="auth-buttons" class="auth-buttons">
-                <a href="auth.html" class="nav-link">Sign In</a>
-                <a href="auth.html" class="nav-link" style="background: #4a9eff; color: white; border-radius: 6px;">Sign Up</a>
+                <a href="auth.html" class="nav-link btn-secondary-auth">Sign In</a>
+                <a href="auth.html" class="nav-link btn-primary-auth">Sign Up</a>
             </div>
             
             <!-- User menu for authenticated users -->
@@ -691,7 +728,7 @@
 
     <!-- Join CTA (when < 5 candidates) -->
     <div class="join-cta-index" id="joinCTAIndex" style="display: none;">
-        Growing our candidate pool! <a href="apply.html">Be the first to join →</a>
+        Growing our candidate pool! <a href="auth.html">Join now - Sign up for free →</a>
     </div>
 
     <section class="hero-section">
@@ -699,11 +736,26 @@
             <h2 class="hero-title">Hear back within 48 hours</h2>
             <p class="hero-description">(from pledged employers)</p>
             
-            <div class="cta-buttons">
-                <a href="post.html" class="btn btn-primary">Post Role</a>
-                <a href="apply.html" class="btn btn-secondary">Apply Now</a>
-                <a href="demo.html" class="btn btn-secondary">Watch Demo</a>
-                <a href="how.html" class="btn btn-secondary">How it Works</a>
+            <div class="cta-buttons" id="main-cta-buttons">
+                <!-- For non-authenticated users -->
+                <div id="guest-cta" class="guest-cta">
+                    <a href="auth.html" class="btn btn-primary" style="font-size: 18px; padding: 16px 32px; margin-right: 16px; box-shadow: 0 4px 16px rgba(74, 158, 255, 0.4); animation: pulse-glow 2s infinite;">🚀 Get Started - Sign Up</a>
+                    <a href="auth.html" class="btn btn-secondary">Sign In</a>
+                    <p style="margin-top: 12px; font-size: 14px; color: #6c757d;">✅ Free to join • ✅ No spam • ✅ Fast replies guaranteed</p>
+                </div>
+                
+                <!-- For authenticated users -->
+                <div id="authenticated-cta" class="authenticated-cta" style="display: none;">
+                    <a href="post.html" class="btn btn-primary">Post Role</a>
+                    <a href="apply.html" class="btn btn-secondary">Apply Now</a>
+                </div>
+                
+                <!-- Secondary actions -->
+                <div style="margin-top: 16px;">
+                    <a href="demo.html" class="btn btn-secondary">Watch Demo</a>
+                    <a href="how.html" class="btn btn-secondary">How it Works</a>
+                    <a href="jobs.html" class="btn btn-secondary">Browse Jobs</a>
+                </div>
             </div>
             
             <!-- Proof Strip -->
@@ -1297,28 +1349,38 @@
             const userMenu = document.getElementById('user-menu');
             const headerUserName = document.getElementById('header-user-name');
             const dashboardLink = document.getElementById('dashboard-link');
+            const guestCta = document.getElementById('guest-cta');
+            const authenticatedCta = document.getElementById('authenticated-cta');
 
             if (user) {
                 // User is authenticated
-                authButtons.style.display = 'none';
-                userMenu.style.display = 'flex';
+                if (authButtons) authButtons.style.display = 'none';
+                if (userMenu) userMenu.style.display = 'flex';
+                if (guestCta) guestCta.style.display = 'none';
+                if (authenticatedCta) authenticatedCta.style.display = 'block';
                 
                 // Get user data to determine role
                 const userData = await utils.getUserRole(user.uid);
                 if (userData) {
-                    headerUserName.textContent = user.displayName || user.email;
+                    if (headerUserName) headerUserName.textContent = user.displayName || user.email;
                     
                     // Set dashboard link based on role
-                    if (userData === USER_ROLES.STUDENT) {
-                        dashboardLink.href = '/student-dashboard.html';
-                    } else if (userData === USER_ROLES.RECRUITER) {
-                        dashboardLink.href = '/recruiter-dashboard.html';
+                    if (dashboardLink) {
+                        if (userData === USER_ROLES.STUDENT) {
+                            dashboardLink.href = '/student-dashboard.html';
+                            dashboardLink.textContent = 'My Dashboard';
+                        } else if (userData === USER_ROLES.RECRUITER) {
+                            dashboardLink.href = '/recruiter-dashboard.html';
+                            dashboardLink.textContent = 'My Dashboard';
+                        }
                     }
                 }
             } else {
-                // User is not authenticated
-                authButtons.style.display = 'flex';
-                userMenu.style.display = 'none';
+                // User is not authenticated - show prominent auth options
+                if (authButtons) authButtons.style.display = 'flex';
+                if (userMenu) userMenu.style.display = 'none';
+                if (guestCta) guestCta.style.display = 'block';
+                if (authenticatedCta) authenticatedCta.style.display = 'none';
             }
         });
 

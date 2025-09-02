@@ -99,6 +99,46 @@
             color: white;
         }
 
+        .auth-nav {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .auth-nav .btn-primary {
+            background: #4a9eff;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(74, 158, 255, 0.3);
+        }
+
+        .auth-nav .btn-primary:hover {
+            background: #2c8afc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.4);
+        }
+
+        .auth-nav .btn-secondary {
+            background: transparent;
+            color: #4a9eff;
+            border: 2px solid #4a9eff;
+            padding: 10px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .auth-nav .btn-secondary:hover {
+            background: #4a9eff;
+            color: white;
+        }
+
         .main-content {
             padding: 80px 0;
         }
@@ -356,6 +396,12 @@
                 <a href="post.html">Post Job</a>
                 <a href="faq.html">FAQ</a>
             </nav>
+            
+            <!-- Authentication Navigation -->
+            <div class="auth-nav">
+                <a href="auth.html" class="btn-primary">🚀 Get Started - Sign Up</a>
+                <a href="auth.html" class="btn-secondary">Sign In</a>
+            </div>
         </div>
     </header>
 

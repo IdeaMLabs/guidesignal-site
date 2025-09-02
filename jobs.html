@@ -96,10 +96,54 @@
             color: #4a9eff;
             text-decoration: none;
             font-weight: 500;
+            margin-right: 15px;
         }
 
         .nav-link:hover {
             color: #1e3a5f;
+        }
+
+        .auth-cta {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .auth-cta .btn-primary {
+            background: #4a9eff;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(74, 158, 255, 0.3);
+            margin-right: 12px;
+            display: inline-block;
+        }
+
+        .auth-cta .btn-primary:hover {
+            background: #2c8afc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.4);
+        }
+
+        .auth-cta .btn-secondary {
+            background: transparent;
+            color: #4a9eff;
+            border: 2px solid #4a9eff;
+            padding: 12px 26px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .auth-cta .btn-secondary:hover {
+            background: #4a9eff;
+            color: white;
         }
 
         .jobs-section {
@@ -429,6 +473,12 @@
             <a href="index.html" class="nav-link" title="Return to GuideSignal homepage">← Back to Home</a>
             <a href="how.html" class="nav-link" title="Learn how GuideSignal works">How it Works</a>
             <a href="faq.html" class="nav-link" title="Frequently asked questions">FAQ</a>
+            
+            <!-- Authentication CTA -->
+            <div class="auth-cta">
+                <a href="auth.html" class="btn-primary">🚀 Apply to Jobs - Sign Up</a>
+                <a href="auth.html" class="btn-secondary">Sign In</a>
+            </div>
         </div>
     </header>
 
