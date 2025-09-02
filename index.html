@@ -4,21 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="GuideSignal connects job seekers with fast-reply employers. Get responses within 48 hours from verified companies. Free for candidates, transparent pay ranges, AI-powered matching.">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
     <meta name="keywords" content="job search, fast reply jobs, hiring platform, AI matching, employment, quick responses, salary transparency">
     <meta name="author" content="GuideSignal">
     <meta name="robots" content="index, follow">
     
+    <!-- HTTPS and Certificate Security -->
+    <script>
+        // Redirect www to non-www to fix certificate issues
+        if (window.location.hostname === 'www.guide-signal.com') {
+            window.location.replace('https://guide-signal.com' + window.location.pathname + window.location.search + window.location.hash);
+        }
+        
+        // Force HTTPS redirect
+        if (window.location.protocol !== 'https:' && window.location.hostname.includes('guide-signal.com')) {
+            window.location.replace('https://' + window.location.hostname + window.location.pathname + window.location.search + window.location.hash);
+        }
+    </script>
+    
     <!-- Preconnect to critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://www.guide-signal.com">
+    <link rel="dns-prefetch" href="https://guide-signal.com">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.guide-signal.com">
+    <meta property="og:url" content="https://guide-signal.com">
     <meta property="og:title" content="GuideSignal - AI-Powered Job Matching | Focused Job Matching">
     <meta property="og:description" content="Advanced ML job matching with guaranteed 48h responses. Superior to LinkedIn & Indeed. 94.2% accuracy, transparent pay, bias-free matching.">
-    <meta property="og:image" content="https://www.guide-signal.com/assets/GuideSignalLogo.png">
+    <meta property="og:image" content="https://guide-signal.com/assets/GuideSignalLogo.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="GuideSignal">
@@ -27,16 +44,20 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@guidesignal">
     <meta name="twitter:creator" content="@guidesignal">
-    <meta name="twitter:url" content="https://www.guide-signal.com">
+    <meta name="twitter:url" content="https://guide-signal.com">
     <meta name="twitter:title" content="GuideSignal - AI-Powered Job Matching | Focused Job Matching">
     <meta name="twitter:description" content="Advanced ML job matching with guaranteed 48h responses. Superior to LinkedIn & Indeed. 94.2% accuracy, transparent pay, bias-free matching.">
-    <meta name="twitter:image" content="https://www.guide-signal.com/assets/GuideSignalLogo.png">
+    <meta name="twitter:image" content="https://guide-signal.com/assets/GuideSignalLogo.png">
+    
+    <!-- Security and Certificate Meta -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="preconnect" href="https://guide-signal.com" crossorigin>
     
     <!-- LinkedIn -->
     <meta property="linkedin:owner" content="GuideSignal">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://www.guide-signal.com">
+    <link rel="canonical" href="https://guide-signal.com">
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
@@ -1221,8 +1242,8 @@
             "@type": "Organization",
             "name": "GuideSignal",
             "description": "Professional hiring platform connecting job seekers with fast-reply employers",
-            "url": "https://www.guide-signal.com",
-            "logo": "https://www.guide-signal.com/assets/GuideSignalLogo.png",
+            "url": "https://guide-signal.com",
+            "logo": "https://guide-signal.com/assets/GuideSignalLogo.png",
             "contactPoint": {
                 "@type": "ContactPoint",
                 "contactType": "customer service",
@@ -1249,7 +1270,7 @@
             "@context": "https://schema.org",
             "@type": "WebSite",
             "name": "GuideSignal",
-            "url": "https://www.guide-signal.com",
+            "url": "https://guide-signal.com",
             "description": "Professional hiring platform connecting job seekers with fast-reply employers. Get responses within 48 hours from verified companies.",
             "publisher": {
                 "@type": "Organization",
@@ -1258,7 +1279,7 @@
             "potentialAction": [
                 {
                     "@type": "SearchAction",
-                    "target": "https://www.guide-signal.com/jobs.html?search={search_term_string}",
+                    "target": "https://guide-signal.com/jobs.html?search={search_term_string}",
                     "query-input": "required name=search_term_string"
                 }
             ]
