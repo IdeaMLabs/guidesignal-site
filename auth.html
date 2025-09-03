@@ -54,7 +54,8 @@
     <link rel="stylesheet" href="assets/gui-layout-fixes.css">
     
     <title>Sign In - GuideSignal</title>
-    <!-- Password toggle fix deployed: 2025-01-08 -->
+    <!-- Eye button removed from confirm password: 2025-01-08 15:30 UTC -->
+    <meta name="cache-bust" content="eye-button-removal-v2-20250108">
     <style>
         /* CSS Variables */
         :root {
@@ -418,6 +419,7 @@
                 <input type="password" class="form-input" id="signup-password-confirm" required>
                 <div class="field-error" id="signup-password-confirm-error"></div>
                 <div class="field-success" id="signup-password-confirm-success"></div>
+                <!-- No eye button here - removed as requested -->
             </div>
             
             <div class="form-group">
