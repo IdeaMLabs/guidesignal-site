@@ -464,6 +464,52 @@
         </div>
     </main>
 
+    <script>
+    // Global password toggle function (must be outside ES module for onclick access)
+    window.togglePassword = function(inputId) {
+        console.log('togglePassword called with inputId:', inputId);
+        
+        const input = document.getElementById(inputId);
+        if (!input) {
+            console.error('Input not found:', inputId);
+            return;
+        }
+        
+        console.log('Input found:', input);
+        console.log('Current input type:', input.type);
+        
+        // Find the toggle button - it should be the next sibling or find by class
+        let toggle = input.nextElementSibling;
+        if (!toggle || !toggle.classList.contains('password-toggle')) {
+            // Fallback: look for the toggle button in the same container
+            const container = input.closest('.password-container');
+            if (container) {
+                toggle = container.querySelector('.password-toggle');
+            }
+        }
+        
+        if (!toggle) {
+            console.error('Toggle button not found for:', inputId);
+            console.error('Available buttons in container:', document.querySelectorAll('.password-container .password-toggle'));
+            return;
+        }
+        
+        console.log('Toggle button found:', toggle);
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            toggle.textContent = '🙈';
+            toggle.setAttribute('aria-label', 'Hide password');
+            console.log('Changed to text type - password visible');
+        } else {
+            input.type = 'password';
+            toggle.textContent = '👁️';
+            toggle.setAttribute('aria-label', 'Show password');
+            console.log('Changed to password type - password hidden');
+        }
+    };
+    </script>
+
     <script type="module">
         import { authFunctions, utils, USER_ROLES } from './firebase-config-secure.js';
 
@@ -1313,50 +1359,6 @@
                 }
             }
         });
-
-        // Password toggle functionality with enhanced debugging
-        window.togglePassword = function(inputId) {
-            console.log('togglePassword called with inputId:', inputId);
-            
-            const input = document.getElementById(inputId);
-            if (!input) {
-                console.error('Input not found:', inputId);
-                return;
-            }
-            
-            console.log('Input found:', input);
-            console.log('Current input type:', input.type);
-            
-            // Find the toggle button - it should be the next sibling or find by class
-            let toggle = input.nextElementSibling;
-            if (!toggle || !toggle.classList.contains('password-toggle')) {
-                // Fallback: look for the toggle button in the same container
-                const container = input.closest('.password-container');
-                if (container) {
-                    toggle = container.querySelector('.password-toggle');
-                }
-            }
-            
-            if (!toggle) {
-                console.error('Toggle button not found for:', inputId);
-                console.error('Available buttons in container:', document.querySelectorAll('.password-container .password-toggle'));
-                return;
-            }
-            
-            console.log('Toggle button found:', toggle);
-            
-            if (input.type === 'password') {
-                input.type = 'text';
-                toggle.textContent = '🙈';
-                toggle.setAttribute('aria-label', 'Hide password');
-                console.log('Changed to text type - password visible');
-            } else {
-                input.type = 'password';
-                toggle.textContent = '👁️';
-                toggle.setAttribute('aria-label', 'Show password');
-                console.log('Changed to password type - password hidden');
-            }
-        };
 
         // Forgot password functionality
         window.showForgotPassword = function() {
