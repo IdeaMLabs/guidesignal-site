@@ -168,7 +168,16 @@
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 12px;
+        }
+        
+        .role-checkbox {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            cursor: pointer;
+            accent-color: var(--primary-500);
+            flex-shrink: 0;
         }
         
         .role-option:hover {
@@ -198,39 +207,11 @@
             line-height: 1.4;
         }
         
-        /* Check Mark System */
-        .role-option::after {
-            content: '';
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--gray-300);
-            border-radius: 50%;
-            background: white;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-            margin-left: 16px;
-        }
-        
-        .role-option:hover::after {
-            border-color: var(--primary-500);
-        }
-        
+        /* Selected State Styling */
         .role-option.selected {
             border-color: var(--primary-500);
             background: #f0f8ff;
             box-shadow: 0 4px 12px rgba(74, 158, 255, 0.2);
-        }
-        
-        .role-option.selected::after {
-            content: '✓';
-            background: var(--primary-500);
-            border-color: var(--primary-500);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: bold;
         }
         
         .role-option.selected .role-title {
@@ -260,10 +241,9 @@
                 font-size: 13px;
             }
             
-            .role-option::after {
-                width: 20px;
-                height: 20px;
-                margin-left: 12px;
+            .role-checkbox {
+                width: 18px;
+                height: 18px;
             }
         }
     </style>
@@ -369,18 +349,21 @@
                 <label class="form-label">I am a...</label>
                 <div class="role-selector">
                     <div class="role-option" data-role="student">
+                        <input type="checkbox" class="role-checkbox" id="role-student" name="user-role" value="student">
                         <div class="role-content">
                             <div class="role-title">🎓 Student</div>
                             <div class="role-desc">Looking for internships and entry-level opportunities</div>
                         </div>
                     </div>
                     <div class="role-option" data-role="job-seeker">
+                        <input type="checkbox" class="role-checkbox" id="role-job-seeker" name="user-role" value="job-seeker">
                         <div class="role-content">
                             <div class="role-title">💼 Job Seeker</div>
                             <div class="role-desc">Seeking new career opportunities</div>
                         </div>
                     </div>
                     <div class="role-option" data-role="recruiter">
+                        <input type="checkbox" class="role-checkbox" id="role-recruiter" name="user-role" value="recruiter">
                         <div class="role-content">
                             <div class="role-title">🏢 Recruiter</div>
                             <div class="role-desc">Posting jobs and hiring talent</div>
@@ -495,7 +478,11 @@
                     if (selectedRole) {
                         const roleOption = document.querySelector(`[data-role="${selectedRole}"]`);
                         if (roleOption) {
-                            roleOption.classList.add('selected');
+                            const checkbox = roleOption.querySelector('.role-checkbox');
+                            if (checkbox) {
+                                checkbox.checked = true;
+                                roleOption.classList.add('selected');
+                            }
                         }
                     }
                 }
@@ -566,25 +553,30 @@
             }
         }
 
-        // Enhanced role selection with better feedback
+        // Enhanced role selection with single checkbox rule
         function setupRoleSelection() {
-            document.querySelectorAll('.role-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    // Animate deselection
-                    document.querySelectorAll('.role-option.selected').forEach(opt => {
-                        opt.classList.add('deselecting');
-                        setTimeout(() => {
-                            opt.classList.remove('selected', 'deselecting');
-                        }, 150);
-                    });
-                    
-                    // Animate selection
-                    setTimeout(() => {
-                        this.classList.add('selected');
-                        selectedRole = this.dataset.role;
+            const checkboxes = document.querySelectorAll('.role-checkbox');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        // Uncheck all other checkboxes (single selection rule)
+                        checkboxes.forEach(otherCheckbox => {
+                            if (otherCheckbox !== this) {
+                                otherCheckbox.checked = false;
+                                // Remove selected class from other options
+                                const otherOption = otherCheckbox.closest('.role-option');
+                                otherOption.classList.remove('selected');
+                            }
+                        });
+                        
+                        // Add selected class to this option
+                        const option = this.closest('.role-option');
+                        option.classList.add('selected');
+                        selectedRole = option.dataset.role;
                         
                         // Show role confirmation with welcoming message
-                        const roleType = this.dataset.role;
+                        const roleType = option.dataset.role;
                         let welcomeMessage = '';
                         
                         if (roleType === 'student') {
@@ -596,23 +588,35 @@
                         }
                         
                         showRoleConfirmation(welcomeMessage);
+                    } else {
+                        // Remove selected class when unchecked
+                        const option = this.closest('.role-option');
+                        option.classList.remove('selected');
+                        selectedRole = null;
                         
-                        // Check if all requirements are met to enable signup button
-                        validateSignUpButton();
-                        checkFormValidity();
-                    }, 150);
-                });
-                
-                // Add keyboard support
-                option.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        this.click();
+                        // Remove confirmation message
+                        const existing = document.querySelector('.role-confirmation');
+                        if (existing) {
+                            existing.remove();
+                        }
                     }
+                    
+                    // Check if all requirements are met to enable signup button
+                    validateSignUpButton();
+                    checkFormValidity();
                 });
-                
-                // Make focusable
-                option.setAttribute('tabindex', '0');
+            });
+            
+            // Make role options clickable (clicks propagate to checkbox)
+            document.querySelectorAll('.role-option').forEach(option => {
+                option.addEventListener('click', function(e) {
+                    // Don't interfere if clicking the checkbox directly
+                    if (e.target.type === 'checkbox') return;
+                    
+                    const checkbox = this.querySelector('.role-checkbox');
+                    checkbox.checked = !checkbox.checked;
+                    checkbox.dispatchEvent(new Event('change'));
+                });
             });
         }
         
@@ -862,6 +866,7 @@
                 document.getElementById('signup-form').reset();
                 selectedRole = null;
                 document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
+                document.querySelectorAll('.role-checkbox').forEach(cb => cb.checked = false);
                 
                 // Switch to sign-in tab after successful registration
                 setTimeout(() => {
