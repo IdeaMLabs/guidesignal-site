@@ -149,6 +149,123 @@
         .back-link:hover {
             text-decoration: underline;
         }
+        
+        /* Role Selection Styles with Clear Visual Check System */
+        .role-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        
+        .role-option {
+            position: relative;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            cursor: pointer;
+            background: white;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .role-option:hover {
+            border-color: var(--primary-500);
+            background: #f8fafc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.15);
+        }
+        
+        .role-content {
+            flex: 1;
+        }
+        
+        .role-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .role-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        /* Check Mark System */
+        .role-option::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--gray-300);
+            border-radius: 50%;
+            background: white;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            margin-left: 16px;
+        }
+        
+        .role-option:hover::after {
+            border-color: var(--primary-500);
+        }
+        
+        .role-option.selected {
+            border-color: var(--primary-500);
+            background: #f0f8ff;
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.2);
+        }
+        
+        .role-option.selected::after {
+            content: '✓';
+            background: var(--primary-500);
+            border-color: var(--primary-500);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .role-option.selected .role-title {
+            color: var(--primary-600);
+        }
+        
+        .role-option.selected .role-desc {
+            color: #555;
+        }
+        
+        /* Animation for selection change */
+        .role-option.deselecting {
+            transform: scale(0.98);
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .role-option {
+                padding: 14px;
+            }
+            
+            .role-title {
+                font-size: 15px;
+            }
+            
+            .role-desc {
+                font-size: 13px;
+            }
+            
+            .role-option::after {
+                width: 20px;
+                height: 20px;
+                margin-left: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -252,16 +369,22 @@
                 <label class="form-label">I am a...</label>
                 <div class="role-selector">
                     <div class="role-option" data-role="student">
-                        <div class="role-title">🎓 Student</div>
-                        <div class="role-desc">Looking for internships and entry-level opportunities</div>
+                        <div class="role-content">
+                            <div class="role-title">🎓 Student</div>
+                            <div class="role-desc">Looking for internships and entry-level opportunities</div>
+                        </div>
                     </div>
                     <div class="role-option" data-role="job-seeker">
-                        <div class="role-title">💼 Job Seeker</div>
-                        <div class="role-desc">Seeking new career opportunities</div>
+                        <div class="role-content">
+                            <div class="role-title">💼 Job Seeker</div>
+                            <div class="role-desc">Seeking new career opportunities</div>
+                        </div>
                     </div>
                     <div class="role-option" data-role="recruiter">
-                        <div class="role-title">🏢 Recruiter</div>
-                        <div class="role-desc">Posting jobs and hiring talent</div>
+                        <div class="role-content">
+                            <div class="role-title">🏢 Recruiter</div>
+                            <div class="role-desc">Posting jobs and hiring talent</div>
+                        </div>
                     </div>
                 </div>
             </div>
