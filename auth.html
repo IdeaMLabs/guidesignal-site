@@ -255,6 +255,44 @@
                 height: 18px;
             }
         }
+        
+        /* Password Container and Toggle Styles */
+        .password-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            font-size: 16px;
+            color: var(--gray-500);
+            z-index: 1;
+            transition: color 0.2s ease;
+            user-select: none;
+        }
+        
+        .password-toggle:hover {
+            color: var(--gray-700);
+        }
+        
+        .password-toggle:focus {
+            outline: 2px solid var(--primary-500);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+        
+        /* Adjust input padding to make room for toggle button */
+        .password-container .form-input {
+            padding-right: 45px;
+        }
     </style>
 </head>
 <body>
@@ -1249,14 +1287,34 @@
         // Password toggle functionality
         window.togglePassword = function(inputId) {
             const input = document.getElementById(inputId);
-            const toggle = input.nextElementSibling;
+            if (!input) {
+                console.error('Input not found:', inputId);
+                return;
+            }
+            
+            // Find the toggle button - it should be the next sibling or find by class
+            let toggle = input.nextElementSibling;
+            if (!toggle || !toggle.classList.contains('password-toggle')) {
+                // Fallback: look for the toggle button in the same container
+                const container = input.closest('.password-container');
+                if (container) {
+                    toggle = container.querySelector('.password-toggle');
+                }
+            }
+            
+            if (!toggle) {
+                console.error('Toggle button not found for:', inputId);
+                return;
+            }
             
             if (input.type === 'password') {
                 input.type = 'text';
                 toggle.textContent = '🙈';
+                toggle.setAttribute('aria-label', 'Hide password');
             } else {
                 input.type = 'password';
                 toggle.textContent = '👁️';
+                toggle.setAttribute('aria-label', 'Show password');
             }
         };
 
