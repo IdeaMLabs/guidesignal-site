@@ -8,25 +8,44 @@
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://guide-signal.com/apply.html">
 <title>Apply for Fast-Reply Job Matches - GuideSignal</title>
+
+<!-- Shared CSS -->
+<link rel="stylesheet" href="assets/shared.css">
+
+<!-- Logo preloading for performance -->
+<link rel="preload" href="assets/GuideSignalLogo.svg" as="image" type="image/svg+xml">
+<link rel="preload" href="assets/GuideSignalLogo.png" as="image" type="image/png">
+
 <style>
-  body{margin:0;background:#F7F9FC;font:15px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-  main{max-width:760px;margin:24px auto;padding:0 16px}
-  .card{background:#fff;border:1px solid #e5eaf1;border-radius:16px;padding:22px;box-shadow:0 6px 20px rgba(2,8,23,.06)}
-  label{display:block;margin:12px 0 6px}
-  input,textarea,select{width:100%;padding:12px;border-radius:10px;border:1px solid #dbe1ea;box-sizing:border-box}
-  select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right 12px center;background-size:16px;padding-right:40px}
-  @media (max-width: 480px) {
-    main{padding:0 12px}
-    .card{padding:16px}
-    input,textarea,select{font-size:16px}
-  }
-  button{margin-top:12px;padding:12px 16px;border-radius:12px;border:1px solid #0F172A;background:#0F172A;color:#fff;font-weight:700}
-  small{color:#64748b}
-  .targeting-banner{background:#e3f2fd;border:1px solid #4a9eff;border-radius:8px;padding:12px;margin-bottom:16px;color:#1976d2;font-size:14px;text-align:center}
+/* Apply page specific styles */
+body {
+    background: #F7F9FC;
+}
+
+.targeting-banner {
+    background: var(--primary-50, #e3f2fd);
+    border: 1px solid var(--primary-500);
+    border-radius: var(--radius);
+    padding: var(--space-3);
+    margin-bottom: var(--space-4);
+    color: var(--primary-700);
+    font-size: 0.875rem;
+    text-align: center;
+    font-weight: 500;
+}
 </style>
 </head>
 <body>
 <main>
+  <!-- Logo -->
+  <div class="logo" style="text-align: center; margin-bottom: 24px;">
+    <picture>
+      <source srcset="assets/GuideSignalLogo.webp" type="image/webp">
+      <source srcset="assets/GuideSignalLogo.svg" type="image/svg+xml">
+      <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo - AI-Powered Job Matching" width="120" height="120" style="cursor: pointer; border-radius: 8px; transition: transform 0.2s;" onclick="window.location.href='index.html'" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    </picture>
+  </div>
+
   <div style="text-align:center;margin-bottom:20px">
     <a href="index.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">← Home</a>
     <a href="jobs.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">Fast-Reply Jobs</a>
@@ -81,6 +100,12 @@
     </form>
   </div>
 </main>
+
+<!-- Contact Us Component -->
+<script src="contact-us.js" defer></script>
+
+<!-- Universal Logo Component -->
+<script src="universal-logo.js" defer></script>
 </body>
 
 <script type="module">

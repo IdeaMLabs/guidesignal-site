@@ -9,63 +9,51 @@
     
     <!-- Enhanced Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://ideamlabs.github.io/guidesignal-site/jobs.html">
+    <meta property="og:url" content="https://guide-signal.com/jobs.html">
     <meta property="og:title" content="Fast-Reply AI Job Matching - GuideSignal">
     <meta property="og:description" content="AI-powered job matching with guaranteed 48h responses. Browse certified employers with transparent pay.">
-    <meta property="og:image" content="https://ideamlabs.github.io/guidesignal-site/assets/GuideSignalLogo.png">
+    <meta property="og:image" content="https://guide-signal.com/assets/GuideSignalLogo.png">
     <meta property="og:site_name" content="GuideSignal">
     
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Fast-Reply AI Job Matching - GuideSignal">
     <meta name="twitter:description" content="AI-powered job matching with guaranteed 48h responses. Browse certified employers.">
-    <meta name="twitter:image" content="https://ideamlabs.github.io/guidesignal-site/assets/GuideSignalLogo.png">
+    <meta name="twitter:image" content="https://guide-signal.com/assets/GuideSignalLogo.png">
     
     <!-- Preconnect for performance -->
-    <link rel="preconnect" href="https://ideamlabs.github.io">
-    <link rel="dns-prefetch" href="https://ideamlabs.github.io">
+    <link rel="preconnect" href="https://guide-signal.com">
+    <link rel="dns-prefetch" href="https://guide-signal.com">
     
-    <link rel="canonical" href="https://ideamlabs.github.io/guidesignal-site/jobs.html">
+    <link rel="canonical" href="https://guide-signal.com/jobs.html">
+    
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="assets/shared.css">
+    
     <title>Fast-Reply AI Job Matching | Certified Employers - GuideSignal</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* Jobs page specific styles */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            color: #1e3a5f;
-            line-height: 1.6;
-            min-height: 100vh;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        header {
-            padding: 40px 0;
+        
+        .jobs-header {
+            padding: var(--space-8) 0;
             text-align: center;
             background: white;
-            box-shadow: 0 2px 20px rgba(30, 58, 95, 0.08);
+            box-shadow: var(--shadow-lg);
         }
-
+        
         .logo {
             width: 80px;
             height: 80px;
-            margin: 0 auto 20px;
-            background-color: #ffffff;
+            margin: 0 auto var(--space-4);
+            background: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.1);
-            position: relative;
+            box-shadow: var(--shadow-lg);
             overflow: hidden;
         }
         
@@ -73,108 +61,63 @@
             width: 90%;
             height: 90%;
             object-fit: contain;
-            background: #ffffff;
         }
-
-        h1 {
-            font-size: 36px;
+        
+        .jobs-title {
+            font-size: 2.25rem;
             font-weight: 300;
-            color: #1e3a5f;
-            margin-bottom: 10px;
-            letter-spacing: -1px;
+            color: var(--primary-600);
+            margin-bottom: var(--space-2);
+            letter-spacing: -0.025em;
         }
-
-        .subtitle {
-            font-size: 18px;
-            color: #6c757d;
+        
+        .jobs-subtitle {
+            font-size: 1.125rem;
+            color: var(--gray-600);
             font-weight: 300;
         }
-
-        .nav-link {
-            display: inline-block;
-            margin-top: 20px;
-            color: #4a9eff;
-            text-decoration: none;
-            font-weight: 500;
-            margin-right: 15px;
-        }
-
-        .nav-link:hover {
-            color: #1e3a5f;
-        }
-
+        
         .auth-cta {
             text-align: center;
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #e9ecef;
+            margin-top: var(--space-6);
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--gray-200);
         }
-
-        .auth-cta .btn-primary {
-            background: #4a9eff;
-            color: white;
-            padding: 14px 28px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(74, 158, 255, 0.3);
-            margin-right: 12px;
-            display: inline-block;
-        }
-
-        .auth-cta .btn-primary:hover {
-            background: #2c8afc;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.4);
-        }
-
-        .auth-cta .btn-secondary {
-            background: transparent;
-            color: #4a9eff;
-            border: 2px solid #4a9eff;
-            padding: 12px 26px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-
-        .auth-cta .btn-secondary:hover {
-            background: #4a9eff;
-            color: white;
-        }
-
+        
         .jobs-section {
-            padding: 60px 0;
+            padding: var(--space-8) 0;
         }
-
+        
         .section-title {
             text-align: center;
-            font-size: 32px;
+            font-size: 2rem;
             font-weight: 300;
-            color: #1e3a5f;
-            margin-bottom: 50px;
-            letter-spacing: -1px;
+            color: var(--primary-600);
+            margin-bottom: var(--space-8);
+            letter-spacing: -0.025em;
         }
-
+        
         .jobs-grid {
             display: grid;
-            gap: 30px;
+            gap: var(--space-6);
+            max-width: 800px;
+            margin: 0 auto;
         }
-
+        
         .job-card {
             background: white;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow);
             position: relative;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: var(--transition);
+            border: 1px solid var(--gray-200);
         }
-
+        
         .job-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
             box-shadow: 0 8px 30px rgba(30, 58, 95, 0.15);
         }
 
@@ -463,21 +406,31 @@
     </script>
 </head>
 <body>
-    <header>
+    <!-- Skip links for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <header class="jobs-header" role="banner">
         <div class="container">
             <div class="logo">
-                <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo - Fast Reply Jobs" width="72" height="72">
+                <picture>
+                    <source srcset="assets/GuideSignalLogo.webp" type="image/webp">
+                    <source srcset="assets/GuideSignalLogo.svg" type="image/svg+xml">
+                    <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo - Fast Reply Jobs" width="72" height="72" loading="eager">
+                </picture>
             </div>
-            <h1>Fast-Reply Jobs</h1>
-            <p class="subtitle">Employers certified for quick responses <span id="pledged-counter" class="pledged-counter"></span></p>
-            <a href="index.html" class="nav-link" title="Return to GuideSignal homepage">← Back to Home</a>
-            <a href="how.html" class="nav-link" title="Learn how GuideSignal works">How it Works</a>
-            <a href="faq.html" class="nav-link" title="Frequently asked questions">FAQ</a>
+            <h1 class="jobs-title">Fast-Reply Jobs</h1>
+            <p class="jobs-subtitle">Employers certified for quick responses <span id="pledged-counter" class="pledged-counter"></span></p>
+            
+            <nav class="nav-links" role="navigation" aria-label="Page navigation">
+                <a href="index.html" class="nav-link" title="Return to GuideSignal homepage">← Back to Home</a>
+                <a href="how.html" class="nav-link" title="Learn how GuideSignal works">How it Works</a>
+                <a href="faq.html" class="nav-link" title="Frequently asked questions">FAQ</a>
+            </nav>
             
             <!-- Authentication CTA -->
             <div class="auth-cta">
-                <a href="auth.html" class="btn-primary">🚀 Apply to Jobs - Sign Up</a>
-                <a href="auth.html" class="btn-secondary">Sign In</a>
+                <a href="auth.html" class="btn btn-primary">🚀 Apply to Jobs - Sign Up</a>
+                <a href="auth.html" class="btn btn-secondary">Sign In</a>
             </div>
         </div>
     </header>
@@ -962,5 +915,8 @@
             }
         }
     </script>
+    
+    <!-- Contact Us Component -->
+    <script src="contact-us.js" defer></script>
 </body>
 </html>

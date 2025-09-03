@@ -6,15 +6,33 @@
     
     <!-- HTTPS and Certificate Security -->
     <script>
-        // Redirect www to non-www to fix certificate issues
-        if (window.location.hostname === 'www.guide-signal.com') {
-            window.location.replace('https://guide-signal.com' + window.location.pathname + window.location.search + window.location.hash);
-        }
-        
-        // Force HTTPS redirect for auth page (critical for security)
-        if (window.location.protocol !== 'https:' && window.location.hostname.includes('guide-signal.com')) {
-            window.location.replace('https://' + window.location.hostname + window.location.pathname + window.location.search + window.location.hash);
-        }
+        // Enhanced HTTPS redirect with improved domain validation
+        (function() {
+            const isDev = location.hostname === 'localhost' || 
+                         location.hostname === '127.0.0.1' || 
+                         location.hostname.startsWith('192.168.') ||
+                         location.hostname.endsWith('.local');
+            
+            // Redirect www to non-www
+            if (window.location.hostname === 'www.guide-signal.com') {
+                window.location.replace('https://guide-signal.com' + window.location.pathname + window.location.search + window.location.hash);
+                return;
+            }
+            
+            // Force HTTPS in production (critical for auth security)
+            if (location.protocol !== 'https:' && !isDev) {
+                const allowedDomains = ['guide-signal.com', 'guidesignal.netlify.app', 'guidesignal.github.io'];
+                const currentDomain = location.hostname.toLowerCase();
+                
+                if (allowedDomains.some(domain => currentDomain.includes(domain))) {
+                    const httpsUrl = 'https://' + location.hostname + location.pathname + location.search + location.hash;
+                    console.log('Auth security: Redirecting to HTTPS:', httpsUrl);
+                    window.location.replace(httpsUrl);
+                } else {
+                    console.error('Auth security: Unauthorized domain detected:', currentDomain);
+                }
+            }
+        })();
     </script>
     
     <!-- Security Headers -->
@@ -23,558 +41,127 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="Sign in or sign up for GuideSignal - Connect students with fast-reply employers">
     <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="assets/shared.css">
+    
     <title>Sign In - GuideSignal</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* Auth page specific styles */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            color: #1e3a5f;
-            line-height: 1.6;
-            min-height: 100vh;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--primary-50) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
+            min-height: 100vh;
         }
-
+        
         .auth-container {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 8px 40px rgba(30, 58, 95, 0.15);
-            padding: 40px;
             width: 100%;
-            max-width: 480px;
-            position: relative;
+            max-width: 400px;
+            padding: var(--space-4);
         }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
+        
+        .auth-card {
             background: white;
-            padding: 10px;
-            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.1);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--gray-200);
         }
-
-        .logo h1 {
-            font-size: 28px;
-            font-weight: 300;
-            color: #1e3a5f;
-            margin-top: 15px;
+        
+        .auth-logo {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto var(--space-6);
+            background: var(--primary-500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
         }
-
+        
+        .auth-title {
+            text-align: center;
+            margin-bottom: var(--space-6);
+            color: var(--gray-900);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: var(--space-3);
+            }
+            
+            .auth-card {
+                padding: var(--space-6);
+            }
+        }
+        
         .auth-tabs {
             display: flex;
-            margin-bottom: 30px;
-            background: #f8f9fa;
-            border-radius: 8px;
+            margin-bottom: var(--space-6);
+            background: var(--gray-100);
+            border-radius: var(--radius);
             padding: 4px;
         }
-
+        
         .auth-tab {
             flex: 1;
-            padding: 12px;
+            padding: var(--space-3);
             text-align: center;
             background: transparent;
             border: none;
-            border-radius: 6px;
+            border-radius: calc(var(--radius) - 2px);
             cursor: pointer;
             font-weight: 500;
-            color: #6c757d;
-            transition: all 0.2s ease;
+            color: var(--gray-600);
+            transition: var(--transition);
+            font-family: inherit;
         }
-
+        
         .auth-tab.active {
             background: white;
-            color: #1e3a5f;
-            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.1);
+            color: var(--primary-600);
+            box-shadow: var(--shadow-sm);
         }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #1e3a5f;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.2s ease;
-            background: white;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #4a9eff;
-        }
-
-        .form-input.invalid {
-            border-color: #dc2626;
-            background: #fef2f2;
-        }
-
-        .form-input.valid {
-            border-color: #10b981;
-            background: #f0fdf4;
-        }
-
-        .password-container {
-            position: relative;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #6c757d;
-            font-size: 18px;
-        }
-
-        .password-toggle:hover {
-            color: #4a9eff;
-        }
-
-        .field-error {
-            color: #dc2626;
-            font-size: 12px;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .field-success {
-            color: #10b981;
-            font-size: 12px;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .password-strength {
-            margin-top: 8px;
-        }
-
-        .strength-bar {
-            height: 4px;
-            background: #e9ecef;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .strength-fill {
-            height: 100%;
-            width: 0%;
-            transition: all 0.3s ease;
-        }
-
-        .strength-weak { background: #dc2626; width: 25%; }
-        .strength-fair { background: #f59e0b; width: 50%; }
-        .strength-good { background: #3b82f6; width: 75%; }
-        .strength-strong { background: #10b981; width: 100%; }
-
-        .strength-text {
-            font-size: 12px;
-            margin-top: 4px;
-            font-weight: 500;
-        }
-
-        .forgot-password {
-            text-align: right;
-            margin-top: 10px;
-        }
-
-        .forgot-password a {
-            color: #4a9eff;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .forgot-password a:hover {
-            text-decoration: underline;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 15px;
-        }
-
-        .remember-me input[type="checkbox"] {
-            width: auto;
-        }
-
-        .form-select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 16px;
-            background: white;
-            cursor: pointer;
-        }
-
-        .role-selector {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .role-option {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: white;
-            position: relative;
-        }
-
-        .role-option:hover {
-            border-color: #4a9eff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.15);
-        }
-
-        .role-option.selected {
-            border-color: #4a9eff;
-            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(74, 158, 255, 0.25);
-        }
-
-        .role-option.selected::after {
-            content: '✓';
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: #4a9eff;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .terms-accepted {
-            border-color: #10b981 !important;
-            background: #f0fdf4 !important;
-        }
-
-        .terms-rejected {
-            border-color: #ef4444 !important;
-            background: #fef2f2 !important;
-        }
-
-        .form-valid {
-            position: relative;
-        }
-
-        .form-valid::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #10b981 0%, #4a9eff 100%);
-            border-radius: 16px 16px 0 0;
-        }
-
-        .role-title {
-            font-weight: 600;
-            color: #1e3a5f;
-            margin-bottom: 5px;
-        }
-
-        .role-desc {
-            font-size: 14px;
-            color: #6c757d;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 14px;
-            background: #4a9eff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-top: 10px;
-        }
-
-        .btn:hover {
-            background: #2c8afc;
-            transform: translateY(-1px);
-        }
-
-        .btn:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn.loading-state {
-            position: relative;
-            color: transparent;
-        }
-
-        .btn.loading-state .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .offline-indicator {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: #ef4444;
-            color: white;
-            padding: 8px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 10001;
-            transform: translateY(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        .offline-indicator.show {
-            transform: translateY(0);
-        }
-
-        .page-loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .page-loader.show {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .page-loader .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #e9ecef;
-            border-top: 3px solid #4a9eff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        .form-input:invalid:not(:focus) {
-            animation: shake 0.5s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        .auth-container {
-            animation: slideUp 0.5s ease-out;
-        }
-
-        .auth-form {
-            transition: opacity 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .signup-progress {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            padding: 0 10px;
-        }
-
-        .progress-step {
-            flex: 1;
-            text-align: center;
-            padding: 10px 5px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 500;
-            color: #6c757d;
-            background: #f8f9fa;
-            margin: 0 5px;
-            transition: all 0.3s ease;
-        }
-
-        .progress-step.active {
-            background: #4a9eff;
-            color: white;
-        }
-
-        .progress-step.completed {
-            background: #10b981;
-            color: white;
-        }
-
-        .divider {
-            text-align: center;
-            margin: 20px 0;
-            color: #6c757d;
-            position: relative;
-        }
-
-        .divider::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: #e9ecef;
-            z-index: 1;
-        }
-
-        .divider span {
-            background: white;
-            padding: 0 15px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .error-message {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #dc2626;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        .success-message {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            color: #166534;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #ffffff;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
+        
         .back-link {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            color: #4a9eff;
+            top: var(--space-4);
+            left: var(--space-4);
+            color: var(--primary-500);
             text-decoration: none;
             font-weight: 500;
         }
-
+        
         .back-link:hover {
             text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .auth-container {
-                margin: 20px;
-                padding: 30px 20px;
-            }
-            
-            .role-selector {
-                flex-direction: column;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Page loader -->
-    <div class="page-loader" id="page-loader">
-        <div class="spinner"></div>
-    </div>
-    
-    <!-- Offline indicator -->
-    <div class="offline-indicator" id="offline-indicator">
-        You're offline. Please check your internet connection.
-    </div>
+    <!-- Skip links -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     
     <div class="auth-container">
         <a href="/" class="back-link">← Back to Home</a>
         
-        <div class="logo">
-            <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo">
-            <h1>GuideSignal</h1>
-        </div>
+        <div class="auth-card">
+            <div class="auth-logo">GS</div>
+            <h1 class="auth-title">Welcome to GuideSignal</h1>
 
-        <div class="auth-tabs">
-            <button class="auth-tab active" onclick="switchTab('signin', this)">Sign In</button>
-            <button class="auth-tab" onclick="switchTab('signup', this)">Sign Up</button>
-        </div>
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchTab('signin', this)">Sign In</button>
+                <button class="auth-tab" onclick="switchTab('signup', this)">Sign Up</button>
+            </div>
 
-        <div id="error-message" class="error-message" style="display: none;"></div>
-        <div id="success-message" class="success-message" style="display: none;"></div>
+            <div id="error-message" class="error-message" style="display: none;"></div>
+            <div id="success-message" class="success-message" style="display: none;"></div>
 
         <!-- Sign In Form -->
         <form id="signin-form" class="auth-form">
