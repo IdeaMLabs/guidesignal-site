@@ -5,7 +5,7 @@ class ContactUsModal {
     constructor() {
         this.isOpen = false;
         this.formData = {};
-        this.submitEndpoint = 'https://formspree.io/f/your-form-id'; // Replace with actual endpoint
+        this.submitEndpoint = 'https://formspree.io/f/xdklalra'; // GuideSignal contact form
         
         this.init();
     }
@@ -500,8 +500,8 @@ class ContactUsModal {
 
     async submitToFormspree(data) {
         try {
-            // Replace with your actual Formspree endpoint
-            const response = await fetch('https://formspree.io/f/your-form-id', {
+            // GuideSignal Formspree endpoint
+            const response = await fetch(this.submitEndpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

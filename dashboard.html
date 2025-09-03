@@ -4,34 +4,146 @@
 <meta charset='utf-8'>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dashboard - GuideSignal</title>
-<style>body { font-family: system-ui, sans-serif; margin: 20px; }table { border-collapse: collapse; width: 100%; margin: 20px 0; }th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }th { background-color: #f2f2f2; }h1 { color: #1e3a5f; }h2 { color: #4a9eff; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; }.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0; }.stat-card { background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center; }.stat-number { font-size: 24px; font-weight: bold; color: #1e3a5f; }.stat-label { color: #6c757d; font-size: 14px; }</style>
+<style>
+body { 
+  font-family: system-ui, sans-serif; 
+  margin: 20px; 
+  line-height: 1.6;
+}
+
+table { 
+  border-collapse: collapse; 
+  width: 100%; 
+  margin: 20px 0; 
+}
+
+th, td { 
+  border: 1px solid #ddd; 
+  padding: 8px; 
+  text-align: left; 
+}
+
+th { 
+  background-color: #f2f2f2; 
+  font-weight: 700;
+}
+
+h1 { 
+  color: #1e3a5f; 
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+h2 { 
+  color: #4a9eff; 
+  border-bottom: 2px solid #e9ecef; 
+  padding-bottom: 5px; 
+  font-size: 1.5rem;
+  margin: 2rem 0 1rem 0;
+}
+
+.stats-grid { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+  gap: 20px; 
+  margin: 20px 0; 
+}
+
+.stat-card { 
+  background: #f8f9fa; 
+  padding: 15px; 
+  border-radius: 8px; 
+  text-align: center; 
+  border: 1px solid #e9ecef;
+  transition: box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.stat-number { 
+  font-size: 24px; 
+  font-weight: bold; 
+  color: #1e3a5f; 
+  display: block;
+  margin-bottom: 4px;
+}
+
+.stat-label { 
+  color: #6c757d; 
+  font-size: 14px; 
+}
+
+.nav-links {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.nav-links a {
+  color: #4a9eff;
+  text-decoration: none;
+  margin-right: 20px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-links a:hover {
+  background-color: #f8f9fa;
+}
+
+.logo {
+  text-align: center; 
+  margin-bottom: 24px;
+}
+
+.logo img {
+  cursor: pointer; 
+  border-radius: 8px; 
+  transition: transform 0.2s ease;
+}
+
+.logo img:hover {
+  transform: scale(1.05);
+}
+
+caption {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 8px;
+  text-align: left;
+  caption-side: top;
+}
+</style>
 </head>
 <body>
 
 <!-- Logo -->
-<div class="logo" style="text-align: center; margin-bottom: 24px;">
+<div class="logo">
   <picture>
     <source srcset="assets/GuideSignalLogo.webp" type="image/webp">
     <source srcset="assets/GuideSignalLogo.svg" type="image/svg+xml">
-    <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo - Dashboard" width="120" height="120" style="cursor: pointer; border-radius: 8px; transition: transform 0.2s;" onclick="window.location.href='index.html'" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo - Dashboard" width="120" height="120" onclick="window.location.href='index.html'">
   </picture>
 </div>
 
-<div style="text-align:center;margin-bottom:20px">
-  <a href="index.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">← Home</a>
-  <a href="jobs.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">Jobs</a>
-  <a href="apply.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">Apply</a>
-  <a href="post.html" style="color:#4a9eff;text-decoration:none">Post Job</a>
-</div>
+<nav class="nav-links">
+  <a href="index.html">← Home</a>
+  <a href="jobs.html">Jobs</a>
+  <a href="apply.html">Apply</a>
+  <a href="post.html">Post Job</a>
+</nav>
 
 <h1>GuideSignal Dashboard</h1><p>Last updated: 2025-08-29T16:05:59.608427Z</p><h2>Subject Line A/B Testing</h2><p>Thompson Sampling optimization of email subject lines based on 24-hour reply rates.</p><table border="1" class="dataframe">
+  <caption>Subject Line A/B Testing Results - Email Template Performance Metrics</caption>
   <thead>
     <tr style="text-align: right;">
-      <th>Variant</th>
-      <th>Template</th>
-      <th>Reply Rate</th>
-      <th>Total Sent</th>
-      <th>Replies</th>
+      <th scope="col">Variant</th>
+      <th scope="col">Template</th>
+      <th scope="col">Reply Rate</th>
+      <th scope="col">Total Sent</th>
+      <th scope="col">Replies</th>
     </tr>
   </thead>
   <tbody>
@@ -93,15 +205,16 @@
     </tr>
   </tbody>
 </table><h2>Email Body Template A/B Testing</h2><p>Thompson Sampling optimization of email body templates based on 24-hour reply rates.</p><table border="1" class="dataframe">
+  <caption>Email Body Template A/B Testing Results - Template Performance and Confidence Levels</caption>
   <thead>
     <tr style="text-align: right;">
-      <th>Variant</th>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Reply Rate</th>
-      <th>Confidence</th>
-      <th>Total Sent</th>
-      <th>Replies</th>
+      <th scope="col">Variant</th>
+      <th scope="col">Name</th>
+      <th scope="col">Description</th>
+      <th scope="col">Reply Rate</th>
+      <th scope="col">Confidence</th>
+      <th scope="col">Total Sent</th>
+      <th scope="col">Replies</th>
     </tr>
   </thead>
   <tbody>
@@ -161,19 +274,20 @@
     </tr>
   </tbody>
 </table><h2>Recent Matches</h2><table border="1" class="dataframe">
+  <caption>Recent Job Matching Results - Applicant and Job Details with Scoring</caption>
   <thead>
     <tr style="text-align: right;">
-      <th>applicant_id</th>
-      <th>applicant_name</th>
-      <th>applicant_email</th>
-      <th>job_id</th>
-      <th>employer</th>
-      <th>job_title</th>
-      <th>job_city</th>
-      <th>job_pay_min</th>
-      <th>job_pay_max</th>
-      <th>score</th>
-      <th>explanation</th>
+      <th scope="col">Applicant ID</th>
+      <th scope="col">Applicant Name</th>
+      <th scope="col">Applicant Email</th>
+      <th scope="col">Job ID</th>
+      <th scope="col">Employer</th>
+      <th scope="col">Job Title</th>
+      <th scope="col">Job City</th>
+      <th scope="col">Min Pay ($)</th>
+      <th scope="col">Max Pay ($)</th>
+      <th scope="col">Match Score</th>
+      <th scope="col">Match Explanation</th>
     </tr>
   </thead>
   <tbody>
@@ -192,13 +306,14 @@
     </tr>
   </tbody>
 </table><h2>Job Reply Statistics</h2><table border="1" class="dataframe">
+  <caption>Job Reply Statistics - Employer Response Times and Application Activity</caption>
   <thead>
     <tr style="text-align: right;">
-      <th>id</th>
-      <th>employer_name</th>
-      <th>response_median_reply_hours</th>
-      <th>response_fast_prob</th>
-      <th>active_apps_last_24h</th>
+      <th scope="col">Job ID</th>
+      <th scope="col">Employer Name</th>
+      <th scope="col">Median Reply Hours</th>
+      <th scope="col">Fast Reply Probability</th>
+      <th scope="col">Active Applications (24h)</th>
     </tr>
   </thead>
   <tbody>
@@ -225,3 +340,9 @@
     </tr>
   </tbody>
 </table><h2>System Status</h2><div class='stats-grid'><div class='stat-card'><div class='stat-number'>0</div><div class='stat-label'>Certified Employers</div></div><div class='stat-card'><div class='stat-number'>0.0%</div><div class='stat-label'>Certification Rate</div></div><div class='stat-card'><div class='stat-number'>1</div><div class='stat-label'>Contacts on Cooldown</div></div><div class='stat-card'><div class='stat-number'>2</div><div class='stat-label'>Suppressed Contacts</div></div><div class='stat-card'><div class='stat-number'>0</div><div class='stat-label'>Bounced Emails</div></div><div class='stat-card'><div class='stat-number'>1</div><div class='stat-label'>Spam Complaints</div></div><div class='stat-card'><div class='stat-number'>1</div><div class='stat-label'>Subject Tests</div></div><div class='stat-card'><div class='stat-number'>0</div><div class='stat-label'>Body Tests</div></div><div class='stat-card'><div class='stat-number'>8</div><div class='stat-label'>Subject Variants</div></div><div class='stat-card'><div class='stat-number'>6</div><div class='stat-label'>Body Variants</div></div></div>
+
+<!-- Contact Us Component -->
+<script src="contact-us.js" defer></script>
+
+</body>
+</html>

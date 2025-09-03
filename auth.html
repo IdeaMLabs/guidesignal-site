@@ -261,7 +261,8 @@
     <!-- Skip links -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
     
-    <div class="auth-container">
+    <main id="main-content">
+        <div class="auth-container">
         <a href="/" class="back-link">← Back to Home</a>
         
         <div class="auth-card">
@@ -392,7 +393,8 @@
                 <span class="btn-text">Create Account</span>
             </button>
         </form>
-    </div>
+        </div>
+    </main>
 
     <script type="module">
         import { authFunctions, utils, USER_ROLES } from './firebase-config-secure.js';
@@ -1646,5 +1648,8 @@
 
         console.log('Enhanced auth page loaded successfully');
     </script>
+
+    <!-- Contact Us Component -->
+    <script src="contact-us.js" defer></script>
 </body>
 </html>

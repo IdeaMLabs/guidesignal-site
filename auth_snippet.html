@@ -1,0 +1,27 @@
+<!-- Role Selection Section (Fix 2) -->
+<div id="role-selection">
+  <p>I am a…</p>
+  <label>
+    <input type="radio" name="role" value="student" required>
+    🎓 Student — Looking for internships and entry-level opportunities
+  </label><br>
+  <label>
+    <input type="radio" name="role" value="job_seeker" required>
+    💼 Job Seeker — Seeking new career opportunities
+  </label><br>
+  <label>
+    <input type="radio" name="role" value="recruiter" required>
+    🗂 Recruiter — Posting jobs and hiring talent
+  </label>
+</div>
+
+<script>
+// Validation to ensure a role must be chosen before form submission
+document.querySelector("form").addEventListener("submit", function(e) {
+  const role = document.querySelector("input[name='role']:checked");
+  if (!role) {
+    e.preventDefault();
+    alert("Please select one role before continuing.");
+  }
+});
+</script>
