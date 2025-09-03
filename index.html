@@ -104,16 +104,18 @@
       font-weight: 600;
       padding: 16px 36px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       text-decoration: none;
       display: inline-block;
       transition: all 0.2s ease;
       margin-bottom: 60px;
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
     }
     
     .cta:hover {
       background: #0056b3;
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
     }
     
     .cta:active {
@@ -125,13 +127,19 @@
       width: 120px;
       height: 120px;
       margin: 0 auto 60px;
-      background: #007bff;
+      background: linear-gradient(135deg, #007bff, #0056b3);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      box-shadow: 0 8px 25px rgba(0, 123, 255, 0.2);
+      box-shadow: 0 12px 40px rgba(0, 123, 255, 0.25);
+      transition: all 0.3s ease;
+    }
+    
+    .hero-icon:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0, 123, 255, 0.3);
     }
     
     .hero-icon::before {
