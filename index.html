@@ -12,51 +12,12 @@
     <meta name="author" content="GuideSignal">
     <meta name="robots" content="index, follow">
     
-    <!-- HTTPS and Certificate Security -->
-    <script>
-        // Redirect www to non-www to fix certificate issues
-        if (window.location.hostname === 'www.guide-signal.com') {
-            window.location.replace('https://guide-signal.com' + window.location.pathname + window.location.search + window.location.hash);
-        }
-        
-        // Force HTTPS redirect
-        // Enhanced HTTPS redirect with improved error handling and domain validation
-        (function() {
-            const isDev = location.hostname === 'localhost' || 
-                         location.hostname === '127.0.0.1' || 
-                         location.hostname.startsWith('192.168.') ||
-                         location.hostname.endsWith('.local');
-            
-            // Force HTTPS in production
-            if (location.protocol !== 'https:' && !isDev) {
-                // Validate domain before redirect
-                const allowedDomains = ['guide-signal.com', 'www.guide-signal.com', 'guidesignal.netlify.app', 'guidesignal.github.io'];
-                const currentDomain = location.hostname.toLowerCase();
-                
-                if (allowedDomains.some(domain => currentDomain.includes(domain)) || currentDomain.includes('guidesignal')) {
-                    const httpsUrl = 'https://' + location.hostname + location.pathname + location.search + location.hash;
-                    console.log('Redirecting to HTTPS:', httpsUrl);
-                    window.location.replace(httpsUrl);
-                } else {
-                    console.warn('Domain not in allowlist, manual HTTPS required for:', currentDomain);
-                }
-            }
-            
-            // Set security headers via meta tags
-            const csp = document.createElement('meta');
-            csp.setAttribute('http-equiv', 'Content-Security-Policy');
-            csp.setAttribute('content', "default-src 'self' https:; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://apis.google.com https://identitytoolkit.googleapis.com https://cdn.emailjs.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://formspree.io https://api.emailjs.com wss: https:; form-action 'self' https://formspree.io https://api.emailjs.com");
-            document.head.appendChild(csp);
-            
-            // HSTS header request
-            if (location.protocol === 'https:') {
-                const hsts = document.createElement('meta');
-                hsts.setAttribute('http-equiv', 'Strict-Transport-Security');
-                hsts.setAttribute('content', 'max-age=31536000; includeSubDomains; preload');
-                document.head.appendChild(hsts);
-            }
-        })();
-    </script>
+    <!-- Enhanced HTTPS and Security Management -->
+    <script src="assets/security-config.js" defer></script>
+    <noscript>
+        <!-- Fallback redirect for no-JS users -->
+        <meta http-equiv="refresh" content="0;url=https://guide-signal.com">
+    </noscript>
     
     <!-- Preconnect to critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
