@@ -253,7 +253,11 @@
                 <div class="role-selector">
                     <div class="role-option" data-role="student">
                         <div class="role-title">🎓 Student</div>
-                        <div class="role-desc">Looking for jobs and internships</div>
+                        <div class="role-desc">Looking for internships and entry-level opportunities</div>
+                    </div>
+                    <div class="role-option" data-role="job-seeker">
+                        <div class="role-title">💼 Job Seeker</div>
+                        <div class="role-desc">Seeking new career opportunities</div>
                     </div>
                     <div class="role-option" data-role="recruiter">
                         <div class="role-title">🏢 Recruiter</div>
@@ -463,9 +467,19 @@
                         this.classList.add('selected');
                         selectedRole = this.dataset.role;
                         
-                        // Show role confirmation
-                        const roleName = this.querySelector('.role-title').textContent;
-                        showRoleConfirmation(`Selected: ${roleName}`);
+                        // Show role confirmation with welcoming message
+                        const roleType = this.dataset.role;
+                        let welcomeMessage = '';
+                        
+                        if (roleType === 'student') {
+                            welcomeMessage = 'Welcome! We\'ll help you find internships and entry-level opportunities.';
+                        } else if (roleType === 'job-seeker') {
+                            welcomeMessage = 'Welcome! We\'ll help you discover your next career opportunity.';
+                        } else if (roleType === 'recruiter') {
+                            welcomeMessage = 'Welcome! Ready to post jobs and find great talent.';
+                        }
+                        
+                        showRoleConfirmation(welcomeMessage);
                         
                         // Check if all requirements are met to enable signup button
                         validateSignUpButton();
@@ -699,6 +713,12 @@
                 additionalData.experience = '';
                 additionalData.education = '';
                 additionalData.applicationsCount = 0;
+            } else if (selectedRole === USER_ROLES.JOB_SEEKER) {
+                additionalData.skills = [];
+                additionalData.experience = '';
+                additionalData.currentRole = '';
+                additionalData.applicationsCount = 0;
+                additionalData.careerLevel = '';
             } else if (selectedRole === USER_ROLES.RECRUITER) {
                 additionalData.company = '';
                 additionalData.jobsPosted = 0;

@@ -281,6 +281,7 @@ export const utils = {
 // User roles
 export const USER_ROLES = {
     STUDENT: 'student',
+    JOB_SEEKER: 'job-seeker',
     RECRUITER: 'recruiter'
 };
 
