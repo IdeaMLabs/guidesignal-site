@@ -171,25 +171,21 @@
             gap: 12px;
         }
         
-        .role-checkbox {
+        .role-radio {
             width: 22px;
             height: 22px;
             margin: 0;
             cursor: pointer;
             accent-color: var(--primary-500);
             flex-shrink: 0;
-            border-radius: 4px;
-            border: 2px solid var(--gray-300);
-            background: white;
         }
         
-        .role-checkbox:checked {
-            background: var(--primary-500);
-            border-color: var(--primary-500);
+        .role-radio:checked + .role-content .role-title {
+            color: var(--primary-600);
         }
         
-        .role-checkbox:hover {
-            border-color: var(--primary-500);
+        .role-radio:hover {
+            accent-color: var(--primary-600);
         }
         
         .role-option:hover {
@@ -253,7 +249,7 @@
                 font-size: 13px;
             }
             
-            .role-checkbox {
+            .role-radio {
                 width: 18px;
                 height: 18px;
             }
@@ -359,23 +355,23 @@
             
             <div class="form-group">
                 <label class="form-label">I am a...</label>
-                <div class="role-selector">
+                <div id="role-selection" class="role-selector">
                     <div class="role-option" data-role="student">
-                        <input type="checkbox" class="role-checkbox" id="role-student" name="user-role" value="student">
+                        <input type="radio" name="role" value="student" class="role-radio" id="role-student" required>
                         <div class="role-content">
                             <div class="role-title">🎓 Student</div>
                             <div class="role-desc">Looking for internships and entry-level opportunities</div>
                         </div>
                     </div>
                     <div class="role-option" data-role="job-seeker">
-                        <input type="checkbox" class="role-checkbox" id="role-job-seeker" name="user-role" value="job-seeker">
+                        <input type="radio" name="role" value="job_seeker" class="role-radio" id="role-job-seeker" required>
                         <div class="role-content">
                             <div class="role-title">💼 Job Seeker</div>
                             <div class="role-desc">Seeking new career opportunities</div>
                         </div>
                     </div>
                     <div class="role-option" data-role="recruiter">
-                        <input type="checkbox" class="role-checkbox" id="role-recruiter" name="user-role" value="recruiter">
+                        <input type="radio" name="role" value="recruiter" class="role-radio" id="role-recruiter" required>
                         <div class="role-content">
                             <div class="role-title">🏢 Recruiter</div>
                             <div class="role-desc">Posting jobs and hiring talent</div>
@@ -490,9 +486,9 @@
                     if (selectedRole) {
                         const roleOption = document.querySelector(`[data-role="${selectedRole}"]`);
                         if (roleOption) {
-                            const checkbox = roleOption.querySelector('.role-checkbox');
-                            if (checkbox) {
-                                checkbox.checked = true;
+                            const radio = roleOption.querySelector('.role-radio');
+                            if (radio) {
+                                radio.checked = true;
                                 roleOption.classList.add('selected');
                             }
                         }
@@ -567,20 +563,13 @@
 
         // Enhanced role selection with single checkbox rule
         function setupRoleSelection() {
-            const checkboxes = document.querySelectorAll('.role-checkbox');
+            const radioButtons = document.querySelectorAll('.role-radio');
             
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
                     if (this.checked) {
-                        // Uncheck all other checkboxes (single selection rule)
-                        checkboxes.forEach(otherCheckbox => {
-                            if (otherCheckbox !== this) {
-                                otherCheckbox.checked = false;
-                                // Remove selected class from other options
-                                const otherOption = otherCheckbox.closest('.role-option');
-                                otherOption.classList.remove('selected');
-                            }
-                        });
+                        // Remove selected class from all options
+                        document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
                         
                         // Add selected class to this option
                         const option = this.closest('.role-option');
@@ -600,34 +589,23 @@
                         }
                         
                         showRoleConfirmation(welcomeMessage);
-                    } else {
-                        // Remove selected class when unchecked
-                        const option = this.closest('.role-option');
-                        option.classList.remove('selected');
-                        selectedRole = null;
                         
-                        // Remove confirmation message
-                        const existing = document.querySelector('.role-confirmation');
-                        if (existing) {
-                            existing.remove();
-                        }
+                        // Check if all requirements are met to enable signup button
+                        validateSignUpButton();
+                        checkFormValidity();
                     }
-                    
-                    // Check if all requirements are met to enable signup button
-                    validateSignUpButton();
-                    checkFormValidity();
                 });
             });
             
-            // Make role options clickable (clicks propagate to checkbox)
+            // Make role options clickable (clicks propagate to radio button)
             document.querySelectorAll('.role-option').forEach(option => {
                 option.addEventListener('click', function(e) {
-                    // Don't interfere if clicking the checkbox directly
-                    if (e.target.type === 'checkbox') return;
+                    // Don't interfere if clicking the radio button directly
+                    if (e.target.type === 'radio') return;
                     
-                    const checkbox = this.querySelector('.role-checkbox');
-                    checkbox.checked = !checkbox.checked;
-                    checkbox.dispatchEvent(new Event('change'));
+                    const radio = this.querySelector('.role-radio');
+                    radio.checked = true;
+                    radio.dispatchEvent(new Event('change'));
                 });
             });
         }
@@ -878,7 +856,7 @@
                 document.getElementById('signup-form').reset();
                 selectedRole = null;
                 document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
-                document.querySelectorAll('.role-checkbox').forEach(cb => cb.checked = false);
+                document.querySelectorAll('.role-radio').forEach(cb => cb.checked = false);
                 
                 // Switch to sign-in tab after successful registration
                 setTimeout(() => {
