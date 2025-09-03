@@ -1,0 +1,554 @@
+/* GuideSignal Layout & Logo Fixes */
+/* Comprehensive fixes for GUI issues across all pages */
+
+/* === LOGO FIXES === */
+
+/* Ensure logo container is always visible */
+.logo,
+.universal-logo-container,
+.site-logo {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  margin: 20px auto !important;
+  text-align: center !important;
+  width: 200px !important;
+  height: 200px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border: 3px solid #e2e8f0 !important;
+}
+
+/* Logo image fixes */
+.logo img,
+.universal-logo-container img,
+.site-logo img {
+  display: block !important;
+  width: 90% !important;
+  height: 90% !important;
+  max-width: 180px !important;
+  max-height: 180px !important;
+  margin: 10% auto !important;
+  object-fit: contain !important;
+  border-radius: 8px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1)) !important;
+}
+
+/* Logo hover effects */
+.logo:hover,
+.universal-logo-container:hover,
+.site-logo:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+.logo:hover img,
+.universal-logo-container:hover img,
+.site-logo:hover img {
+  transform: scale(1.05) !important;
+}
+
+/* Picture element within logo */
+.logo picture,
+.universal-logo-container picture {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* === HEADER LAYOUT FIXES === */
+
+/* Header structure */
+header {
+  padding: 40px 0 30px !important;
+  text-align: center !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  position: relative !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* Header gradient accent */
+header::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 4px !important;
+  background: linear-gradient(90deg, #4a9eff 0%, #1e3a5f 100%) !important;
+}
+
+/* Navigation positioning */
+.header-nav {
+  position: absolute !important;
+  top: 20px !important;
+  right: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+/* === TYPOGRAPHY FIXES === */
+
+/* Main heading */
+h1 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem) !important;
+  font-weight: 300 !important;
+  color: #1e3a5f !important;
+  margin: 20px 0 15px !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.2 !important;
+  background: linear-gradient(135deg, #1e3a5f 0%, #4a9eff 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Subtitle */
+.subtitle {
+  font-size: clamp(1.125rem, 3vw, 1.25rem) !important;
+  color: #64748b !important;
+  font-weight: 400 !important;
+  max-width: 600px !important;
+  margin: 0 auto 30px !important;
+  line-height: 1.6 !important;
+}
+
+/* Hero section typography */
+.hero-title {
+  font-size: clamp(2.5rem, 6vw, 4rem) !important;
+  font-weight: 200 !important;
+  color: #1e3a5f !important;
+  margin-bottom: 20px !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.1 !important;
+}
+
+.hero-description {
+  font-size: clamp(1.25rem, 4vw, 1.5rem) !important;
+  color: #64748b !important;
+  margin-bottom: 40px !important;
+  font-weight: 300 !important;
+  max-width: 700px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  line-height: 1.5 !important;
+}
+
+/* === BUTTON FIXES === */
+
+/* CTA buttons container */
+.cta-buttons {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 16px !important;
+  margin: 40px auto !important;
+  flex-wrap: wrap !important;
+  max-width: 800px !important;
+}
+
+/* Button base styles */
+.btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px 32px !important;
+  text-decoration: none !important;
+  border-radius: 12px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: none !important;
+  cursor: pointer !important;
+  min-width: 180px !important;
+  min-height: 50px !important;
+  letter-spacing: 0.025em !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Primary button */
+.btn-primary {
+  background: linear-gradient(135deg, #1e3a5f 0%, #4a9eff 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(74, 158, 255, 0.3) !important;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(74, 158, 255, 0.4) !important;
+  color: white !important;
+}
+
+/* Secondary button */
+.btn-secondary {
+  background: white !important;
+  color: #1e3a5f !important;
+  border: 2px solid #4a9eff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.btn-secondary:hover {
+  background: #4a9eff !important;
+  color: white !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(74, 158, 255, 0.3) !important;
+}
+
+/* Auth buttons in header */
+.btn-primary-auth,
+.btn-secondary-auth {
+  padding: 10px 20px !important;
+  font-size: 0.875rem !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.btn-primary-auth {
+  background: linear-gradient(135deg, #4a9eff 0%, #1e3a5f 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(74, 158, 255, 0.3) !important;
+}
+
+.btn-primary-auth:hover {
+  background: linear-gradient(135deg, #2c8afc 0%, #1d4ed8 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 15px rgba(74, 158, 255, 0.4) !important;
+  color: white !important;
+}
+
+.btn-secondary-auth {
+  background: white !important;
+  color: #4a9eff !important;
+  border: 2px solid #4a9eff !important;
+}
+
+.btn-secondary-auth:hover {
+  background: #4a9eff !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+}
+
+/* === STATS SECTION FIXES === */
+
+/* Scoreboard section */
+.scoreboard {
+  padding: 60px 0 !important;
+  background: linear-gradient(135deg, #1e3a5f 0%, #4a9eff 100%) !important;
+  color: white !important;
+  position: relative !important;
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  gap: 30px !important;
+  text-align: center !important;
+  max-width: 1000px !important;
+  margin: 0 auto !important;
+}
+
+/* Individual stats */
+.stat {
+  padding: 30px 20px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.3s ease !important;
+}
+
+.stat:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-4px) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+.stat-number {
+  font-size: clamp(2.5rem, 5vw, 3rem) !important;
+  font-weight: 200 !important;
+  margin-bottom: 10px !important;
+  color: white !important;
+  letter-spacing: -0.02em !important;
+}
+
+.stat-label {
+  font-size: 1rem !important;
+  opacity: 0.95 !important;
+  margin-bottom: 5px !important;
+  font-weight: 500 !important;
+}
+
+.stat-unit {
+  font-size: 0.875rem !important;
+  opacity: 0.8 !important;
+  font-weight: 300 !important;
+}
+
+/* === MOBILE RESPONSIVE FIXES === */
+
+@media (max-width: 768px) {
+  /* Header mobile fixes */
+  .header-nav {
+    position: static !important;
+    margin: 20px 0 0 !important;
+    justify-content: center !important;
+  }
+
+  /* Logo mobile sizing */
+  .logo,
+  .universal-logo-container {
+    width: 150px !important;
+    height: 150px !important;
+    margin: 15px auto !important;
+  }
+
+  .logo img,
+  .universal-logo-container img {
+    max-width: 135px !important;
+    max-height: 135px !important;
+  }
+
+  /* Header padding mobile */
+  header {
+    padding: 30px 0 25px !important;
+  }
+
+  /* Typography mobile */
+  h1 {
+    font-size: 2rem !important;
+    margin: 15px 0 10px !important;
+  }
+
+  .subtitle {
+    font-size: 1rem !important;
+    margin-bottom: 25px !important;
+  }
+
+  /* Buttons mobile */
+  .cta-buttons {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+    margin: 30px auto !important;
+  }
+
+  .btn {
+    width: 100% !important;
+    max-width: 280px !important;
+    padding: 14px 24px !important;
+    font-size: 0.95rem !important;
+  }
+
+  /* Auth buttons mobile */
+  .auth-buttons {
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: center !important;
+  }
+
+  .btn-primary-auth,
+  .btn-secondary-auth {
+    width: 140px !important;
+    padding: 8px 16px !important;
+    font-size: 0.8rem !important;
+  }
+
+  /* Stats grid mobile */
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    padding: 0 20px !important;
+  }
+
+  .scoreboard {
+    padding: 40px 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Container mobile */
+  .container {
+    padding: 0 16px !important;
+  }
+
+  /* Logo extra small */
+  .logo,
+  .universal-logo-container {
+    width: 120px !important;
+    height: 120px !important;
+  }
+
+  .logo img,
+  .universal-logo-container img {
+    max-width: 108px !important;
+    max-height: 108px !important;
+  }
+
+  /* Typography extra small */
+  h1 {
+    font-size: 1.75rem !important;
+  }
+
+  .hero-title {
+    font-size: 2rem !important;
+  }
+
+  .hero-description {
+    font-size: 1.125rem !important;
+  }
+}
+
+/* === ACCESSIBILITY FIXES === */
+
+/* Focus states */
+.btn:focus,
+.nav-link:focus,
+button:focus,
+a:focus {
+  outline: 2px solid #4a9eff !important;
+  outline-offset: 2px !important;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .logo,
+  .universal-logo-container {
+    border: 3px solid #000 !important;
+  }
+
+  .btn-primary {
+    border: 2px solid #fff !important;
+  }
+
+  .btn-secondary {
+    border: 3px solid #4a9eff !important;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* === LAYOUT CONTAINER FIXES === */
+
+/* Main container */
+.container {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 0 20px !important;
+  position: relative !important;
+}
+
+/* Hero section */
+.hero-section {
+  padding: 60px 0 !important;
+  text-align: center !important;
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.8) 100%) !important;
+  position: relative !important;
+}
+
+/* Features section (if present) */
+.features {
+  padding: 60px 0 !important;
+  background: white !important;
+}
+
+/* === BANNER AND NOTICE FIXES === */
+
+/* Employer banner */
+.employer-banner {
+  background: linear-gradient(135deg, #1e3a5f 0%, #4a9eff 100%) !important;
+  color: white !important;
+  padding: 12px 0 !important;
+  text-align: center !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+}
+
+.employer-banner a {
+  color: white !important;
+  text-decoration: none !important;
+  font-weight: 700 !important;
+  margin: 0 8px !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.3s ease !important;
+}
+
+.employer-banner a:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Mini stats */
+.mini-stats {
+  background: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  text-align: center !important;
+  padding: 8px 0 !important;
+  font-size: 0.8125rem !important;
+  color: #64748b !important;
+  font-weight: 500 !important;
+}
+
+.mini-stats span {
+  color: #1e3a5f !important;
+  font-weight: 600 !important;
+}
+
+/* === PRINT STYLES === */
+@media print {
+  header,
+  .header-nav,
+  .auth-buttons,
+  .cta-buttons,
+  .employer-banner,
+  .mini-stats,
+  .capacity-notice,
+  .join-cta-index {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .logo,
+  .universal-logo-container {
+    background: white !important;
+    box-shadow: none !important;
+    border: 2px solid #ccc !important;
+  }
+
+  h1,
+  .hero-title {
+    color: black !important;
+    -webkit-text-fill-color: black !important;
+  }
+}

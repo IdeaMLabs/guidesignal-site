@@ -1,0 +1,458 @@
+/* GuideSignal GUI Layout Fixes - Based on GUI1 Screenshot Issues */
+/* Specific fixes for logo positioning, header layout, and content flow */
+
+/* === CRITICAL LAYOUT FIXES === */
+
+/* Fix header container positioning */
+header {
+  padding: 30px 0 40px !important;
+  text-align: center !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  position: relative !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  overflow: visible !important;
+  min-height: auto !important;
+}
+
+/* Fix header navigation positioning - prevent overlap */
+.header-nav {
+  position: absolute !important;
+  top: 15px !important;
+  right: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  z-index: 10 !important;
+}
+
+/* Ensure navigation doesn't interfere with main content */
+.header-nav .nav-link,
+.header-nav .auth-buttons {
+  font-size: 14px !important;
+  white-space: nowrap !important;
+}
+
+/* Fix logo container - prevent text overlap */
+.logo {
+  display: block !important;
+  width: 160px !important;
+  height: 160px !important;
+  margin: 0 auto 25px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+  position: relative !important;
+  border: 2px solid #e2e8f0 !important;
+  flex-shrink: 0 !important;
+}
+
+.logo img {
+  width: 85% !important;
+  height: 85% !important;
+  max-width: 136px !important;
+  max-height: 136px !important;
+  margin: 12px auto !important;
+  display: block !important;
+  object-fit: contain !important;
+  border-radius: 6px !important;
+}
+
+/* Fix main title positioning */
+h1 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem) !important;
+  font-weight: 300 !important;
+  color: #1e3a5f !important;
+  margin: 15px 0 10px !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+  background: linear-gradient(135deg, #1e3a5f 0%, #4a9eff 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Fix subtitle positioning */
+.subtitle {
+  font-size: clamp(1rem, 3vw, 1.125rem) !important;
+  color: #64748b !important;
+  font-weight: 400 !important;
+  max-width: 500px !important;
+  margin: 0 auto 30px !important;
+  line-height: 1.5 !important;
+  text-align: center !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Fix header container layout to prevent overlap */
+header .container {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 20px !important;
+  margin-top: 0 !important;
+}
+
+/* === BANNER AND STATUS FIXES === */
+
+/* Fix mini stats positioning */
+.mini-stats {
+  background: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  text-align: center !important;
+  padding: 10px 0 !important;
+  font-size: 13px !important;
+  color: #64748b !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+.mini-stats span {
+  color: #1e3a5f !important;
+  font-weight: 600 !important;
+}
+
+/* Fix ML stats positioning */
+#ml-stats {
+  background: #e8f4fd !important;
+  border-bottom: 1px solid #4a9eff !important;
+  color: #1565c0 !important;
+  font-weight: 500 !important;
+}
+
+/* Fix capacity notice */
+.capacity-notice {
+  background: linear-gradient(135deg, #fff3cd, #ffeeba) !important;
+  border-bottom: 1px solid #f59e0b !important;
+  color: #856404 !important;
+  padding: 10px 0 !important;
+  text-align: center !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.capacity-bar {
+  display: inline-block !important;
+  width: 60px !important;
+  height: 8px !important;
+  background: #e5e7eb !important;
+  border-radius: 4px !important;
+  margin: 0 8px !important;
+  position: relative !important;
+  vertical-align: middle !important;
+}
+
+.capacity-fill {
+  height: 100% !important;
+  background: linear-gradient(135deg, #10b981, #20c997) !important;
+  border-radius: 4px !important;
+  transition: width 0.3s ease !important;
+}
+
+/* === HERO SECTION FIXES === */
+
+/* Fix hero section layout */
+.hero-section {
+  padding: 50px 0 !important;
+  text-align: center !important;
+  background: transparent !important;
+  position: relative !important;
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 6vw, 4rem) !important;
+  font-weight: 200 !important;
+  color: #1e3a5f !important;
+  margin-bottom: 15px !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.1 !important;
+}
+
+.hero-description {
+  font-size: clamp(1.125rem, 4vw, 1.25rem) !important;
+  color: #64748b !important;
+  margin-bottom: 40px !important;
+  font-weight: 300 !important;
+  max-width: 600px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  line-height: 1.4 !important;
+}
+
+/* Fix CTA buttons */
+.cta-buttons {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 16px !important;
+  margin: 30px auto !important;
+  flex-wrap: wrap !important;
+  max-width: 600px !important;
+}
+
+/* === MOBILE RESPONSIVE FIXES === */
+
+@media (max-width: 768px) {
+  /* Mobile header fixes */
+  header {
+    padding: 20px 0 30px !important;
+  }
+  
+  .header-nav {
+    position: static !important;
+    margin: 15px 0 0 !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+  }
+  
+  /* Mobile logo */
+  .logo {
+    width: 130px !important;
+    height: 130px !important;
+    margin: 0 auto 20px !important;
+  }
+  
+  .logo img {
+    max-width: 110px !important;
+    max-height: 110px !important;
+    margin: 10px auto !important;
+  }
+  
+  /* Mobile typography */
+  h1 {
+    font-size: 2.25rem !important;
+    margin: 10px 0 8px !important;
+  }
+  
+  .subtitle {
+    font-size: 1rem !important;
+    margin-bottom: 25px !important;
+    padding: 0 15px !important;
+  }
+  
+  /* Mobile hero */
+  .hero-section {
+    padding: 35px 0 !important;
+  }
+  
+  .hero-title {
+    font-size: 2rem !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .hero-description {
+    font-size: 1.125rem !important;
+    margin-bottom: 30px !important;
+    padding: 0 20px !important;
+  }
+  
+  /* Mobile CTA buttons */
+  .cta-buttons {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+    margin: 25px auto !important;
+    padding: 0 20px !important;
+  }
+  
+  .btn {
+    width: 100% !important;
+    max-width: 280px !important;
+    padding: 14px 24px !important;
+    font-size: 0.95rem !important;
+  }
+  
+  /* Mobile auth buttons */
+  .auth-buttons {
+    flex-direction: row !important;
+    gap: 8px !important;
+    justify-content: center !important;
+  }
+  
+  .btn-primary-auth,
+  .btn-secondary-auth {
+    padding: 8px 16px !important;
+    font-size: 0.8rem !important;
+    min-width: 80px !important;
+  }
+  
+  /* Mobile mini stats */
+  .mini-stats {
+    font-size: 11px !important;
+    padding: 8px 5px !important;
+    line-height: 1.3 !important;
+  }
+  
+  .capacity-notice {
+    font-size: 11px !important;
+    padding: 8px 5px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra small mobile fixes */
+  header {
+    padding: 15px 0 25px !important;
+  }
+  
+  .logo {
+    width: 110px !important;
+    height: 110px !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .logo img {
+    max-width: 95px !important;
+    max-height: 95px !important;
+  }
+  
+  h1 {
+    font-size: 1.875rem !important;
+    margin: 8px 0 6px !important;
+  }
+  
+  .subtitle {
+    font-size: 0.9rem !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .header-nav {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  
+  .auth-buttons {
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+  
+  .btn-primary-auth,
+  .btn-secondary-auth {
+    width: 120px !important;
+    padding: 6px 12px !important;
+    font-size: 0.75rem !important;
+  }
+}
+
+/* === CONTAINER WIDTH FIXES === */
+
+.container {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 0 20px !important;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 0 30px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 40px !important;
+  }
+}
+
+/* === PREVENT TEXT OVERLAY ISSUES === */
+
+/* Ensure proper stacking context */
+header * {
+  position: relative !important;
+}
+
+/* Prevent content from overlapping */
+.logo,
+h1,
+.subtitle,
+.hero-title,
+.hero-description {
+  isolation: isolate !important;
+}
+
+/* Fix any z-index issues */
+.header-nav {
+  z-index: 20 !important;
+}
+
+.logo {
+  z-index: 10 !important;
+}
+
+h1,
+.subtitle {
+  z-index: 5 !important;
+}
+
+/* === ACCESSIBILITY AND VISUAL HIERARCHY === */
+
+/* Ensure proper focus states */
+.btn:focus,
+.nav-link:focus,
+a:focus,
+button:focus {
+  outline: 2px solid #4a9eff !important;
+  outline-offset: 2px !important;
+  z-index: 100 !important;
+}
+
+/* Ensure text is readable on all backgrounds */
+h1,
+.hero-title {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.subtitle,
+.hero-description {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* === PRINT STYLES === */
+@media print {
+  .header-nav,
+  .mini-stats,
+  .capacity-notice,
+  .cta-buttons {
+    display: none !important;
+  }
+  
+  header {
+    background: white !important;
+    box-shadow: none !important;
+    border-bottom: 2px solid #ccc !important;
+  }
+  
+  .logo {
+    background: white !important;
+    box-shadow: none !important;
+  }
+}
+
+/* === HIGH CONTRAST MODE === */
+@media (prefers-contrast: high) {
+  .logo {
+    border: 3px solid #000 !important;
+    background: #fff !important;
+  }
+  
+  h1,
+  .hero-title {
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
+  }
+  
+  .btn-primary {
+    border: 2px solid #fff !important;
+  }
+  
+  .btn-secondary {
+    border: 3px solid #000 !important;
+  }
+}

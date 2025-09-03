@@ -14,6 +14,8 @@
 
 <!-- Shared CSS -->
 <link rel="stylesheet" href="assets/shared.css">
+<!-- Layout and logo fixes -->
+<link rel="stylesheet" href="assets/layout-fixes.css">
 
 <!-- Logo preloading for performance -->
 <link rel="preload" href="assets/GuideSignalLogo.svg" as="image" type="image/svg+xml">
@@ -112,7 +114,7 @@ body {
 </body>
 
 <script type="module">
-import { authFunctions, dbFunctions, utils, USER_ROLES } from './firebase-config.js';
+import { authFunctions, dbFunctions, utils, USER_ROLES } from './firebase-config-secure.js';
 
 let currentUser = null;
 

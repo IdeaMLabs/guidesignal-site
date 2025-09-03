@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Test - GuideSignal</title>
+    <link rel="stylesheet" href="assets/index-optimized.css?v=3">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .success { background: #dcfce7; color: #166534; }
+        .error { background: #fee2e2; color: #dc2626; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>CSS Fix Test Page</h1>
+        
+        <div class="logo">
+            <picture>
+                <source srcset="assets/GuideSignalLogo.svg" type="image/svg+xml">
+                <img src="assets/GuideSignalLogo.png" 
+                     alt="GuideSignal Logo - Test" 
+                     width="160" height="160">
+            </picture>
+        </div>
+        
+        <h1>GuideSignal</h1>
+        <p class="subtitle">Testing CSS fixes - this should have proper layout</p>
+        
+        <div class="status success">✅ If the logo appears with proper styling, CSS is working</div>
+        <div class="status error">❌ If layout looks broken, CSS cache may need manual refresh</div>
+        
+        <p><strong>To force CSS refresh:</strong></p>
+        <ol>
+            <li>Press <kbd>Ctrl+F5</kbd> (Windows) or <kbd>Cmd+Shift+R</kbd> (Mac)</li>
+            <li>Or open Developer Tools → Network → Check "Disable cache" → Refresh</li>
+            <li>Or try opening in incognito/private mode</li>
+        </ol>
+        
+        <div class="cta-buttons">
+            <a href="index.html?v=3" class="btn btn-primary">← Back to Main Site</a>
+        </div>
+    </div>
+    
+    <script>
+        console.log('CSS Test Page loaded');
+        console.log('Logo element:', document.querySelector('.logo'));
+        console.log('Logo image:', document.querySelector('.logo img'));
+        
+        // Check if CSS is properly loaded
+        const logo = document.querySelector('.logo');
+        if (logo) {
+            const styles = window.getComputedStyle(logo);
+            console.log('Logo width:', styles.width);
+            console.log('Logo height:', styles.height);
+            console.log('Logo background:', styles.background);
+            
+            if (styles.width === '160px' && styles.height === '160px') {
+                console.log('✅ CSS fixes are applied correctly!');
+            } else {
+                console.log('❌ CSS fixes not applied - cache issue detected');
+                console.log('Current computed styles:', {
+                    width: styles.width,
+                    height: styles.height,
+                    margin: styles.margin,
+                    background: styles.background
+                });
+            }
+        }
+    </script>
+</body>
+</html>

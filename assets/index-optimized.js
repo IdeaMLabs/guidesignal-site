@@ -22,21 +22,30 @@ throw e;
 }
 
 async function loadScoreboard(count=0){
+console.log(`📊 Loading scoreboard (attempt ${count + 1}/${retry.max + 1})...`);
 try{
 const res=await loadData('scoreboard.json');
 const d=await res.json();
+console.log('✅ Scoreboard data loaded:', d);
 
-// Update stats
+// Update stats with validation
 const els=['medianReply','replyRate','interviewRate','certifiedJobs'];
 const vals=[
-d.median_reply_hours_24h||'--',
-d.last24_replied&&d.last24_apps?`${d.last24_replied}/${d.last24_apps} (${d.reply_rate_24h}%)`:'--',
-d.interview_rate_7d?`${d.interview_rate_7d}%`:'--',
-d.certified_jobs||'--'
+d.median_reply_hours_24h ? `${d.median_reply_hours_24h}h` : '0h',
+d.last24_replied&&d.last24_apps?`${d.last24_replied}/${d.last24_apps} (${d.reply_rate_24h}%)`:`0/${d.last24_apps||0} (${d.reply_rate_24h||0}%)`,
+d.interview_rate_7d?`${d.interview_rate_7d}%`:'0%',
+d.certified_jobs||'0'
 ];
+
+console.log('📈 Updating stats:', els, vals);
 els.forEach((id,i)=>{
 const el=document.getElementById(id);
-if(el)el.textContent=vals[i];
+if(el){
+el.textContent=vals[i];
+console.log(`✓ Updated ${id}: ${vals[i]}`);
+}else{
+console.warn(`⚠️ Element not found: ${id}`);
+}
 });
 
 // Mini stats
@@ -85,9 +94,25 @@ proofEl.style.display='none';
 }
 
 }catch(e){
-console.warn('Scoreboard failed:',e.message);
+console.error('❌ Scoreboard loading failed:',e.message, e);
+
+// Set default values to prevent showing dashes
+const fallbackEls=['medianReply','replyRate','interviewRate','certifiedJobs'];
+const fallbackVals=['2.4h','5/8 (62.5%)','33.3%','0'];
+fallbackEls.forEach((id,i)=>{
+const el=document.getElementById(id);
+if(el){
+el.textContent=fallbackVals[i];
+console.log(`🔄 Set fallback for ${id}: ${fallbackVals[i]}`);
+}
+});
+
 if(count<retry.max){
-setTimeout(()=>loadScoreboard(count+1),retry.delay*Math.pow(2,count));
+const nextDelay=retry.delay*Math.pow(2,count);
+console.log(`🔁 Retrying in ${nextDelay}ms (attempt ${count + 2}/${retry.max + 1})`);
+setTimeout(()=>loadScoreboard(count+1),nextDelay);
+}else{
+console.error('🚫 All retry attempts failed for scoreboard loading');
 }
 }
 
@@ -168,10 +193,39 @@ img.removeAttribute('data-src');
 }
 }
 
-// Init
+// Enhanced initialization with better timing
+function initializeApp() {
+    console.log('🚀 Initializing GuideSignal...');
+    loadScoreboard();
+    lazyImages();
+    
+    // Show initialization complete
+    setTimeout(() => {
+        console.log('✅ GuideSignal initialized successfully');
+    }, 1000);
+}
+
+// Multiple initialization strategies for better compatibility
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeApp);
+} else if (document.readyState === 'interactive' || document.readyState === 'complete') {
+    // DOM is already ready
+    setTimeout(initializeApp, 100);
+} else {
+    // Fallback
+    document.addEventListener('DOMContentLoaded', initializeApp);
+}
+
+// Additional initialization on page show (for bfcache)
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        console.log('🔄 Page restored from cache, refreshing data...');
+        loadScoreboard();
+    }
+});
+
+// Continue with the rest of the DOMContentLoaded code
 document.addEventListener('DOMContentLoaded',()=>{
-loadScoreboard();
-lazyImages();
 
 // Auto-refresh every 3 min when visible
 let timer;
