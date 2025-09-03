@@ -32,7 +32,8 @@
       "Bash(start dashboard.html)",
       "Bash(dir:*)",
       "WebSearch",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(rg:*)"
     ],
     "deny": [],
     "ask": []
