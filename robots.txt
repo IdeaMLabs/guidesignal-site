@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.guide-signal.com/sitemap.xml
+Sitemap: https://guide-signal.com/sitemap.xml
+
+# Disallow admin and config directories for security
+Disallow: /config/
+Disallow: /admin/
+Disallow: /.git/
