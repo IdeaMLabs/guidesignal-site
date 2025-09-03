@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- HTTPS and Certificate Security -->
+    <script>
+        // Enhanced HTTPS redirect with improved domain validation
+        (function() {
+            const isDev = location.hostname === 'localhost' || 
+                         location.hostname === '127.0.0.1' || 
+                         location.hostname.startsWith('192.168.') ||
+                         location.hostname.endsWith('.local');
+            
+            // Redirect www to non-www
+            if (window.location.hostname === 'www.guide-signal.com') {
+                window.location.replace('https://guide-signal.com' + window.location.pathname + window.location.search + window.location.hash);
+                return;
+            }
+            
+            // Force HTTPS in production (critical for auth security)
+            if (location.protocol !== 'https:' && !isDev) {
+                const allowedDomains = ['guide-signal.com', 'guidesignal.netlify.app', 'guidesignal.github.io'];
+                const currentDomain = location.hostname.toLowerCase();
+                
+                if (allowedDomains.some(domain => currentDomain.includes(domain))) {
+                    const httpsUrl = 'https://' + location.hostname + location.pathname + location.search + location.hash;
+                    console.log('Auth security: Redirecting to HTTPS:', httpsUrl);
+                    window.location.replace(httpsUrl);
+                } else {
+                    console.error('Auth security: Unauthorized domain detected:', currentDomain);
+                }
+            }
+        })();
+    </script>
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="description" content="Sign in or sign up for GuideSignal - Connect students with fast-reply employers">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="assets/shared.css">
+    
+    <title>Sign In - GuideSignal</title>
+    <style>
+        /* Auth page specific styles */
+        body {
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--primary-50) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            padding: var(--space-4);
+        }
+        
+        .auth-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--gray-200);
+        }
+        
+        .auth-logo {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto var(--space-6);
+            background: var(--primary-500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .auth-title {
+            text-align: center;
+            margin-bottom: var(--space-6);
+            color: var(--gray-900);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: var(--space-3);
+            }
+            
+            .auth-card {
+                padding: var(--space-6);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            padding: 10px;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.1);
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 300;
+            color: #1e3a5f;
+            margin-top: 15px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #6c757d;
+            transition: all 0.2s ease;
+        }
+
+        .auth-tab.active {
+            background: white;
+            color: #1e3a5f;
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #1e3a5f;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4a9eff;
+        }
+
+        .form-input.invalid {
+            border-color: #dc2626;
+            background: #fef2f2;
+        }
+
+        .form-input.valid {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6c757d;
+            font-size: 18px;
+        }
+
+        .password-toggle:hover {
+            color: #4a9eff;
+        }
+
+        .field-error {
+            color: #dc2626;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .field-success {
+            color: #10b981;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .password-strength {
+            margin-top: 8px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+        }
+
+        .strength-weak { background: #dc2626; width: 25%; }
+        .strength-fair { background: #f59e0b; width: 50%; }
+        .strength-good { background: #3b82f6; width: 75%; }
+        .strength-strong { background: #10b981; width: 100%; }
+
+        .strength-text {
+            font-size: 12px;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .forgot-password a {
+            color: #4a9eff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: auto;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .role-option {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            position: relative;
+        }
+
+        .role-option:hover {
+            border-color: #4a9eff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.15);
+        }
+
+        .role-option.selected {
+            border-color: #4a9eff;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(74, 158, 255, 0.25);
+        }
+
+        .role-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #4a9eff;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .terms-accepted {
+            border-color: #10b981 !important;
+            background: #f0fdf4 !important;
+        }
+
+        .terms-rejected {
+            border-color: #ef4444 !important;
+            background: #fef2f2 !important;
+        }
+
+        .form-valid {
+            position: relative;
+        }
+
+        .form-valid::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981 0%, #4a9eff 100%);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .role-title {
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 5px;
+        }
+
+        .role-desc {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #4a9eff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #2c8afc;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn.loading-state {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn.loading-state .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .offline-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ef4444;
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 10001;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .offline-indicator.show {
+            transform: translateY(0);
+        }
+
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .page-loader.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .page-loader .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e9ecef;
+            border-top: 3px solid #4a9eff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .form-input:invalid:not(:focus) {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .auth-container {
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .auth-form {
+            transition: opacity 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .signup-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            padding: 10px 5px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #6c757d;
+            background: #f8f9fa;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            background: #4a9eff;
+            color: white;
+        }
+
+        .progress-step.completed {
+            background: #10b981;
+            color: white;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            color: #6c757d;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #4a9eff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+            
+            .role-selector {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page loader -->
+    <div class="page-loader" id="page-loader">
+        <div class="spinner"></div>
+    </div>
+    
+    <!-- Offline indicator -->
+    <div class="offline-indicator" id="offline-indicator">
+        You're offline. Please check your internet connection.
+    </div>
+    
+    <div class="auth-container">
+        <a href="/" class="back-link">← Back to Home</a>
+        
+        <div class="logo">
+            <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo">
+            <h1>GuideSignal</h1>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchTab('signin', this)">Sign In</button>
+            <button class="auth-tab" onclick="switchTab('signup', this)">Sign Up</button>
+        </div>
+
+        <div id="error-message" class="error-message" style="display: none;"></div>
+        <div id="success-message" class="success-message" style="display: none;"></div>
+
+        <!-- Sign In Form -->
+        <form id="signin-form" class="auth-form">
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" id="signin-email" required>
+                <div class="field-error" id="signin-email-error"></div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <div class="password-container">
+                    <input type="password" class="form-input" id="signin-password" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('signin-password')">
+                        👁️
+                    </button>
+                </div>
+                <div class="field-error" id="signin-password-error"></div>
+            </div>
+            
+            <div class="remember-me">
+                <input type="checkbox" id="remember-me">
+                <label for="remember-me">Remember me</label>
+            </div>
+            
+            <div class="forgot-password">
+                <a href="#" onclick="showForgotPassword()">Forgot password?</a>
+            </div>
+            
+            <button type="submit" class="btn" id="signin-btn">
+                <span class="btn-text">Sign In</span>
+            </button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signup-form" class="auth-form" style="display: none;">
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-input" id="signup-name" required minlength="2">
+                <div class="field-error" id="signup-name-error"></div>
+                <div class="field-success" id="signup-name-success"></div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" id="signup-email" required>
+                <div class="field-error" id="signup-email-error"></div>
+                <div class="field-success" id="signup-email-success"></div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <div class="password-container">
+                    <input type="password" class="form-input" id="signup-password" required minlength="8">
+                    <button type="button" class="password-toggle" onclick="togglePassword('signup-password')">
+                        👁️
+                    </button>
+                </div>
+                <div class="field-error" id="signup-password-error"></div>
+                <div class="password-strength" id="password-strength" style="display: none;">
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strength-fill"></div>
+                    </div>
+                    <div class="strength-text" id="strength-text"></div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <div class="password-container">
+                    <input type="password" class="form-input" id="signup-password-confirm" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('signup-password-confirm')">
+                        👁️
+                    </button>
+                </div>
+                <div class="field-error" id="signup-password-confirm-error"></div>
+                <div class="field-success" id="signup-password-confirm-success"></div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">I am a...</label>
+                <div class="role-selector">
+                    <div class="role-option" data-role="student">
+                        <div class="role-title">🎓 Student</div>
+                        <div class="role-desc">Looking for jobs and internships</div>
+                    </div>
+                    <div class="role-option" data-role="recruiter">
+                        <div class="role-title">🏢 Recruiter</div>
+                        <div class="role-desc">Posting jobs and hiring talent</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress indicator -->
+            <div class="signup-progress" id="signup-progress" style="display: none;">
+                <div class="progress-step" data-step="1">Info</div>
+                <div class="progress-step" data-step="2">Role</div>
+                <div class="progress-step" data-step="3">Terms</div>
+            </div>
+            
+            <div class="form-group" style="margin-top: 10px;">
+                <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #6c757d; line-height: 1.4;">
+                    <input type="checkbox" id="terms-agreement" required style="margin-top: 2px; flex-shrink: 0;">
+                    <span>I agree to the <a href="/terms.html" target="_blank" style="color: #4a9eff; text-decoration: none;">Terms of Service</a> and <a href="/privacy.html" target="_blank" style="color: #4a9eff; text-decoration: none;">Privacy Policy</a></span>
+                </label>
+            </div>
+            
+            <button type="submit" class="btn" id="signup-btn" disabled>
+                <span class="btn-text">Create Account</span>
+            </button>
+        </form>
+    </div>
+
+    <script type="module">
+        import { authFunctions, utils, USER_ROLES } from './firebase-config.js';
+        import { sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        // State management
+        let currentTab = 'signin';
+        let selectedRole = null;
+        let formData = { signin: {}, signup: {} }; // Preserve form data across tab switches
+        let loginAttempts = 0;
+        let lastAttemptTime = 0;
+        const MAX_LOGIN_ATTEMPTS = 5;
+        const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes
+
+        // Enhanced validation patterns
+        const validationPatterns = {
+            email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+            password: {
+                minLength: 8,
+                requireUppercase: /[A-Z]/,
+                requireLowercase: /[a-z]/,
+                requireNumber: /\d/,
+                requireSpecial: /[!@#$%^&*(),.?":{}|<>]/
+            },
+            name: /^[a-zA-Z\s]{2,50}$/
+        };
+
+        // Enhanced tab switching with form data preservation
+        window.switchTab = function(tab, clickedElement) {
+            // Save current form data
+            saveFormData(currentTab);
+            
+            const previousTab = currentTab;
+            currentTab = tab;
+            
+            // Update tab buttons with animation
+            document.querySelectorAll('.auth-tab').forEach(btn => btn.classList.remove('active'));
+            
+            // If clickedElement is provided, use it; otherwise find the correct button
+            if (clickedElement) {
+                clickedElement.classList.add('active');
+            } else {
+                // Fallback: find the correct button by tab name
+                const targetButton = document.querySelector(`[onclick="switchTab('${tab}')"]`);
+                if (targetButton) {
+                    targetButton.classList.add('active');
+                }
+            }
+            
+            // Animate form transition
+            const currentForm = document.getElementById(previousTab + '-form');
+            const newForm = document.getElementById(tab + '-form');
+            
+            console.log('Switching from', previousTab, 'to', tab);
+            console.log('Current form:', currentForm);
+            console.log('New form:', newForm);
+            
+            if (currentForm) {
+                currentForm.style.opacity = '0';
+                setTimeout(() => {
+                    currentForm.style.display = 'none';
+                    if (newForm) {
+                        newForm.style.display = 'block';
+                        newForm.style.opacity = '0';
+                        setTimeout(() => {
+                            newForm.style.opacity = '1';
+                        }, 50);
+                    }
+                }, 150);
+            } else {
+                // Direct switching if no current form (initialization)
+                if (newForm) {
+                    // Hide all forms first
+                    document.querySelectorAll('.auth-form').forEach(form => {
+                        form.style.display = 'none';
+                    });
+                    // Show target form
+                    newForm.style.display = 'block';
+                    newForm.style.opacity = '1';
+                }
+            }
+            
+            // Restore form data after animation
+            setTimeout(() => {
+                restoreFormData(tab);
+                
+                // Re-run validations for signup form
+                if (tab === 'signup') {
+                    validateSignUpButton();
+                    checkFormValidity();
+                    
+                    // Restore role selection visual state
+                    if (selectedRole) {
+                        const roleOption = document.querySelector(`[data-role="${selectedRole}"]`);
+                        if (roleOption) {
+                            roleOption.classList.add('selected');
+                        }
+                    }
+                }
+            }, 200);
+            
+            // Clear messages
+            hideMessages();
+        };
+
+        // Enhanced form data management
+        function saveFormData(tab) {
+            if (tab === 'signin') {
+                const emailEl = document.getElementById('signin-email');
+                const passwordEl = document.getElementById('signin-password');
+                const rememberEl = document.getElementById('remember-me');
+                
+                formData.signin = {
+                    email: emailEl?.value || '',
+                    password: passwordEl?.value || '',
+                    rememberMe: rememberEl?.checked || false
+                };
+            } else if (tab === 'signup') {
+                const nameEl = document.getElementById('signup-name');
+                const emailEl = document.getElementById('signup-email');
+                const passwordEl = document.getElementById('signup-password');
+                const confirmEl = document.getElementById('signup-password-confirm');
+                const termsEl = document.getElementById('terms-agreement');
+                
+                formData.signup = {
+                    name: nameEl?.value || '',
+                    email: emailEl?.value || '',
+                    password: passwordEl?.value || '',
+                    passwordConfirm: confirmEl?.value || '',
+                    termsAccepted: termsEl?.checked || false,
+                    selectedRole: selectedRole
+                };
+            }
+        }
+
+        function restoreFormData(tab) {
+            if (tab === 'signin' && formData.signin) {
+                const data = formData.signin;
+                const emailEl = document.getElementById('signin-email');
+                const passwordEl = document.getElementById('signin-password');
+                const rememberEl = document.getElementById('remember-me');
+                
+                if (emailEl) emailEl.value = data.email || '';
+                if (passwordEl) passwordEl.value = data.password || '';
+                if (rememberEl) rememberEl.checked = data.rememberMe || false;
+            } else if (tab === 'signup' && formData.signup) {
+                const data = formData.signup;
+                const nameEl = document.getElementById('signup-name');
+                const emailEl = document.getElementById('signup-email');
+                const passwordEl = document.getElementById('signup-password');
+                const confirmEl = document.getElementById('signup-password-confirm');
+                const termsEl = document.getElementById('terms-agreement');
+                
+                if (nameEl) nameEl.value = data.name || '';
+                if (emailEl) emailEl.value = data.email || '';
+                if (passwordEl) passwordEl.value = data.password || '';
+                if (confirmEl) confirmEl.value = data.passwordConfirm || '';
+                if (termsEl) termsEl.checked = data.termsAccepted || false;
+                
+                // Restore role selection
+                if (data.selectedRole) {
+                    selectedRole = data.selectedRole;
+                }
+            }
+        }
+
+        // Enhanced role selection with better feedback
+        function setupRoleSelection() {
+            document.querySelectorAll('.role-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    // Animate deselection
+                    document.querySelectorAll('.role-option.selected').forEach(opt => {
+                        opt.classList.add('deselecting');
+                        setTimeout(() => {
+                            opt.classList.remove('selected', 'deselecting');
+                        }, 150);
+                    });
+                    
+                    // Animate selection
+                    setTimeout(() => {
+                        this.classList.add('selected');
+                        selectedRole = this.dataset.role;
+                        
+                        // Show role confirmation
+                        const roleName = this.querySelector('.role-title').textContent;
+                        showRoleConfirmation(`Selected: ${roleName}`);
+                        
+                        // Check if all requirements are met to enable signup button
+                        validateSignUpButton();
+                        checkFormValidity();
+                    }, 150);
+                });
+                
+                // Add keyboard support
+                option.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+                
+                // Make focusable
+                option.setAttribute('tabindex', '0');
+            });
+        }
+        
+        // Show role selection confirmation
+        function showRoleConfirmation(message) {
+            // Remove any existing confirmation
+            const existing = document.querySelector('.role-confirmation');
+            if (existing) {
+                existing.remove();
+            }
+            
+            // Create confirmation element
+            const confirmation = document.createElement('div');
+            confirmation.className = 'role-confirmation';
+            confirmation.style.cssText = `
+                color: #10b981;
+                font-size: 14px;
+                font-weight: 500;
+                margin-top: 10px;
+                text-align: center;
+                animation: fadeInUp 0.3s ease;
+            `;
+            confirmation.textContent = message;
+            
+            // Insert after role selector
+            const roleSelector = document.querySelector('.role-selector');
+            roleSelector.parentNode.insertBefore(confirmation, roleSelector.nextSibling);
+        }
+        
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .role-option.deselecting {
+                transform: scale(0.95);
+                opacity: 0.7;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Enhanced signup button validation
+        function validateSignUpButton() {
+            const signupBtn = document.getElementById('signup-btn');
+            const termsCheckbox = document.getElementById('terms-agreement');
+            
+            if (!signupBtn) return;
+            
+            // Check all requirements
+            const hasRole = selectedRole !== null;
+            const hasTerms = termsCheckbox && termsCheckbox.checked;
+            const isOnline = navigator.onLine;
+            
+            // Enable button only if all requirements are met
+            const shouldEnable = hasRole && hasTerms && isOnline;
+            signupBtn.disabled = !shouldEnable;
+            
+            // Update button text to show what's missing
+            if (!shouldEnable) {
+                let missing = [];
+                if (!hasRole) missing.push('select role');
+                if (!hasTerms) missing.push('agree to terms');
+                if (!isOnline) missing.push('internet connection');
+                
+                signupBtn.title = `Please ${missing.join(', ')} to continue`;
+            } else {
+                signupBtn.title = 'Create your account';
+            }
+        }
+
+        // Terms agreement handling
+        function setupTermsAgreement() {
+            const termsCheckbox = document.getElementById('terms-agreement');
+            if (termsCheckbox) {
+                termsCheckbox.addEventListener('change', () => {
+                    validateSignUpButton();
+                    
+                    // Visual feedback for terms acceptance
+                    const termsGroup = termsCheckbox.closest('.form-group');
+                    if (termsCheckbox.checked) {
+                        termsGroup.classList.add('terms-accepted');
+                        termsGroup.classList.remove('terms-rejected');
+                    } else {
+                        termsGroup.classList.remove('terms-accepted');
+                        termsGroup.classList.add('terms-rejected');
+                    }
+                });
+            }
+        }
+
+        // Enhanced form submissions with validation and rate limiting
+        document.getElementById('signin-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Check rate limiting
+            if (isAccountLocked()) {
+                const remainingTime = Math.ceil((LOCKOUT_DURATION - (Date.now() - lastAttemptTime)) / 60000);
+                showError(`Too many failed attempts. Please try again in ${remainingTime} minutes.`);
+                return;
+            }
+            
+            const email = document.getElementById('signin-email').value;
+            const password = document.getElementById('signin-password').value;
+            const rememberMe = document.getElementById('remember-me').checked;
+            
+            // Validate inputs
+            if (!validateSignInForm(email, password)) {
+                return;
+            }
+            
+            setLoading('signin-btn', true);
+            hideMessages();
+            clearFieldErrors();
+            
+            const result = await handleNetworkError(
+                () => authFunctions.signInUser(email, password, rememberMe),
+                () => authFunctions.signInUser(email, password, rememberMe)
+            );
+            
+            if (result.success) {
+                // Reset login attempts on success
+                loginAttempts = 0;
+                
+                // Handle remember me
+                if (rememberMe) {
+                    localStorage.setItem('rememberEmail', email);
+                } else {
+                    localStorage.removeItem('rememberEmail');
+                }
+                
+                showSuccess('Sign in successful! Redirecting...');
+                
+                // Get user role and redirect
+                setTimeout(async () => {
+                    const role = await utils.getUserRole(result.user.uid);
+                    utils.redirectToDashboard(role);
+                }, 1500);
+            } else {
+                // Increment failed attempts
+                loginAttempts++;
+                lastAttemptTime = Date.now();
+                
+                // Show user-friendly error
+                const friendlyError = getFriendlyErrorMessage(result.error);
+                showError(friendlyError);
+                
+                // Show attempt warning
+                if (loginAttempts >= 3 && loginAttempts < MAX_LOGIN_ATTEMPTS) {
+                    showError(`${friendlyError} (${MAX_LOGIN_ATTEMPTS - loginAttempts} attempts remaining)`);
+                }
+                
+                setLoading('signin-btn', false);
+            }
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Comprehensive pre-validation
+            const name = document.getElementById('signup-name').value.trim();
+            const email = document.getElementById('signup-email').value.trim().toLowerCase();
+            const password = document.getElementById('signup-password').value;
+            const passwordConfirm = document.getElementById('signup-password-confirm').value;
+            const termsCheckbox = document.getElementById('terms-agreement');
+            
+            // Clear previous errors
+            hideMessages();
+            clearFieldErrors();
+            
+            let hasErrors = false;
+            
+            // Role selection validation
+            if (!selectedRole) {
+                showError('Please select your role (Student or Recruiter)');
+                hasErrors = true;
+            }
+            
+            // Terms agreement validation
+            if (!termsCheckbox || !termsCheckbox.checked) {
+                showError('Please agree to the Terms of Service and Privacy Policy');
+                hasErrors = true;
+            }
+            
+            // Form field validation
+            if (!validateSignUpForm(name, email, password, passwordConfirm)) {
+                hasErrors = true;
+            }
+            
+            // Stop if any validation errors
+            if (hasErrors) {
+                return;
+            }
+            
+            setLoading('signup-btn', true);
+            
+            const additionalData = {
+                profileComplete: false,
+                emailVerified: false,
+                accountCreatedAt: new Date().toISOString()
+            };
+            
+            // Add role-specific data
+            if (selectedRole === USER_ROLES.STUDENT) {
+                additionalData.skills = [];
+                additionalData.experience = '';
+                additionalData.education = '';
+                additionalData.applicationsCount = 0;
+            } else if (selectedRole === USER_ROLES.RECRUITER) {
+                additionalData.company = '';
+                additionalData.jobsPosted = 0;
+                additionalData.verified = false;
+                additionalData.subscriptionTier = 'free';
+            }
+            
+            const result = await handleNetworkError(
+                () => authFunctions.registerUser(email, password, name, selectedRole, additionalData),
+                () => authFunctions.registerUser(email, password, name, selectedRole, additionalData)
+            );
+            
+            if (result.success) {
+                // Show success message with email verification notice
+                if (result.emailVerificationSent) {
+                    showSuccess('Account created successfully! Please check your email to verify your account before signing in.');
+                } else {
+                    showSuccess('Account created successfully! You can now sign in.');
+                }
+                
+                // Clear form data
+                formData.signup = {};
+                
+                // Reset form
+                document.getElementById('signup-form').reset();
+                selectedRole = null;
+                document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
+                
+                // Switch to sign-in tab after successful registration
+                setTimeout(() => {
+                    switchTab('signin', null);
+                    // Pre-fill email in sign-in form and focus password
+                    document.getElementById('signin-email').value = email;
+                    setTimeout(() => {
+                        document.getElementById('signin-password').focus();
+                    }, 500);
+                    showSuccess('Registration complete! Please sign in with your credentials');
+                }, 2000);
+            } else {
+                const friendlyError = getFriendlyErrorMessage(result.error);
+                showError(friendlyError);
+                setLoading('signup-btn', false);
+            }
+        });
+
+        // Enhanced utility functions
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Scroll to top to ensure message is visible
+            errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Auto hide after 8 seconds (increased for better UX)
+            setTimeout(() => {
+                if (errorDiv.style.display === 'block') {
+                    errorDiv.style.opacity = '0';
+                    setTimeout(() => {
+                        errorDiv.style.display = 'none';
+                        errorDiv.style.opacity = '1';
+                    }, 300);
+                }
+            }, 8000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            
+            // Scroll to top to ensure message is visible
+            successDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function hideMessages() {
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('success-message').style.display = 'none';
+            document.getElementById('error-message').style.opacity = '1';
+            document.getElementById('success-message').style.opacity = '1';
+        }
+
+        function setLoading(btnId, loading) {
+            const btn = document.getElementById(btnId);
+            const btnText = btn.querySelector('.btn-text');
+            
+            if (loading) {
+                btn.disabled = true;
+                btn.classList.add('loading-state');
+                btnText.innerHTML = '<span class="loading"></span>Processing...';
+            } else {
+                btn.disabled = false;
+                btn.classList.remove('loading-state');
+                btnText.textContent = btnId.includes('signin') ? 'Sign In' : 'Create Account';
+            }
+        }
+
+        // Enhanced validation functions
+        function validateSignInForm(email, password) {
+            let isValid = true;
+            
+            if (!validateEmail(email)) {
+                showFieldError('signin-email', 'Please enter a valid email address');
+                isValid = false;
+            }
+            
+            if (!password || password.length < 6) {
+                showFieldError('signin-password', 'Password is required');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        function validateSignUpForm(name, email, password, passwordConfirm) {
+            let isValid = true;
+            
+            // Name validation
+            if (!name || name.length < 2) {
+                showFieldError('signup-name', 'Full name must be at least 2 characters');
+                isValid = false;
+            } else if (!validateName(name)) {
+                showFieldError('signup-name', 'Please enter a valid full name (letters and spaces only)');
+                isValid = false;
+            }
+            
+            // Email validation
+            if (!email) {
+                showFieldError('signup-email', 'Email address is required');
+                isValid = false;
+            } else if (!validateEmail(email)) {
+                showFieldError('signup-email', 'Please enter a valid email address');
+                isValid = false;
+            }
+            
+            // Password validation
+            if (!password) {
+                showFieldError('signup-password', 'Password is required');
+                isValid = false;
+            } else if (!validatePassword(password)) {
+                showFieldError('signup-password', 'Password must be at least 8 characters with uppercase, lowercase, number, and special character');
+                isValid = false;
+            }
+            
+            // Password confirmation validation
+            if (!passwordConfirm) {
+                showFieldError('signup-password-confirm', 'Please confirm your password');
+                isValid = false;
+            } else if (password !== passwordConfirm) {
+                showFieldError('signup-password-confirm', 'Passwords do not match');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        function validateEmail(email) {
+            return validationPatterns.email.test(email);
+        }
+
+        function validateName(name) {
+            // More flexible name validation - allow apostrophes, hyphens, and international characters
+            const namePattern = /^[a-zA-Z\s'\-À-ÿ]{2,50}$/;
+            return namePattern.test(name.trim());
+        }
+
+        function validatePassword(password) {
+            const p = validationPatterns.password;
+            return password.length >= p.minLength &&
+                   p.requireUppercase.test(password) &&
+                   p.requireLowercase.test(password) &&
+                   p.requireNumber.test(password) &&
+                   p.requireSpecial.test(password);
+        }
+
+        // Field-specific validation functions
+        function validateEmailField(inputId) {
+            const input = document.getElementById(inputId);
+            const email = input.value.trim();
+            
+            if (!email) {
+                showFieldError(inputId, 'Email is required');
+                return false;
+            }
+            
+            if (!validateEmail(email)) {
+                showFieldError(inputId, 'Please enter a valid email address');
+                return false;
+            }
+            
+            showFieldSuccess(inputId, 'Valid email address');
+            return true;
+        }
+
+        function validateNameField() {
+            const input = document.getElementById('signup-name');
+            const name = input.value.trim();
+            
+            if (!name) {
+                showFieldError('signup-name', 'Full name is required');
+                return false;
+            }
+            
+            if (!validateName(name)) {
+                showFieldError('signup-name', 'Please enter a valid full name (2-50 characters, letters only)');
+                return false;
+            }
+            
+            showFieldSuccess('signup-name', 'Valid name');
+            return true;
+        }
+
+        function validatePasswordStrength() {
+            const input = document.getElementById('signup-password');
+            const password = input.value;
+            const strengthContainer = document.getElementById('password-strength');
+            const strengthFill = document.getElementById('strength-fill');
+            const strengthText = document.getElementById('strength-text');
+            
+            if (!password) {
+                strengthContainer.style.display = 'none';
+                return;
+            }
+            
+            strengthContainer.style.display = 'block';
+            
+            let score = 0;
+            let feedback = [];
+            
+            if (password.length >= 8) score++; else feedback.push('8+ characters');
+            if (validationPatterns.password.requireUppercase.test(password)) score++; else feedback.push('uppercase letter');
+            if (validationPatterns.password.requireLowercase.test(password)) score++; else feedback.push('lowercase letter');
+            if (validationPatterns.password.requireNumber.test(password)) score++; else feedback.push('number');
+            if (validationPatterns.password.requireSpecial.test(password)) score++; else feedback.push('special character');
+            
+            // Remove existing classes
+            strengthFill.className = 'strength-fill';
+            
+            let strengthLevel, strengthColor;
+            if (score <= 2) {
+                strengthLevel = 'weak';
+                strengthColor = '#dc2626';
+                strengthFill.classList.add('strength-weak');
+            } else if (score === 3) {
+                strengthLevel = 'fair';
+                strengthColor = '#f59e0b';
+                strengthFill.classList.add('strength-fair');
+            } else if (score === 4) {
+                strengthLevel = 'good';
+                strengthColor = '#3b82f6';
+                strengthFill.classList.add('strength-good');
+            } else {
+                strengthLevel = 'strong';
+                strengthColor = '#10b981';
+                strengthFill.classList.add('strength-strong');
+            }
+            
+            strengthText.textContent = `Password strength: ${strengthLevel.toUpperCase()}`;
+            strengthText.style.color = strengthColor;
+            
+            if (feedback.length > 0) {
+                strengthText.textContent += ` (needs: ${feedback.join(', ')})`;
+            }
+        }
+
+        function validatePasswordConfirm() {
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-password-confirm').value;
+            
+            if (!confirmPassword) {
+                clearFieldError('signup-password-confirm');
+                clearFieldSuccess('signup-password-confirm');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showFieldError('signup-password-confirm', 'Passwords do not match');
+                return false;
+            }
+            
+            showFieldSuccess('signup-password-confirm', 'Passwords match');
+            return true;
+        }
+
+        // Field error/success management
+        function showFieldError(fieldId, message) {
+            const input = document.getElementById(fieldId);
+            const errorElement = document.getElementById(fieldId + '-error');
+            const successElement = document.getElementById(fieldId + '-success');
+            
+            if (input) {
+                input.classList.add('invalid');
+                input.classList.remove('valid');
+            }
+            
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+            
+            if (successElement) {
+                successElement.style.display = 'none';
+            }
+        }
+
+        function showFieldSuccess(fieldId, message) {
+            const input = document.getElementById(fieldId);
+            const errorElement = document.getElementById(fieldId + '-error');
+            const successElement = document.getElementById(fieldId + '-success');
+            
+            if (input) {
+                input.classList.add('valid');
+                input.classList.remove('invalid');
+            }
+            
+            if (successElement) {
+                successElement.textContent = message;
+                successElement.style.display = 'block';
+            }
+            
+            if (errorElement) {
+                errorElement.style.display = 'none';
+            }
+        }
+
+        function clearFieldError(fieldId) {
+            const input = document.getElementById(fieldId);
+            const errorElement = document.getElementById(fieldId + '-error');
+            
+            if (input) {
+                input.classList.remove('invalid');
+            }
+            
+            if (errorElement) {
+                errorElement.style.display = 'none';
+            }
+        }
+
+        function clearFieldSuccess(fieldId) {
+            const input = document.getElementById(fieldId);
+            const successElement = document.getElementById(fieldId + '-success');
+            
+            if (input) {
+                input.classList.remove('valid');
+            }
+            
+            if (successElement) {
+                successElement.style.display = 'none';
+            }
+        }
+
+        function clearFieldErrors() {
+            document.querySelectorAll('.field-error').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.field-success').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.form-input').forEach(input => {
+                input.classList.remove('invalid', 'valid');
+            });
+        }
+
+        // Rate limiting functions
+        function isAccountLocked() {
+            return loginAttempts >= MAX_LOGIN_ATTEMPTS && 
+                   (Date.now() - lastAttemptTime) < LOCKOUT_DURATION;
+        }
+
+        // User-friendly error messages
+        function getFriendlyErrorMessage(error) {
+            const errorMappings = {
+                'auth/user-not-found': 'No account found with this email address.',
+                'auth/wrong-password': 'Incorrect password. Please try again.',
+                'auth/invalid-email': 'Please enter a valid email address.',
+                'auth/user-disabled': 'This account has been disabled. Please contact support.',
+                'auth/too-many-requests': 'Too many failed attempts. Please try again later.',
+                'auth/email-already-in-use': 'An account with this email already exists.',
+                'auth/weak-password': 'Please choose a stronger password.',
+                'auth/invalid-credential': 'Invalid email or password. Please check your credentials.',
+                'auth/network-request-failed': 'Network error. Please check your connection.',
+                'auth/internal-error': 'Something went wrong. Please try again.',
+            };
+            
+            // Check for specific error codes
+            for (const [code, message] of Object.entries(errorMappings)) {
+                if (error.includes(code)) {
+                    return message;
+                }
+            }
+            
+            // Default friendly message
+            return 'Something went wrong. Please try again or contact support if the problem persists.';
+        }
+
+        // Enhanced auth state management
+        authFunctions.onAuthStateChanged(async (user) => {
+            if (user) {
+                try {
+                    const role = await utils.getUserRole(user.uid);
+                    if (role) {
+                        // Show loading state before redirect
+                        document.body.style.opacity = '0.7';
+                        document.body.style.pointerEvents = 'none';
+                        
+                        showSuccess('Already signed in! Redirecting to dashboard...');
+                        setTimeout(() => {
+                            utils.redirectToDashboard(role);
+                        }, 1000);
+                    }
+                } catch (error) {
+                    console.error('Error checking user role:', error);
+                    // Don't redirect if there's an error, let user sign in normally
+                }
+            }
+        });
+
+        // Password toggle functionality
+        window.togglePassword = function(inputId) {
+            const input = document.getElementById(inputId);
+            const toggle = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggle.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                toggle.textContent = '👁️';
+            }
+        };
+
+        // Forgot password functionality
+        window.showForgotPassword = function() {
+            const email = document.getElementById('signin-email').value;
+            
+            if (!email) {
+                showError('Please enter your email address first');
+                document.getElementById('signin-email').focus();
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                showError('Please enter a valid email address');
+                document.getElementById('signin-email').focus();
+                return;
+            }
+            
+            resetPassword(email);
+        };
+
+        async function resetPassword(email) {
+            try {
+                showPageLoader();
+                const result = await authFunctions.sendPasswordReset(email);
+                hidePageLoader();
+                
+                if (result.success) {
+                    showSuccess(`Password reset email sent to ${email}. Please check your inbox.`);
+                } else {
+                    const friendlyError = getFriendlyErrorMessage(result.error);
+                    showError(friendlyError);
+                }
+            } catch (error) {
+                hidePageLoader();
+                const friendlyError = getFriendlyErrorMessage(error.message);
+                showError(friendlyError);
+            }
+        }
+
+        // Real-time validation setup
+        function setupRealTimeValidation() {
+            // Email validation
+            ['signin-email', 'signup-email'].forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('blur', () => validateEmailField(id));
+                    input.addEventListener('input', () => {
+                        clearFieldError(id);
+                        if (id === 'signup-email') {
+                            checkFormValidity();
+                        }
+                    });
+                }
+            });
+            
+            // Name validation
+            const nameInput = document.getElementById('signup-name');
+            if (nameInput) {
+                nameInput.addEventListener('blur', () => validateNameField());
+                nameInput.addEventListener('input', () => {
+                    clearFieldError('signup-name');
+                    checkFormValidity();
+                });
+            }
+            
+            // Password validation
+            const signupPassword = document.getElementById('signup-password');
+            if (signupPassword) {
+                signupPassword.addEventListener('input', () => {
+                    validatePasswordStrength();
+                    clearFieldError('signup-password');
+                    checkFormValidity();
+                    if (document.getElementById('signup-password-confirm').value) {
+                        validatePasswordConfirm();
+                    }
+                });
+            }
+            
+            // Password confirmation
+            const passwordConfirm = document.getElementById('signup-password-confirm');
+            if (passwordConfirm) {
+                passwordConfirm.addEventListener('input', () => {
+                    validatePasswordConfirm();
+                    checkFormValidity();
+                });
+                passwordConfirm.addEventListener('blur', validatePasswordConfirm);
+            }
+        }
+
+        // Check overall form validity for visual feedback
+        function checkFormValidity() {
+            if (currentTab !== 'signup') return;
+            
+            const name = document.getElementById('signup-name')?.value.trim() || '';
+            const email = document.getElementById('signup-email')?.value.trim() || '';
+            const password = document.getElementById('signup-password')?.value || '';
+            const passwordConfirm = document.getElementById('signup-password-confirm')?.value || '';
+            const termsCheckbox = document.getElementById('terms-agreement');
+            
+            // Check individual field validity
+            const nameValid = name.length >= 2 && validateName(name);
+            const emailValid = validateEmail(email);
+            const passwordValid = validatePassword(password);
+            const passwordMatchValid = password === passwordConfirm && passwordConfirm.length > 0;
+            const roleValid = selectedRole !== null;
+            const termsValid = termsCheckbox && termsCheckbox.checked;
+            
+            // Update progress indicator
+            updateSignupProgress(nameValid && emailValid && passwordValid && passwordMatchValid, roleValid, termsValid);
+            
+            const isFormValid = nameValid && emailValid && passwordValid && passwordMatchValid && roleValid && termsValid;
+            
+            // Update form styling based on validity
+            const form = document.getElementById('signup-form');
+            if (form) {
+                if (isFormValid) {
+                    form.classList.add('form-valid');
+                } else {
+                    form.classList.remove('form-valid');
+                }
+            }
+            
+            return isFormValid;
+        }
+        
+        // Update signup progress indicator
+        function updateSignupProgress(infoComplete, roleComplete, termsComplete) {
+            const progressContainer = document.getElementById('signup-progress');
+            if (!progressContainer) return;
+            
+            // Show progress when user starts signup form
+            if (currentTab === 'signup') {
+                progressContainer.style.display = 'flex';
+            }
+            
+            const steps = progressContainer.querySelectorAll('.progress-step');
+            
+            // Update step 1 (Info)
+            const step1 = steps[0];
+            if (step1) {
+                step1.classList.toggle('completed', infoComplete);
+                step1.classList.toggle('active', !infoComplete);
+            }
+            
+            // Update step 2 (Role)
+            const step2 = steps[1];
+            if (step2) {
+                step2.classList.toggle('completed', roleComplete);
+                step2.classList.toggle('active', infoComplete && !roleComplete);
+            }
+            
+            // Update step 3 (Terms)
+            const step3 = steps[2];
+            if (step3) {
+                step3.classList.toggle('completed', termsComplete);
+                step3.classList.toggle('active', infoComplete && roleComplete && !termsComplete);
+            }
+        }
+
+        // Initialize page with performance optimizations
+        function initializePage() {
+            setupRealTimeValidation();
+            setupOfflineDetection();
+            setupPerformanceOptimizations();
+            
+            // Restore remembered email
+            const rememberedEmail = localStorage.getItem('rememberEmail');
+            const signinEmail = document.getElementById('signin-email');
+            const rememberMe = document.getElementById('remember-me');
+            
+            if (rememberedEmail && signinEmail && rememberMe) {
+                signinEmail.value = rememberedEmail;
+                rememberMe.checked = true;
+            }
+            
+            // Check URL parameters
+            checkUrlParameters();
+            
+            // Initialize form states
+            if (currentTab === 'signup') {
+                validateSignUpButton();
+                checkFormValidity();
+            }
+            
+            // Focus first input with delay for better UX
+            setTimeout(() => {
+                if (currentTab === 'signin' && signinEmail) {
+                    signinEmail.focus();
+                } else if (currentTab === 'signup') {
+                    const signupName = document.getElementById('signup-name');
+                    if (signupName) signupName.focus();
+                }
+            }, 100);
+            
+            // Hide page loader
+            hidePageLoader();
+        }
+
+        // Performance optimizations
+        function setupPerformanceOptimizations() {
+            // Preload next page resources
+            preloadDashboardResources();
+            
+            // Enable service worker for caching (if available)
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').catch(() => {
+                    // Service worker not available, continue normally
+                });
+            }
+            
+            // Optimize images
+            optimizeImages();
+        }
+
+        // Offline detection
+        function setupOfflineDetection() {
+            const offlineIndicator = document.getElementById('offline-indicator');
+            
+            function showOffline() {
+                offlineIndicator.classList.add('show');
+                // Disable forms when offline
+                document.querySelectorAll('button[type="submit"]').forEach(btn => {
+                    btn.disabled = true;
+                });
+            }
+            
+            function showOnline() {
+                offlineIndicator.classList.remove('show');
+                // Re-enable forms when back online
+                document.querySelectorAll('button[type="submit"]').forEach(btn => {
+                    btn.disabled = false;
+                });
+                validateSignUpButton(); // Re-validate signup button
+            }
+            
+            window.addEventListener('online', showOnline);
+            window.addEventListener('offline', showOffline);
+            
+            // Check initial state
+            if (!navigator.onLine) {
+                showOffline();
+            }
+        }
+
+        // Check URL parameters for special states
+        function checkUrlParameters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            if (urlParams.get('verified') === 'true') {
+                showSuccess('Email verified successfully! You can now sign in.');
+            }
+            
+            if (urlParams.get('reset') === 'true') {
+                showSuccess('Password reset link sent! Please check your email.');
+            }
+            
+            if (urlParams.get('expired') === 'true') {
+                showError('Your session has expired. Please sign in again.');
+            }
+        }
+
+        // Preload resources for better performance
+        function preloadDashboardResources() {
+            // Preload dashboard CSS and JS
+            const dashboardResources = [
+                '/student-dashboard.html',
+                '/recruiter-dashboard.html',
+                '/firebase-config.js'
+            ];
+            
+            dashboardResources.forEach(resource => {
+                const link = document.createElement('link');
+                link.rel = 'prefetch';
+                link.href = resource;
+                document.head.appendChild(link);
+            });
+        }
+
+        // Optimize images for better performance
+        function optimizeImages() {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                // Add loading="lazy" if not already present
+                if (!img.hasAttribute('loading')) {
+                    img.loading = 'lazy';
+                }
+                
+                // Add error handling
+                img.addEventListener('error', function() {
+                    this.style.display = 'none';
+                });
+            });
+        }
+
+        // Show page loader
+        function showPageLoader() {
+            const loader = document.getElementById('page-loader');
+            if (loader) {
+                loader.classList.add('show');
+            }
+        }
+
+        // Hide page loader
+        function hidePageLoader() {
+            const loader = document.getElementById('page-loader');
+            if (loader) {
+                setTimeout(() => {
+                    loader.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        // Enhanced error handling with retry mechanism
+        function handleNetworkError(error, retryFunction, maxRetries = 3) {
+            let retryCount = 0;
+            
+            async function retry() {
+                try {
+                    return await retryFunction();
+                } catch (err) {
+                    retryCount++;
+                    if (retryCount < maxRetries && err.message.includes('network')) {
+                        showError(`Connection issue. Retrying... (${retryCount}/${maxRetries})`);
+                        setTimeout(retry, 2000 * retryCount); // Exponential backoff
+                    } else {
+                        throw err;
+                    }
+                }
+            }
+            
+            return retry();
+        }
+
+        // Initialize when DOM is loaded
+        function initializeApp() {
+            initializePage();
+            setupTermsAgreement();
+            setupRoleSelection();
+            setupAdvancedValidation();
+        }
+        
+        // Advanced validation features
+        function setupAdvancedValidation() {
+            // Email existence check with debouncing
+            let emailCheckTimeout;
+            const signupEmail = document.getElementById('signup-email');
+            
+            if (signupEmail) {
+                signupEmail.addEventListener('input', () => {
+                    clearTimeout(emailCheckTimeout);
+                    emailCheckTimeout = setTimeout(async () => {
+                        const email = signupEmail.value.trim();
+                        if (email && validateEmail(email)) {
+                            await checkEmailAvailability(email);
+                        }
+                    }, 1000); // 1 second debounce
+                });
+            }
+        }
+        
+        // Check if email is already registered
+        async function checkEmailAvailability(email) {
+            try {
+                const result = await authFunctions.checkEmailExists(email);
+                
+                if (result.success) {
+                    if (result.exists) {
+                        showFieldError('signup-email', 'An account with this email already exists');
+                        return false;
+                    } else {
+                        showFieldSuccess('signup-email', 'Email is available');
+                        return true;
+                    }
+                }
+            } catch (error) {
+                console.error('Email check error:', error);
+                // Don't show error to user, just continue
+            }
+            return true;
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
+
+        console.log('Enhanced auth page loaded successfully');
+    </script>
+</body>
+</html>

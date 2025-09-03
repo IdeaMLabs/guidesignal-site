@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GuideSignal: AI-powered job matching platform with 48h response guarantee. Free for candidates, transparent salaries, verified employers. 94.2% matching accuracy beats LinkedIn & Indeed.">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
+    <meta name="keywords" content="AI job matching, fast reply jobs, 48 hour response, salary transparency, job search platform, hiring technology, career matching, employment AI, job board alternative, LinkedIn alternative">
+    <meta name="author" content="GuideSignal">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Enhanced HTTPS and Security Management -->
+    <script src="assets/security-config.js" defer></script>
+    <noscript>
+        <!-- Fallback redirect for no-JS users -->
+        <meta http-equiv="refresh" content="0;url=https://guide-signal.com">
+    </noscript>
+    
+    <!-- Preconnect to critical resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://guidesignal.netlify.app">
+    <link rel="dns-prefetch" href="https://ideamlabs.github.io">
+    <link rel="stylesheet" href="assets/index-optimized.css?v=3">
+    <!-- Visual enhancements for GUI fixes -->
+    <link rel="stylesheet" href="assets/visual-enhancements.css">
+    <!-- Layout and logo fixes -->
+    <link rel="stylesheet" href="assets/layout-fixes.css">
+    <!-- GUI layout fixes for positioning issues -->
+    <link rel="stylesheet" href="assets/gui-layout-fixes.css">
+    <!-- Mobile responsive fixes -->
+    <link rel="stylesheet" href="assets/mobile-responsive-fixes.css">
+    <link rel="preload" href="assets/GuideSignalLogo.webp" as="image" type="image/webp">
+    <link rel="preload" href="scoreboard.json" as="fetch" crossorigin>
+    <link rel="prefetch" href="jobs.html">
+    <link rel="prefetch" href="apply.html">
+    <link rel="prefetch" href="scoreboard.json">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://guide-signal.com">
+    <meta property="og:title" content="GuideSignal - AI-Powered Job Matching | Focused Job Matching">
+    <meta property="og:description" content="AI-powered job matching with 48h response guarantee. 94.2% accuracy beats LinkedIn & Indeed. Free for candidates, transparent salaries, verified employers.">
+    <meta property="og:image" content="https://guide-signal.com/assets/GuideSignalLogo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="GuideSignal">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@guidesignal">
+    <meta name="twitter:creator" content="@guidesignal">
+    <meta name="twitter:url" content="https://guide-signal.com">
+    <meta name="twitter:title" content="GuideSignal - AI-Powered Job Matching | Focused Job Matching">
+    <meta name="twitter:description" content="AI-powered job matching with 48h response guarantee. 94.2% accuracy beats LinkedIn & Indeed. Free for candidates, transparent salaries, verified employers.">
+    <meta name="twitter:image" content="https://guide-signal.com/assets/GuideSignalLogo.png">
+    
+    <!-- Security and Certificate Meta -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="preconnect" href="https://guide-signal.com" crossorigin>
+    
+    <!-- LinkedIn -->
+    <meta property="linkedin:owner" content="GuideSignal">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://guide-signal.com">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4a9eff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="GuideSignal">
+    <link rel="apple-touch-icon" href="assets/GuideSignalLogo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    
+    <!-- Google Site Verification -->
+    <meta name="google-site-verification" content="6IsQxeGzH9Rw1mvfE-FVyB6C0gpe7Kk9HMj0YjAiwc8">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=()"
+    
+    <!-- Accessibility -->
+    <meta name="color-scheme" content="light dark">
+    <meta name="accessibility" content="WCAG AA compliant">
+    
+    <!-- Accessibility enhancements -->
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyeMZhrib2Bg-4.woff2">
+    
+    <title>GuideSignal - AI-Powered Job Matching | Focused Job Matching</title>
+    <style>
+        /* Critical above-the-fold styles only */
+        .loading-critical {
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #1e3a5f;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .employer-banner {
+            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
+            color: white;
+            padding: 12px 0;
+            text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        /* Load full styles asynchronously */
+        @media print {
+            .loading-critical { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip links for screen readers -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#navigation" class="skip-link">Skip to navigation</a>
+    
+    <!-- Employer Banner -->
+    <div class="employer-banner" role="banner">
+        Employers pledge 48-hour replies — post today, get fast matches: <a href="post.html">Post free</a> or <a href="/my-jobs">Feature Your Job for $25</a>
+    </div>
+    
+    <header role="banner">
+        <nav class="header-nav" id="navigation" role="navigation" aria-label="Main navigation">
+            <a href="jobs.html" class="nav-link" aria-label="Browse fast-reply job opportunities">Fast-Reply Jobs</a>
+            <a href="how.html" class="nav-link" aria-label="Learn how our platform works">How it Works</a>
+            <a href="faq.html" class="nav-link" aria-label="Frequently asked questions">FAQ</a>
+            
+            <!-- Auth buttons for non-authenticated users -->
+            <div id="auth-buttons" class="auth-buttons">
+                <a href="auth.html" class="nav-link btn-secondary-auth">Sign In</a>
+                <a href="auth.html" class="nav-link btn-primary-auth">Sign Up</a>
+            </div>
+            
+            <!-- User menu for authenticated users -->
+            <div id="user-menu" class="user-menu" style="display: none;">
+                <span class="user-name" id="header-user-name">User</span>
+                <a href="#" class="nav-link" id="dashboard-link">Dashboard</a>
+                <button class="nav-link" id="signout-btn" style="background: none; border: none; cursor: pointer; font: inherit;">Sign Out</button>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="logo">
+                <picture>
+                    <source srcset="assets/GuideSignalLogo.webp" type="image/webp" onerror="this.remove()">
+                    <source srcset="assets/GuideSignalLogo.svg" type="image/svg+xml" onerror="this.remove()">
+                    <img src="assets/GuideSignalLogo.png" 
+                         alt="GuideSignal Logo - Professional Hiring Platform" 
+                         width="180" height="180" 
+                         loading="eager" 
+                         decoding="sync"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJsb2dvR3JhZGllbnQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM0YTllZmY7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMWUzYTVmO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjkwIiBjeT0iOTAiIHI9Ijg1IiBmaWxsPSJ1cmwoI2xvZ29HcmFkaWVudCkiLz48dGV4dCB4PSI5MCIgeT0iOTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI0OCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+R1M8L3RleHQ+PC9zdmc+';">
+                </picture>
+            </div>
+            <h1>GuideSignal</h1>
+            <p class="subtitle">Guiding talent to opportunity with precision and speed</p>
+        </div>
+    </header>
+
+    <!-- Mini Stats Line -->
+    <div class="mini-stats" id="mini-stats">
+        This week: <span id="stat-replies">0</span>/<span id="stat-apps">0</span> replies &lt;24h • Real candidates: <span id="candidateCount">-</span> • Pledged employers: <span id="pledged-employers">0</span> • Open requests: <span id="open-tickets">0</span> • Pending acks: <span id="acks-pending">0</span> • Updated: <span id="lastUpdated">-</span>
+    </div>
+    
+    <!-- ML Learning Stats -->
+    <div class="mini-stats" id="ml-stats" style="background:#e8f4fd;border-color:#4a9eff;color:#1565c0">
+        <span id="ml-learning-info">Loading ML status...</span>
+    </div>
+
+    <!-- Capacity Notice -->
+    <div class="capacity-notice" id="capacity-notice">
+        Capacity: <span id="slots-today">-</span> <div class="capacity-bar"><div class="capacity-fill" id="capacity-fill" style="width: 100%"></div></div> • Next review: <span id="next-review">-</span> • We cap at 3 intros per role/week
+    </div>
+
+    <!-- Join CTA (when < 5 candidates) -->
+    <div class="join-cta-index" id="joinCTAIndex" style="display: none;">
+        Growing our candidate pool! <a href="auth.html">Join now - Sign up for free →</a>
+    </div>
+
+    <main id="main-content" role="main">
+        <section class="hero-section" aria-labelledby="hero-title">
+            <div class="container">
+            <h2 id="hero-title" class="hero-title">Hear back within 48 hours</h2>
+            <p class="hero-description">(from pledged employers)</p>
+            
+            <div class="cta-buttons" id="main-cta-buttons">
+                <!-- For non-authenticated users -->
+                <div id="guest-cta" class="guest-cta">
+                    <a href="auth.html" class="btn btn-primary" style="font-size: 18px; padding: 16px 32px; margin-right: 16px; box-shadow: 0 4px 16px rgba(74, 158, 255, 0.4); animation: pulse-glow 2s infinite;">🚀 Get Started - Sign Up</a>
+                    <a href="auth.html" class="btn btn-secondary">Sign In</a>
+                    <p style="margin-top: 12px; font-size: 14px; color: #6c757d;">✅ Free to join • ✅ No spam • ✅ Fast replies guaranteed</p>
+                </div>
+                
+                <!-- For authenticated users -->
+                <div id="authenticated-cta" class="authenticated-cta" style="display: none;">
+                    <a href="post.html" class="btn btn-primary">Post Role</a>
+                    <a href="apply.html" class="btn btn-secondary">Apply Now</a>
+                </div>
+                
+                <!-- Secondary actions -->
+                <div style="margin-top: 16px;">
+                    <a href="demo.html" class="btn btn-secondary">Watch Demo</a>
+                    <a href="how.html" class="btn btn-secondary">How it Works</a>
+                    <a href="jobs.html" class="btn btn-secondary">Browse Jobs</a>
+                </div>
+            </div>
+            
+            <!-- Proof Strip -->
+            <div class="proof-strip" id="proof-strip" style="display: none; margin-top: 40px; padding: 20px; background: linear-gradient(135deg, #e8f5e8, #f0f9ff); border: 1px solid #4ade80; border-radius: 12px; color: #166534; font-weight: 600; font-size: 18px; text-align: center;">
+                <span id="proof-content">Live this week: 0 intros → 0 interviews (7d)</span>
+            </div>
+            
+            <!-- Demo Conversions Strip -->
+            <div class="demo-conversions" id="demo-conversions" style="display: none; margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #e3f2fd, #f0f9ff); border: 1px solid #4a9eff; border-radius: 12px; color: #1976d2; font-weight: 600; font-size: 16px; text-align: center;">
+                <span id="demo-content">From demo today: 0</span>
+            </div>
+        </div>
+        </section>
+
+        <section class="scoreboard" aria-labelledby="stats-title">
+        <div class="container">
+            <h2 id="stats-title" class="section-title">Live Platform Stats</h2>
+            <div class="stats-grid">
+                <div class="stat">
+                    <div class="stat-number" id="medianReply">--</div>
+                    <div class="stat-label">Median Reply Time (24h)</div>
+                    <div class="stat-unit">hours</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="replyRate">--%</div>
+                    <div class="stat-label">Reply Rate (24h)</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="interviewRate">--%</div>
+                    <div class="stat-label">Interview Rate (7d)</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="certifiedJobs">--</div>
+                    <div class="stat-label">Fast-Reply Certified Jobs</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Fast-Reply Certified</h3>
+                    <p>We track and highlight employers who respond within 2 hours, ensuring you never wait in silence.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Skills-First Matching</h3>
+                    <p>AI-powered matching based on actual requirements and capabilities, not just keywords.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💰</div>
+                    <h3>Pay Transparency</h3>
+                    <p>All roles include salary ranges with intelligent compensation matching for fair opportunities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How it works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h4>Create Profile</h4>
+                    <p>Share your skills, experience, and career preferences with our intelligent system.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h4>Smart Matching</h4>
+                    <p>Our AI analyzes compatibility between candidates and roles for perfect matches.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h4>Fast Connections</h4>
+                    <p>Get connected with verified fast-reply employers who value your time.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h4>Land Your Role</h4>
+                    <p>Navigate transparent interviews with fair compensation discussions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing">
+        <div class="container">
+            <h2 class="section-title">Simple, transparent pricing</h2>
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <h3 class="pricing-title">Candidates</h3>
+                    <div class="pricing-price">Free</div>
+                    <ul class="pricing-features">
+                        <li>✓ Unlimited applications</li>
+                        <li>✓ AI-powered matching</li>
+                        <li>✓ Fast-reply commitment</li>
+                        <li>✓ Salary transparency</li>
+                    </ul>
+                    <a href="apply.html" class="btn btn-primary">Get Started</a>
+                </div>
+                <div class="pricing-card featured">
+                    <h3 class="pricing-title">Employers</h3>
+                    <div class="pricing-price">$25</div>
+                    <ul class="pricing-features">
+                        <li>✓ Post unlimited roles</li>
+                        <li>✓ Priority placement</li>
+                        <li>✓ Advanced filtering</li>
+                        <li>✓ Response tracking</li>
+                    </ul>
+                    <a href="post.html" class="btn btn-secondary">Start Hiring</a>
+                    <div style="margin-top: 15px; font-size: 14px; color: #6c757d;">
+                        Want more visibility? Feature your job for $25.
+                    </div>
+                    <a href="/my-jobs" class="btn btn-primary" style="margin-top: 10px;">Feature Your Job</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="feature-checkout" style="background: #f8f9fa;">
+        <div class="container">
+            <h2 class="section-title">Feature Your Job</h2>
+            <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+                <p style="font-size: 20px; color: #6c757d; margin-bottom: 40px;">
+                    Employers pledge 48-hour replies — post today, get fast matches.
+                </p>
+                <div style="background: white; border-radius: 16px; padding: 50px 30px; border: 2px solid #4a9eff; margin-bottom: 40px;">
+                    <h3 style="font-size: 28px; font-weight: 500; color: #1e3a5f; margin-bottom: 20px;">Premium Job Posting</h3>
+                    <div style="font-size: 48px; font-weight: 200; color: #4a9eff; margin-bottom: 30px;">$25</div>
+                    <ul style="list-style: none; margin-bottom: 40px; padding: 0;">
+                        <li style="padding: 8px 0; font-size: 16px;">✓ Priority placement</li>
+                        <li style="padding: 8px 0; font-size: 16px;">✓ Fast-reply guarantee</li>
+                        <li style="padding: 8px 0; font-size: 16px;">✓ Advanced candidate matching</li>
+                        <li style="padding: 8px 0; font-size: 16px;">✓ Response tracking</li>
+                        <li style="padding: 8px 0; font-size: 16px;">✓ Salary transparency tools</li>
+                    </ul>
+                    <div style="margin-bottom: 20px; font-size: 16px; color: #6c757d; font-style: normal;">
+                        Want more visibility? Feature your job for $25.
+                    </div>
+                    <a href="/my-jobs" class="btn btn-primary" style="font-size: 18px; padding: 20px 40px; margin-right: 10px;">Feature Your Job</a>
+                    <a href="post.html" class="btn btn-secondary" style="font-size: 18px; padding: 20px 40px;">Post Free First</a>
+                </div>
+                <p style="font-size: 16px; color: #6c757d; font-style: italic;">
+                    Join employers who get fast responses and quality matches through our pledge system.
+                </p>
+            </div>
+        </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="container">
+            <p>&copy; GuideSignal 2025</p>
+            <p>Privacy-first job matching.</p>
+            <p>
+                <a href="how.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">How it Works</a>
+                <a href="demo.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">Watch Demo</a>
+                <a href="privacy.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">Privacy Policy</a>
+                <a href="terms.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">Terms of Service</a>
+                <a href="presskit.html" style="color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 20px;">Press Kit</a>
+                <a href="faq.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">FAQ</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="assets/index-optimized.js" defer></script>
+    <!-- Universal logo component -->
+    <script src="universal-logo.js" defer></script>
+
+    <!-- Structured Data / JSON-LD -->
+    <script type="application/ld+json">
+    [
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "GuideSignal",
+            "description": "Professional hiring platform connecting job seekers with fast-reply employers",
+            "url": "https://guide-signal.com",
+            "logo": "https://guide-signal.com/assets/GuideSignalLogo.png",
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "customer service",
+                "email": "ideamlabs@gmail.com"
+            },
+            "offers": [
+                {
+                    "@type": "Offer",
+                    "name": "Job Posting",
+                    "description": "Post jobs and connect with qualified candidates",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                },
+                {
+                    "@type": "Offer",
+                    "name": "Featured Job Posting",
+                    "description": "Premium job posting with priority placement",
+                    "price": "25",
+                    "priceCurrency": "USD"
+                }
+            ]
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "GuideSignal",
+            "url": "https://guide-signal.com",
+            "description": "Professional hiring platform connecting job seekers with fast-reply employers. Get responses within 48 hours from verified companies.",
+            "publisher": {
+                "@type": "Organization",
+                "name": "GuideSignal"
+            },
+            "potentialAction": [
+                {
+                    "@type": "SearchAction",
+                    "target": "https://guide-signal.com/jobs.html?search={search_term_string}",
+                    "query-input": "required name=search_term_string"
+                }
+            ]
+        }
+    ]
+    </script>
+
+    <!-- Firebase Authentication Integration -->
+    <script type="module">
+        import { authFunctions, utils, USER_ROLES } from './firebase-config-secure.js';
+
+        // Check authentication state on page load
+        authFunctions.onAuthStateChanged(async (user) => {
+            const authButtons = document.getElementById('auth-buttons');
+            const userMenu = document.getElementById('user-menu');
+            const headerUserName = document.getElementById('header-user-name');
+            const dashboardLink = document.getElementById('dashboard-link');
+            const guestCta = document.getElementById('guest-cta');
+            const authenticatedCta = document.getElementById('authenticated-cta');
+
+            if (user) {
+                // User is authenticated
+                if (authButtons) authButtons.style.display = 'none';
+                if (userMenu) userMenu.style.display = 'flex';
+                if (guestCta) guestCta.style.display = 'none';
+                if (authenticatedCta) authenticatedCta.style.display = 'block';
+                
+                // Get user data to determine role
+                const userData = await utils.getUserRole(user.uid);
+                if (userData) {
+                    if (headerUserName) headerUserName.textContent = user.displayName || user.email;
+                    
+                    // Set dashboard link based on role
+                    if (dashboardLink) {
+                        if (userData === USER_ROLES.STUDENT) {
+                            dashboardLink.href = '/student-dashboard.html';
+                            dashboardLink.textContent = 'My Dashboard';
+                        } else if (userData === USER_ROLES.RECRUITER) {
+                            dashboardLink.href = '/recruiter-dashboard.html';
+                            dashboardLink.textContent = 'My Dashboard';
+                        }
+                    }
+                }
+            } else {
+                // User is not authenticated - show prominent auth options
+                if (authButtons) authButtons.style.display = 'flex';
+                if (userMenu) userMenu.style.display = 'none';
+                if (guestCta) guestCta.style.display = 'block';
+                if (authenticatedCta) authenticatedCta.style.display = 'none';
+            }
+        });
+
+        // Sign out functionality
+        document.getElementById('signout-btn').addEventListener('click', async () => {
+            const result = await authFunctions.signOutUser();
+            if (result.success) {
+                utils.showNotification('Signed out successfully', 'success');
+                // Page will update automatically due to auth state change
+            }
+        });
+    </script>
+    
+    <!-- Load optimized combined scripts -->
+    <script src="security-enhancements.js" defer></script>
+    <script src="contact-us.js" defer></script>
+</body>
+</html>

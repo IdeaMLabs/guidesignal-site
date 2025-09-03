@@ -1,0 +1,17 @@
+// Your web app's Firebase configuration
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyBJOVbMoHfdxHexsfqsbYsvFzFqaKBXC_s",
+
+  authDomain: "guidesignal.firebaseapp.com",
+
+  projectId: "guidesignal",
+
+  storageBucket: "guidesignal.firebasestorage.app",
+
+  messagingSenderId: "120511246886",
+
+  appId: "1:120511246886:web:5b555a77ee25420951ece7"
+
+};

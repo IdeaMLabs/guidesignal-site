@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered job matching with guaranteed 48h responses. Browse certified fast-reply employers with transparent pay. Superior matching accuracy vs LinkedIn & Indeed.">
+    <meta name="keywords" content="fast reply jobs, AI job matching, certified employers, ML recruitment, guaranteed responses, transparent pay, superior to linkedin indeed">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    
+    <!-- Enhanced Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://guide-signal.com/jobs.html">
+    <meta property="og:title" content="Fast-Reply AI Job Matching - GuideSignal">
+    <meta property="og:description" content="AI-powered job matching with guaranteed 48h responses. Browse certified employers with transparent pay.">
+    <meta property="og:image" content="https://guide-signal.com/assets/GuideSignalLogo.png">
+    <meta property="og:site_name" content="GuideSignal">
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Fast-Reply AI Job Matching - GuideSignal">
+    <meta name="twitter:description" content="AI-powered job matching with guaranteed 48h responses. Browse certified employers.">
+    <meta name="twitter:image" content="https://guide-signal.com/assets/GuideSignalLogo.png">
+    
+    <!-- Enhanced Security -->
+    <script src="assets/security-config.js" defer></script>
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://guide-signal.com">
+    <link rel="dns-prefetch" href="https://guide-signal.com">
+    
+    <link rel="canonical" href="https://guide-signal.com/jobs.html">
+    
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="assets/shared.css">
+    <!-- Layout and logo fixes -->
+    <link rel="stylesheet" href="assets/layout-fixes.css">
+    
+    <title>Fast-Reply AI Job Matching | Certified Employers - GuideSignal</title>
+    <style>
+        /* Jobs page specific styles */
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        .jobs-header {
+            padding: var(--space-8) 0;
+            text-align: center;
+            background: white;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--space-4);
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+        
+        .logo img {
+            width: 90%;
+            height: 90%;
+            object-fit: contain;
+        }
+        
+        .jobs-title {
+            font-size: 2.25rem;
+            font-weight: 300;
+            color: var(--primary-600);
+            margin-bottom: var(--space-2);
+            letter-spacing: -0.025em;
+        }
+        
+        .jobs-subtitle {
+            font-size: 1.125rem;
+            color: var(--gray-600);
+            font-weight: 300;
+        }
+        
+        .auth-cta {
+            text-align: center;
+            margin-top: var(--space-6);
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .jobs-section {
+            padding: var(--space-8) 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--primary-600);
+            margin-bottom: var(--space-8);
+            letter-spacing: -0.025em;
+        }
+        
+        .jobs-grid {
+            display: grid;
+            gap: var(--space-6);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .job-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow);
+            position: relative;
+            transition: var(--transition);
+            border: 1px solid var(--gray-200);
+        }
+        
+        .job-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+            box-shadow: 0 8px 30px rgba(30, 58, 95, 0.15);
+        }
+
+        .fast-reply-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pledge-48h-badge {
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .pledged-counter {
+            display: inline-block;
+            margin-left: 15px;
+            color: #28a745;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .capacity-notice {
+            background: linear-gradient(135deg, #fff3cd, #ffeeba);
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 20px 0;
+        }
+
+        .capacity-bar {
+            display: inline-block;
+            width: 60px;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin: 0 8px;
+            position: relative;
+            vertical-align: middle;
+        }
+
+        .capacity-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .job-title {
+            font-size: 24px;
+            font-weight: 500;
+            color: #1e3a5f;
+            margin-bottom: 8px;
+        }
+
+        .job-employer {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 12px;
+        }
+
+        .job-location {
+            font-size: 16px;
+            color: #495057;
+            margin-bottom: 15px;
+        }
+
+        .job-pay {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 15px;
+        }
+
+        .job-description {
+            color: #6c757d;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .job-skills {
+            margin-bottom: 20px;
+        }
+
+        .skills-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background: #e9ecef;
+            color: #495057;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 4px;
+        }
+
+        .apply-btn {
+            background: #1e3a5f;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .apply-btn:hover {
+            background: #2c4a6f;
+            transform: translateY(-2px);
+        }
+
+        .no-jobs {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .no-jobs h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .job-card {
+                padding: 20px;
+            }
+            
+            .fast-reply-badge {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 15px;
+                display: inline-block;
+            }
+            
+            .job-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+    
+    <!-- JSON-LD Job Posting Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": [
+            {
+                "@type": "JobPosting",
+                "@id": "https://ideamlabs.github.io/guidesignal-site/jobs.html#northstar-help-desk",
+                "title": "Help Desk Technician",
+                "description": "Must-haves: help desk, windows, ticketing; Nice-to-have: o365, zendesk, azure",
+                "datePosted": "2025-09-01",
+                "validThrough": "2025-10-01",
+                "employmentType": "FULL_TIME",
+                "hiringOrganization": {
+                    "@type": "Organization",
+                    "name": "Northstar MSP"
+                },
+                "jobLocation": {
+                    "@type": "Place",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "addressLocality": "Worcester",
+                        "addressRegion": "MA",
+                        "addressCountry": "US"
+                    }
+                },
+                "baseSalary": {
+                    "@type": "MonetaryAmount",
+                    "currency": "USD",
+                    "value": {
+                        "@type": "QuantitativeValue",
+                        "minValue": 21,
+                        "maxValue": 26,
+                        "unitText": "HOUR"
+                    }
+                },
+                "url": "https://ideamlabs.github.io/guidesignal-site/apply.html",
+                "applicantLocationRequirements": {
+                    "@type": "Country",
+                    "name": "US"
+                }
+            },
+            {
+                "@type": "JobPosting",
+                "@id": "https://ideamlabs.github.io/guidesignal-site/jobs.html#logico-warehouse",
+                "title": "Warehouse Associate",
+                "description": "Must-haves: warehouse, forklift; Nice-to-have: rf scanner, sap",
+                "datePosted": "2025-09-01",
+                "validThrough": "2025-10-01",
+                "employmentType": "FULL_TIME",
+                "hiringOrganization": {
+                    "@type": "Organization",
+                    "name": "LogiCo"
+                },
+                "jobLocation": {
+                    "@type": "Place",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "addressLocality": "Shrewsbury",
+                        "addressRegion": "MA",
+                        "addressCountry": "US"
+                    }
+                },
+                "baseSalary": {
+                    "@type": "MonetaryAmount",
+                    "currency": "USD",
+                    "value": {
+                        "@type": "QuantitativeValue",
+                        "minValue": 18,
+                        "maxValue": 22,
+                        "unitText": "HOUR"
+                    }
+                },
+                "url": "https://ideamlabs.github.io/guidesignal-site/apply.html",
+                "applicantLocationRequirements": {
+                    "@type": "Country",
+                    "name": "US"
+                }
+            },
+            {
+                "@type": "JobPosting",
+                "@id": "https://ideamlabs.github.io/guidesignal-site/jobs.html#datahands-support",
+                "title": "Support Analyst (SQL + CS)",
+                "description": "Must-haves: sql, support; Nice-to-have: excel, python",
+                "datePosted": "2025-09-01",
+                "validThrough": "2025-10-01",
+                "employmentType": "FULL_TIME",
+                "hiringOrganization": {
+                    "@type": "Organization",
+                    "name": "DataHands"
+                },
+                "jobLocationType": "TELECOMMUTE",
+                "baseSalary": {
+                    "@type": "MonetaryAmount",
+                    "currency": "USD",
+                    "value": {
+                        "@type": "QuantitativeValue",
+                        "minValue": 24,
+                        "maxValue": 30,
+                        "unitText": "HOUR"
+                    }
+                },
+                "url": "https://ideamlabs.github.io/guidesignal-site/apply.html",
+                "applicantLocationRequirements": {
+                    "@type": "Country",
+                    "name": "US"
+                }
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- Skip links for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <header class="jobs-header" role="banner">
+        <div class="container">
+            <div class="logo">
+                <picture>
+                    <source srcset="assets/GuideSignalLogo.webp" type="image/webp">
+                    <source srcset="assets/GuideSignalLogo.svg" type="image/svg+xml">
+                    <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo - Fast Reply Jobs" width="72" height="72" loading="eager">
+                </picture>
+            </div>
+            <h1 class="jobs-title">Fast-Reply Jobs</h1>
+            <p class="jobs-subtitle">Employers certified for quick responses <span id="pledged-counter" class="pledged-counter"></span></p>
+            
+            <nav class="nav-links" role="navigation" aria-label="Page navigation">
+                <a href="index.html" class="nav-link" title="Return to GuideSignal homepage">← Back to Home</a>
+                <a href="how.html" class="nav-link" title="Learn how GuideSignal works">How it Works</a>
+                <a href="faq.html" class="nav-link" title="Frequently asked questions">FAQ</a>
+            </nav>
+            
+            <!-- Authentication CTA -->
+            <div class="auth-cta">
+                <a href="auth.html" class="btn btn-primary">🚀 Apply to Jobs - Sign Up</a>
+                <a href="auth.html" class="btn btn-secondary">Sign In</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Capacity Notice -->
+    <div class="container">
+        <div class="capacity-notice" id="capacity-notice">
+            Capacity: <span id="slots-today">-</span> <div class="capacity-bar"><div class="capacity-fill" id="capacity-fill" style="width: 100%"></div></div> • Next review: <span id="next-review">-</span> • We cap at 3 intros per role/week
+        </div>
+    </div>
+
+    <!-- Founding Employers Ribbon -->
+    <section class="founding-employers-ribbon" style="background: linear-gradient(135deg, #ffd700, #ff8c00); padding: 1rem 0; text-align: center; box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);">
+        <div class="container">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1.5rem;">🏆</span>
+                    <strong style="color: #1e3a5f; font-size: 1.1rem;">Founding Employers</strong>
+                </div>
+                <span style="color: #1e3a5f; font-size: 0.9rem;">Get priority placement and founding member status</span>
+                <a href="feature.html" style="background: #1e3a5f; color: white; padding: 0.5rem 1.5rem; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(30, 58, 95, 0.3);" 
+                   onmouseover="this.style.background='#2c4a6f'; this.style.transform='translateY(-2px)'"
+                   onmouseout="this.style.background='#1e3a5f'; this.style.transform='translateY(0)'">
+                    Feature Job ($25) ⚡
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="jobs-section">
+        <div class="container">
+            <h2 class="section-title">Available Positions</h2>
+            
+            <div class="loading" id="loading">
+                <h3>Loading jobs...</h3>
+                <p>Please wait while we fetch the latest opportunities</p>
+            </div>
+
+            <div class="jobs-grid" id="jobs-container" style="display: none;">
+                <!-- Jobs will be loaded here -->
+            </div>
+
+            <div class="no-jobs" id="no-jobs" style="display: none;">
+                <h3>No Fast-Reply Jobs Available</h3>
+                <p>Check back soon for new certified opportunities, or <a href="apply.html" style="color: #4a9eff;">submit your profile</a> to get matched when they become available.</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Parse CSV data
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            const headers = lines[0].split(',');
+            const data = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (lines[i].trim()) {
+                    const values = lines[i].split(',');
+                    const row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = values[index] || '';
+                    });
+                    data.push(row);
+                }
+            }
+            return data;
+        }
+
+        // Format pay range
+        function formatPay(min, max) {
+            return `$${min}–${max}/hr`;
+        }
+
+        // Format skills
+        function formatSkills(skillsText) {
+            if (!skillsText) return [];
+            return skillsText.split(';').map(skill => skill.trim()).filter(skill => skill);
+        }
+
+        // Create job card HTML
+        function createJobCard(job) {
+            // Create URL parameters for intro link
+            const params = new URLSearchParams({
+                employer: job.employer,
+                role: job.job_title
+            });
+            const introUrl = `intro.html?${params.toString()}`;
+            
+            // Create job detail page URL - simplified mapping
+            const jobIdMap = {
+                'Northstar MSP': 'northstar-help-desk',
+                'LogiCo': 'logico-warehouse', 
+                'DataHands': 'datahands-support'
+            };
+            const detailUrl = `jobs/${jobIdMap[job.employer]}.html`;
+
+            return `
+                <div class="job-card">
+                    <div class="fast-reply-badge">Fast-Reply Certified</div>
+                    ${job.pledged_48h ? '<div class="pledge-48h-badge">48h Reply Pledge</div>' : ''}
+                    <h3 class="job-title">${job.job_title}</h3>
+                    <div class="job-pay">${formatPay(job.job_pay_min, job.job_pay_max)}</div>
+                    <div class="job-location">📍 ${job.job_city}</div>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <a href="${detailUrl}" class="apply-btn" style="background: #4a9eff;">View Details</a>
+                        <a href="${introUrl}" class="apply-btn">Request intros</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Generate JobPosting structured data schema
+        function generateJobPostingSchema(jobs) {
+            try {
+                const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+                const jobPostings = [];
+                
+                jobs.forEach(job => {
+                    // Only include active jobs (not "open" but "active" based on CSV)
+                    if (job.job_status !== 'active') return;
+                    
+                    // Build description from musts and nice fields
+                    let description = job.job_title || 'Job Opportunity';
+                    if (job.musts) {
+                        description += `\n\nRequired Skills: ${job.musts}`;
+                    }
+                    if (job.nice) {
+                        description += `\n\nPreferred Skills: ${job.nice}`;
+                    }
+                    if (job.pledged_48h === 'True' || job.pledged_48h === true) {
+                        description += '\n\nFast-Reply Certified: We respond within 48 hours.';
+                    }
+                    
+                    // Determine location
+                    let jobLocation = {};
+                    let jobLocationType = null;
+                    
+                    if (job.job_city && job.job_city.toLowerCase().includes('remote')) {
+                        jobLocationType = "TELECOMMUTE";
+                    } else if (job.job_city) {
+                        jobLocation = {
+                            "@type": "Place",
+                            "address": {
+                                "@type": "PostalAddress",
+                                "addressLocality": job.job_city
+                            }
+                        };
+                    } else {
+                        jobLocationType = "TELECOMMUTE"; // Fallback to remote
+                    }
+                    
+                    // Build salary information
+                    let baseSalary = null;
+                    if (job.job_pay_min && job.job_pay_max) {
+                        baseSalary = {
+                            "@type": "MonetaryAmount",
+                            "currency": "USD",
+                            "value": {
+                                "@type": "QuantitativeValue",
+                                "minValue": parseFloat(job.job_pay_min),
+                                "maxValue": parseFloat(job.job_pay_max),
+                                "unitText": "HOUR"
+                            }
+                        };
+                    }
+                    
+                    // Build JobPosting object with all required fields
+                    const jobPosting = {
+                        "@context": "https://schema.org",
+                        "@type": "JobPosting",
+                        "title": job.job_title || 'Job Opportunity',
+                        "description": description.trim(),
+                        "datePosted": today,
+                        "validThrough": new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+                        "employmentType": job.employment_type || "FULL_TIME",
+                        "hiringOrganization": {
+                            "@type": "Organization",
+                            "name": job.employer || "GuideSignal Partner Company",
+                            "sameAs": "https://ideamlabs.github.io/guidesignal-site/",
+                            "logo": "https://ideamlabs.github.io/guidesignal-site/assets/GuideSignalLogo.png"
+                        },
+                        "identifier": {
+                            "@type": "PropertyValue",
+                            "name": "GuideSignal Job ID",
+                            "value": job.id || `job-${job.employer}-${job.job_title}`.replace(/\s+/g, '-').toLowerCase()
+                        },
+                        "applicantLocationRequirements": {
+                            "@type": "Country",
+                            "name": "United States"
+                        }
+                    };
+                    
+                    // Add location information
+                    if (jobLocationType) {
+                        jobPosting.jobLocationType = jobLocationType;
+                    } else if (Object.keys(jobLocation).length > 0) {
+                        jobPosting.jobLocation = jobLocation;
+                    }
+                    
+                    // Add salary if available
+                    if (baseSalary) {
+                        jobPosting.baseSalary = baseSalary;
+                    }
+                    
+                    // Add special properties for certified jobs
+                    if (job.pledged_48h === 'True' || job.pledged_48h === true) {
+                        jobPosting.specialCommitments = "Fast-Reply Certified";
+                    }
+                    
+                    jobPostings.push(jobPosting);
+                });
+                
+                // Remove any existing JobPosting schema
+                const existingSchema = document.getElementById('job-posting-schema');
+                if (existingSchema) {
+                    existingSchema.remove();
+                }
+                
+                // Add new schema to DOM if we have jobs
+                if (jobPostings.length > 0) {
+                    const schemaScript = document.createElement('script');
+                    schemaScript.type = 'application/ld+json';
+                    schemaScript.id = 'job-posting-schema';
+                    schemaScript.textContent = JSON.stringify(jobPostings, null, 2);
+                    document.head.appendChild(schemaScript);
+                    
+                    console.log(`Generated JobPosting schema for ${jobPostings.length} jobs`);
+                } else {
+                    console.log('No jobs available for schema generation');
+                }
+                
+            } catch (error) {
+                console.error('Error generating JobPosting schema:', error);
+            }
+        }
+
+        // Enhanced error handling and performance monitoring
+        const jobsPerformance = {
+            startTime: performance.now(),
+            loadAttempts: 0,
+            lastSuccessfulLoad: null
+        };
+        
+        // Load and display jobs with improved performance and error handling
+        async function loadJobs(retryCount = 0) {
+            const loadStart = performance.now();
+            jobsPerformance.loadAttempts++;
+            
+            try {
+                // Show loading state with better UX
+                updateLoadingState('Loading latest job opportunities...', true);
+                
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 6000); // Reduced timeout
+                
+                const response = await fetch(`public_jobs.csv?ts=${Date.now()}`, {
+                    signal: controller.signal,
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache'
+                    }
+                });
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    throw new Error(`Jobs HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const csvText = await response.text();
+                if (!csvText.trim()) {
+                    throw new Error('Empty jobs data received');
+                }
+                
+                const jobs = parseCSV(csvText);
+                const loadTime = performance.now() - loadStart;
+                
+                jobsPerformance.lastSuccessfulLoad = new Date();
+                console.log(`Jobs loaded successfully in ${loadTime.toFixed(2)}ms`);
+                
+                // Generate JobPosting schema after loading jobs data
+                generateJobPostingSchema(jobs);
+                
+                // All jobs in public_jobs.csv are already filtered for certified & open jobs
+                const certifiedJobs = jobs.filter(job => 
+                    job.job_status === 'open' && 
+                    (job.fast_reply_certified === 'True' || job.fast_reply_certified === 'true')
+                );
+
+                const loadingEl = document.getElementById('loading');
+                const containerEl = document.getElementById('jobs-container');
+                const noJobsEl = document.getElementById('no-jobs');
+
+                loadingEl.style.display = 'none';
+
+                if (certifiedJobs.length === 0) {
+                    noJobsEl.style.display = 'block';
+                } else {
+                    containerEl.innerHTML = certifiedJobs.map(createJobCard).join('');
+                    containerEl.style.display = 'grid';
+                }
+
+                // Update pledged employers counter
+                const pledgedCount = jobs.filter(job => 
+                    job.pledged_48h === 'True' || job.pledged_48h === 'true' || job.pledged_48h === true
+                ).length;
+                const counterEl = document.getElementById('pledged-counter');
+                if (counterEl && pledgedCount > 0) {
+                    counterEl.textContent = `• Pledged employers: ${pledgedCount}`;
+                }
+
+                // Load capacity data from scoreboard
+                try {
+                    const scoreboardResponse = await fetch(`scoreboard.json?ts=${Date.now()}`);
+                    if (scoreboardResponse.ok) {
+                        const scoreboardData = await scoreboardResponse.json();
+                        
+                        const slotsToday = scoreboardData.slots_today || 0;
+                        const maxSlots = 3;
+                        const capacityPercent = Math.max(0, Math.min(100, (slotsToday / maxSlots) * 100));
+                        
+                        document.getElementById('slots-today').textContent = slotsToday;
+                        document.getElementById('next-review').textContent = scoreboardData.next_review || '-';
+                        document.getElementById('capacity-fill').style.width = `${capacityPercent}%`;
+                    }
+                } catch (scoreboardError) {
+                    console.log('Could not load capacity data:', scoreboardError);
+                }
+
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+                
+                // Implement retry logic with exponential backoff
+                if (retryCount < 3) {
+                    const delay = 1000 * Math.pow(2, retryCount); // 1s, 2s, 4s
+                    console.log(`Retrying job load in ${delay}ms (attempt ${retryCount + 1}/3)`);
+                    
+                    updateLoadingState(
+                        `Connection issue. Retrying in ${delay/1000}s... (${retryCount + 1}/3)`,
+                        true
+                    );
+                    
+                    setTimeout(() => loadJobs(retryCount + 1), delay);
+                } else {
+                    // Show user-friendly error with contact info
+                    updateLoadingState(
+                        `Unable to load jobs. Please refresh the page or <a href="mailto:ideamlabs@gmail.com">contact us</a> if the issue persists.`,
+                        false
+                    );
+                    
+                    // Log for debugging
+                    console.error('Final job loading failure after retries:', {
+                        error: error.message,
+                        attempts: jobsPerformance.loadAttempts,
+                        lastSuccess: jobsPerformance.lastSuccessfulLoad
+                    });
+                }
+            }
+        }
+        
+        // Enhanced loading state management
+        function updateLoadingState(message, isLoading) {
+            const loadingEl = document.getElementById('loading');
+            if (loadingEl) {
+                loadingEl.innerHTML = isLoading ? 
+                    `<h3>🔄 ${message}</h3><div class="loading-spinner"></div>` :
+                    `<h3>⚠️ ${message}</h3>`;
+                loadingEl.style.display = 'block';
+            }
+        }
+        
+        // Add loading spinner CSS if not present
+        if (!document.querySelector('#loading-spinner-styles')) {
+            const style = document.createElement('style');
+            style.id = 'loading-spinner-styles';
+            style.textContent = `
+                .loading-spinner {
+                    border: 3px solid #f3f3f3;
+                    border-top: 3px solid #4a9eff;
+                    border-radius: 50%;
+                    width: 30px;
+                    height: 30px;
+                    animation: spin 1s linear infinite;
+                    margin: 20px auto;
+                }
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Enhanced page load with performance monitoring
+        document.addEventListener('DOMContentLoaded', () => {
+            // Track performance
+            performance.mark('jobs-dom-loaded');
+            
+            // Load jobs with better UX
+            loadJobs();
+            
+            // Add accessibility improvements
+            enhanceAccessibility();
+            
+            // Track page performance
+            window.addEventListener('load', () => {
+                performance.mark('jobs-page-loaded');
+                const loadTime = performance.now() - jobsPerformance.startTime;
+                
+                if (loadTime > 4000) {
+                    showJobsNotification(
+                        'Slow connection detected. Jobs may take longer to load.',
+                        'warning'
+                    );
+                }
+            });
+        });
+        
+        // Enhanced notifications for jobs page
+        function showJobsNotification(message, type = 'info', duration = 5000) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 10000;
+                padding: 12px 20px; border-radius: 8px; color: white;
+                font-weight: 600; max-width: 350px; word-wrap: break-word;
+                transform: translateX(400px); transition: transform 0.3s ease;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            `;
+            
+            const colors = {
+                info: '#4a9eff',
+                success: '#10b981',
+                warning: '#f59e0b',
+                error: '#ef4444'
+            };
+            
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.style.transform = 'translateX(0)', 100);
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, duration);
+        }
+        
+        // Accessibility enhancements
+        function enhanceAccessibility() {
+            // Add ARIA labels to job cards
+            const jobCards = document.querySelectorAll('.job-card');
+            jobCards.forEach((card, index) => {
+                card.setAttribute('role', 'article');
+                card.setAttribute('aria-label', `Job opportunity ${index + 1}`);
+            });
+            
+            // Enhance button accessibility
+            const buttons = document.querySelectorAll('.apply-btn, .btn');
+            buttons.forEach(button => {
+                if (!button.getAttribute('aria-label')) {
+                    button.setAttribute('aria-label', button.textContent.trim());
+                }
+            });
+            
+            // Add skip link for keyboard navigation
+            if (!document.querySelector('.skip-link')) {
+                const skipLink = document.createElement('a');
+                skipLink.className = 'skip-link';
+                skipLink.href = '#jobs-container';
+                skipLink.textContent = 'Skip to job listings';
+                skipLink.style.cssText = `
+                    position: absolute; top: -40px; left: 6px; z-index: 10001;
+                    background: #4a9eff; color: white; padding: 8px;
+                    text-decoration: none; border-radius: 4px;
+                    transition: top 0.3s;
+                `;
+                skipLink.addEventListener('focus', () => skipLink.style.top = '6px');
+                skipLink.addEventListener('blur', () => skipLink.style.top = '-40px');
+                document.body.insertBefore(skipLink, document.body.firstChild);
+            }
+        }
+    </script>
+    
+    <!-- Contact Us Component -->
+    <script src="contact-us.js" defer></script>
+</body>
+</html>

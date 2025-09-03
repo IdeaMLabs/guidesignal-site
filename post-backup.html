@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Post a job on GuideSignal and get matched with qualified candidates. Commit to fast replies and earn our Fast-Reply Certified badge for better visibility.">
+<meta name="keywords" content="post job, hire talent, fast reply employers, job posting, recruitment">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ideamlabs.github.io/guidesignal-site/post.html">
+<title>Post a Fast-Reply Job - GuideSignal</title>
+<style>
+  body{margin:0;background:#F7F9FC;font:15px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#0F172A}
+  main{max-width:760px;margin:28px auto;padding:0 16px}
+  .card{background:#fff;border:1px solid #e5eaf1;border-radius:16px;padding:22px;box-shadow:0 6px 20px rgba(2,8,23,.06)}
+  h1{margin:0 0 8px}
+  p.sub{margin:0 0 16px;color:#64748b}
+  label{display:block;margin:12px 0 6px}
+  input,textarea,select{width:100%;padding:12px;border-radius:10px;border:1px solid #dbe1ea}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:640px){ .row{grid-template-columns:1fr} }
+  button{margin-top:14px;padding:12px 16px;border-radius:12px;border:1px solid #0F172A;background:#0F172A;color:#fff;font-weight:700;cursor:pointer}
+  small.note{color:#64748b;display:block;margin-top:10px}
+</style>
+</head>
+<body>
+<main>
+  <!-- Logo -->
+  <div class="logo" style="text-align: center; margin-bottom: 24px;">
+    <picture>
+      <source srcset="assets/GuideSignalLogo.webp" type="image/webp">
+      <source srcset="assets/GuideSignalLogo.svg" type="image/svg+xml">
+      <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo - AI-Powered Job Matching" width="120" height="120" style="cursor: pointer; border-radius: 8px; transition: transform 0.2s;" onclick="window.location.href='index.html'" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    </picture>
+  </div>
+
+  <div style="text-align:center;margin-bottom:20px">
+    <a href="index.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">← Home</a>
+    <a href="jobs.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">Fast-Reply Jobs</a>
+    <a href="how.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">How it Works</a>
+    <a href="faq.html" style="color:#4a9eff;text-decoration:none">FAQ</a>
+  </div>
+  <div class="card" id="wrap">
+    <h1>Post a Fast-Reply Job</h1>
+    <p class="sub">Fast responses get a <b>Fast-Reply Certified</b> badge and priority placement.</p>
+
+    <form id="jobForm" action="https://formspree.io/f/xvgbzwav" method="POST">
+      <!-- Essential fields -->
+      <label for="job_title">Role
+        <input id="job_title" name="job_title" required placeholder="Help Desk Technician" aria-describedby="job-title-help">
+        <small id="job-title-help" style="color: #64748b;">Enter the job title you're hiring for</small>
+      </label>
+      
+      <label for="musts">3–5 Must-haves
+        <textarea id="musts" name="musts" rows="3" required placeholder="help desk, windows, ticketing" aria-describedby="musts-help"></textarea>
+        <small id="musts-help" style="color: #64748b;">List the essential skills and requirements</small>
+      </label>
+      
+      <div class="row">
+        <label for="job_pay_min">Pay min (hourly)
+          <input id="job_pay_min" type="number" step="0.01" name="job_pay_min" required placeholder="15" min="0" max="999">
+        </label>
+        <label for="job_pay_max">Pay max (hourly)
+          <input id="job_pay_max" type="number" step="0.01" name="job_pay_max" required placeholder="25" min="0" max="999">
+        </label>
+      </div>
+      
+      <label for="contact_email">Work email
+        <input type="email" name="contact_email" required placeholder="your.email@company.com" id="contact_email" aria-describedby="email-help">
+        <small id="email-help" style="color: #64748b;">Use your company email for verification</small>
+        <small id="email-warning" style="color: #dc3545; display: none; margin-top: 5px;">Please use your company email</small>
+      </label>
+      
+      <label class="bypass-checkbox" id="bypass-checkbox" style="display: none; margin-top: 10px;">
+        <input type="checkbox" name="no_company_email" id="no_company_email" onchange="toggleEmailBypass()">
+        I don't have a company email
+      </label>
+      
+      <!-- 48-hour pledge checkbox (checked by default) -->
+      <label class="pledge">
+        <input type="checkbox" name="reply_pledge_48h" value="true" checked>
+        48h pledge: We commit to reply to applicants within 48 hours.
+      </label>
+      
+      <!-- Collapsible More Options -->
+      <details style="margin-top: 16px; border: 1px solid #dbe1ea; border-radius: 10px; padding: 12px;">
+        <summary style="font-weight: 600; cursor: pointer; margin-bottom: 12px;">More options</summary>
+        
+        <label>Company
+          <input name="company" placeholder="Your Company Name">
+        </label>
+        
+        <label>Hiring contact (name)
+          <input name="contact_name" placeholder="Your Name">
+        </label>
+        
+        <label>City / Remote
+          <input name="job_city" placeholder="City, State / Remote">
+        </label>
+        
+        <label>Nice-to-haves (comma-separated)
+          <textarea name="nice" rows="2" placeholder="azure, scripting, itil"></textarea>
+        </label>
+        
+        <label>Reply-time pledge (SLA)
+          <select name="reply_sla">
+            <option value="48h" selected>Within 48 hours</option>
+            <option value="<=2h">&le; 2 hours (Fast-Reply Certified)</option>
+            <option value="same-day">Same day</option>
+          </select>
+        </label>
+        
+        <label>Optional: Calendly / phone for fast scheduling
+          <input name="contact_channel" placeholder="https://calendly.com/your-link or phone number">
+        </label>
+      </details>
+
+      <!-- Metadata -->
+      <input type="hidden" name="_subject">
+      <input type="hidden" name="source">
+      <input type="hidden" name="_redirect">
+      <input type="hidden" name="needs_verification" id="needs_verification" value="false">
+      <!-- UTM tracking -->
+      <input type="hidden" name="utm_source">
+      <input type="hidden" name="utm_medium">
+      <input type="hidden" name="utm_campaign">
+      <!-- Honeypot (spam trap) -->
+      <label style="display:none">Leave this empty <input name="website"></label>
+
+      <label style="margin-top: 16px;"><input type="checkbox" name="consent" required> I agree to the <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.</label>
+      <button type="submit">Submit job</button>
+      <small class="note">By submitting, you agree to the reply-time pledge; badge visibility depends on measured reply speed.</small>
+    </form>
+  </div>
+</main>
+
+<!-- Contact Us Component -->
+<script src="contact-us.js" defer></script>
+
+<!-- Universal Logo Component -->
+<script src="universal-logo.js" defer></script>
+</body>
+</html>
+
+<script>
+  // Email domain validation
+  const freeEmailDomains = [
+    'gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 
+    'icloud.com', 'aol.com', 'protonmail.com', 'proton.me'
+  ];
+  
+  function validateEmail() {
+    const emailInput = document.getElementById('contact_email');
+    const emailWarning = document.getElementById('email-warning');
+    const bypassCheckbox = document.getElementById('bypass-checkbox');
+    const noCompanyEmailCheckbox = document.getElementById('no_company_email');
+    const needsVerificationField = document.getElementById('needs_verification');
+    
+    const email = emailInput.value.toLowerCase();
+    const domain = email.split('@')[1];
+    
+    if (domain && freeEmailDomains.includes(domain)) {
+      emailWarning.style.display = 'block';
+      bypassCheckbox.style.display = 'block';
+      emailInput.setCustomValidity('Please use your company email or check the bypass option');
+      return false;
+    } else {
+      emailWarning.style.display = 'none';
+      bypassCheckbox.style.display = 'none';
+      noCompanyEmailCheckbox.checked = false;
+      needsVerificationField.value = 'false';
+      emailInput.setCustomValidity('');
+      return true;
+    }
+  }
+  
+  function toggleEmailBypass() {
+    const noCompanyEmailCheckbox = document.getElementById('no_company_email');
+    const emailInput = document.getElementById('contact_email');
+    const needsVerificationField = document.getElementById('needs_verification');
+    
+    if (noCompanyEmailCheckbox.checked) {
+      emailInput.setCustomValidity('');
+      needsVerificationField.value = 'true';
+    } else {
+      validateEmail();
+    }
+  }
+  
+  // Add email validation listener
+  document.getElementById('contact_email').addEventListener('input', validateEmail);
+  document.getElementById('contact_email').addEventListener('blur', validateEmail);
+  
+  // AJAX submit to keep user on-page with a success message
+  const f = document.getElementById('jobForm');
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = f.querySelector('button[type="submit"]');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    try{
+      const res = await fetch(f.action, {
+        method: 'POST',
+        body: new FormData(f),
+        headers: { 'Accept': 'application/json' }
+      });
+      if(res.ok){
+        document.getElementById('wrap').innerHTML =
+          '<h2>Thanks — your job is posted.</h2><p class="sub">We'll verify your reply-time pledge and display your <b>Fast-Reply</b> badge accordingly.</p><p style="margin-top: 20px;"><a href="https://buy.stripe.com/8x25kC7gS1zz6AxeFk5Rm00" target="_blank" rel="noopener" style="display: inline-block; margin-top: 16px; padding: 12px 16px; border-radius: 12px; border: 1px solid #0F172A; background: #0F172A; color: #fff; font-weight: 700; text-decoration: none;">Feature this job ($25)</a></p>';
+      }else{
+        btn.disabled = false; btn.textContent = 'Submit job';
+        alert('Something went wrong. Please try again.');
+      }
+    }catch(err){
+      btn.disabled = false; btn.textContent = 'Submit job';
+      alert('Network error. Please try again.');
+    }
+  });
+
+  // Handle URL parameters from cohort.html intro requests
+  function handleURLParams() {
+    const params = new URLSearchParams(window.location.search);
+    const role = params.get('role');
+    const candidate = params.get('candidate');
+    const source = params.get('source');
+    
+    // Handle UTM parameters
+    const utmSource = params.get('utm_source');
+    const utmMedium = params.get('utm_medium');
+    const utmCampaign = params.get('utm_campaign');
+    
+    if (utmSource) {
+      const utmSourceField = document.querySelector('input[name="utm_source"]');
+      if (utmSourceField) utmSourceField.value = utmSource;
+    }
+    
+    if (utmMedium) {
+      const utmMediumField = document.querySelector('input[name="utm_medium"]');
+      if (utmMediumField) utmMediumField.value = utmMedium;
+    }
+    
+    if (utmCampaign) {
+      const utmCampaignField = document.querySelector('input[name="utm_campaign"]');
+      if (utmCampaignField) utmCampaignField.value = utmCampaign;
+    }
+
+    if (role) {
+      // Pre-fill the job title with the role
+      const jobTitleField = document.querySelector('input[name="job_title"]');
+      if (jobTitleField) {
+        jobTitleField.value = role;
+      }
+    }
+
+    if (candidate && source === 'cohort_intro') {
+      // Show a helpful banner about the intro request
+      const form = document.getElementById('jobForm');
+      const banner = document.createElement('div');
+      banner.style.cssText = `
+        background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+        border: 1px solid #4a9eff;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 16px;
+        color: #1e3a5f;
+        font-size: 14px;
+        text-align: center;
+      `;
+      banner.innerHTML = `
+        <strong>🤝 Intro Request:</strong> You're posting a job for <strong>${role}</strong> 
+        after viewing <strong>${candidate}'s</strong> profile. They'll be notified when you post!
+      `;
+      form.parentNode.insertBefore(banner, form);
+
+      // Add hidden field to track the intro source
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = 'intro_candidate';
+      hiddenInput.value = candidate;
+      form.appendChild(hiddenInput);
+    }
+  }
+
+  // Run URL param handler on page load
+  document.addEventListener('DOMContentLoaded', handleURLParams);
+</script>

@@ -23,6 +23,22 @@
             margin: 0 auto;
             padding: 40px 20px;
         }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .nav-links a {
+            color: #4a9eff;
+            text-decoration: none;
+            margin-right: 20px;
+        }
 
         .header {
             text-align: center;
@@ -101,6 +117,23 @@
 </head>
 <body>
     <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <picture>
+                <source srcset="assets/GuideSignalLogo.webp" type="image/webp">
+                <source srcset="assets/GuideSignalLogo.svg" type="image/svg+xml">
+                <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo - Privacy Policy" width="120" height="120" style="cursor: pointer; border-radius: 8px; transition: transform 0.2s;" onclick="window.location.href='index.html'" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            </picture>
+        </div>
+
+        <div class="nav-links">
+            <a href="index.html">← Home</a>
+            <a href="jobs.html">Jobs</a>
+            <a href="apply.html">Apply</a>
+            <a href="post.html">Post Job</a>
+            <a href="terms.html">Terms of Service</a>
+        </div>
+
         <div class="header">
             <h1>Privacy Policy</h1>
             <p class="subtitle">How we protect and use your information</p>
@@ -159,5 +192,11 @@
 
         <p class="last-updated">Last updated: August 2024</p>
     </div>
+
+<!-- Contact Us Component -->
+<script src="contact-us.js" defer></script>
+
+<!-- Universal Logo Component -->
+<script src="universal-logo.js" defer></script>
 </body>
 </html>

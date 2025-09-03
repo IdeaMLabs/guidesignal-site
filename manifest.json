@@ -3,23 +3,42 @@
   "short_name": "GuideSignal",
   "description": "Advanced ML-powered job matching with guaranteed fast replies",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#1e3a5f",
   "theme_color": "#4a9eff",
   "icons": [
     {
+      "src": "assets/GuideSignalLogo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
       "src": "assets/GuideSignalLogo.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "assets/GuideSignalLogo.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
   "categories": ["business", "productivity", "employment"],
   "lang": "en",
   "dir": "ltr",
-  "orientation": "portrait-primary"
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+guidesignal",
+      "url": "/?action=%s"
+    }
+  ]
 }

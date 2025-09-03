@@ -23,7 +23,16 @@
       "Bash(start auth.html)",
       "Bash(nslookup:*)",
       "Bash(start how.html)",
-      "Bash(start jobs.html)"
+      "Bash(start jobs.html)",
+      "Bash(start security-test.html)",
+      "Bash(start contact-https-test.html)",
+      "Bash(start apply.html)",
+      "Bash(start post.html)",
+      "Bash(start:*)",
+      "Bash(start dashboard.html)",
+      "Bash(dir:*)",
+      "WebSearch",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

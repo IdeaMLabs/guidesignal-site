@@ -18,6 +18,15 @@ p{margin:8px 0;color:#334155} .note{color:#64748B}
 </head>
 <body>
 <main>
+  <!-- Logo -->
+  <div class="logo" style="text-align: center; margin-bottom: 24px;">
+    <picture>
+      <source srcset="assets/GuideSignalLogo.webp" type="image/webp">
+      <source srcset="assets/GuideSignalLogo.svg" type="image/svg+xml">
+      <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo - AI-Powered Job Matching" width="120" height="120" style="cursor: pointer; border-radius: 8px; transition: transform 0.2s;" onclick="window.location.href='index.html'" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    </picture>
+  </div>
+
   <div style="text-align:center;margin-bottom:20px">
     <a href="index.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">← Home</a>
     <a href="jobs.html" style="color:#4a9eff;text-decoration:none;margin-right:20px">Fast-Reply Jobs</a>
@@ -69,5 +78,11 @@ p{margin:8px 0;color:#334155} .note{color:#64748B}
 
   <p class="note">See also: <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="how.html">How it works</a></p>
 </main>
+
+<!-- Contact Us Component -->
+<script src="contact-us.js" defer></script>
+
+<!-- Universal Logo Component -->
+<script src="universal-logo.js" defer></script>
 </body>
 </html>

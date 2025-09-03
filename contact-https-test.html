@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact & HTTPS Test - GuideSignal</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f9fafb;
+            line-height: 1.6;
+        }
+        .test-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .pass { background: #ecfdf5; color: #065f46; border-left: 4px solid #10b981; }
+        .fail { background: #fef2f2; color: #991b1b; border-left: 4px solid #ef4444; }
+        .warn { background: #fffbeb; color: #92400e; border-left: 4px solid #f59e0b; }
+        .info { background: #eff6ff; color: #1e40af; border-left: 4px solid #3b82f6; }
+        
+        .demo-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .demo-btn {
+            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .demo-btn:hover { transform: translateY(-2px); }
+        
+        pre {
+            background: #f3f4f6;
+            padding: 16px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-pass { background: #10b981; }
+        .status-fail { background: #ef4444; }
+        .status-warn { background: #f59e0b; }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .feature-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .feature-card h4 {
+            margin: 0 0 8px 0;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <h1>📞🔒 Contact & HTTPS Comprehensive Test</h1>
+    <p>Testing contact functionality and HTTPS compliance across the GuideSignal platform.</p>
+
+    <div class="test-section">
+        <h2>🚀 Quick Actions</h2>
+        <div class="demo-buttons">
+            <button class="demo-btn" onclick="testContactModal()">Test Contact Modal</button>
+            <button class="demo-btn" onclick="testHTTPSCompliance()">Test HTTPS Compliance</button>
+            <button class="demo-btn" onclick="runAllTests()">Run All Tests</button>
+            <button class="demo-btn" onclick="exportReport()">Export Report</button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📞 Contact Form Features</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>🎯 Smart Modal</h4>
+                <p>Floating contact button with responsive modal interface</p>
+            </div>
+            <div class="feature-card">
+                <h4>📧 Multiple Submission</h4>
+                <p>Formspree, EmailJS, and local storage fallbacks</p>
+            </div>
+            <div class="feature-card">
+                <h4>🔒 Security First</h4>
+                <p>CSP compliant with HTTPS form submission</p>
+            </div>
+            <div class="feature-card">
+                <h4>📱 Universal</h4>
+                <p>Works on all pages with automatic loading</p>
+            </div>
+        </div>
+        <div id="contact-test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔒 HTTPS Security Status</h2>
+        <div id="https-status">
+            <div class="test-result info">
+                <span>🔄</span>
+                <span>Running HTTPS compliance check...</span>
+            </div>
+        </div>
+        <div id="security-details"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 Test Results</h2>
+        <div id="all-test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔧 Technical Details</h2>
+        <div id="technical-info">
+            <pre id="technical-logs">Loading technical information...</pre>
+        </div>
+    </div>
+
+    <!-- Load all our components -->
+    <script src="security-enhancements.js"></script>
+    <script src="contact-us.js"></script>
+    <script src="https-compliance-check.js"></script>
+
+    <script>
+        let testResults = [];
+        let technicalLogs = [];
+
+        function addLog(message) {
+            technicalLogs.push(`[${new Date().toISOString()}] ${message}`);
+            updateTechnicalLogs();
+        }
+
+        function updateTechnicalLogs() {
+            document.getElementById('technical-logs').textContent = technicalLogs.slice(-20).join('\n');
+        }
+
+        function addTestResult(category, test, status, message, details = null) {
+            const result = { category, test, status, message, details, timestamp: Date.now() };
+            testResults.push(result);
+            addLog(`${status.toUpperCase()}: ${test} - ${message}`);
+            updateTestResults();
+        }
+
+        function updateTestResults() {
+            const container = document.getElementById('all-test-results');
+            container.innerHTML = testResults.map(result => `
+                <div class="test-result ${result.status}">
+                    <span class="status-indicator status-${result.status}"></span>
+                    <div>
+                        <strong>[${result.category}] ${result.test}</strong><br>
+                        <small>${result.message}</small>
+                        ${result.details ? `<pre>${JSON.stringify(result.details, null, 2)}</pre>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function testContactModal() {
+            addLog('Testing contact modal functionality...');
+            
+            try {
+                // Check if contact button exists
+                const contactBtn = document.getElementById('contact-us-btn');
+                if (contactBtn) {
+                    addTestResult('Contact', 'Button Presence', 'pass', 'Contact button found and loaded');
+                    
+                    // Test modal opening
+                    contactBtn.click();
+                    
+                    setTimeout(() => {
+                        const modal = document.getElementById('contact-us-modal');
+                        if (modal && modal.style.visibility === 'visible') {
+                            addTestResult('Contact', 'Modal Opening', 'pass', 'Contact modal opens correctly');
+                            
+                            // Close modal
+                            if (window.contactModal) {
+                                window.contactModal.close();
+                            }
+                        } else {
+                            addTestResult('Contact', 'Modal Opening', 'fail', 'Contact modal failed to open');
+                        }
+                    }, 500);
+                    
+                } else {
+                    addTestResult('Contact', 'Button Presence', 'fail', 'Contact button not found');
+                }
+                
+                // Test form fields
+                setTimeout(() => {
+                    const form = document.getElementById('contact-form');
+                    if (form) {
+                        const requiredFields = form.querySelectorAll('[required]');
+                        addTestResult('Contact', 'Form Fields', 'pass', 
+                            `Form found with ${requiredFields.length} required fields`);
+                    } else {
+                        addTestResult('Contact', 'Form Fields', 'fail', 'Contact form not found');
+                    }
+                }, 1000);
+                
+            } catch (error) {
+                addTestResult('Contact', 'Modal Test', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        async function testHTTPSCompliance() {
+            addLog('Testing HTTPS compliance...');
+            
+            // Wait for HTTPS checker to complete
+            setTimeout(() => {
+                if (window.httpsComplianceReport) {
+                    const report = window.httpsComplianceReport;
+                    
+                    addTestResult('HTTPS', 'Overall Compliance', 
+                        report.compliant ? 'pass' : 'fail',
+                        `Compliance score: ${report.score}/100`,
+                        { issues: report.issues.length, warnings: report.warnings.length }
+                    );
+                    
+                    // Test specific aspects
+                    addTestResult('HTTPS', 'Protocol', 
+                        location.protocol === 'https:' ? 'pass' : 'warn',
+                        `Protocol: ${location.protocol}`
+                    );
+                    
+                    // Check security headers
+                    const hasCSP = !!document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+                    addTestResult('HTTPS', 'Security Headers', 
+                        hasCSP ? 'pass' : 'warn',
+                        hasCSP ? 'CSP header present' : 'CSP header missing'
+                    );
+                    
+                    updateHTTPSStatus(report);
+                } else {
+                    addTestResult('HTTPS', 'Compliance Check', 'warn', 'HTTPS checker not ready yet');
+                }
+            }, 2000);
+        }
+
+        function updateHTTPSStatus(report) {
+            const statusContainer = document.getElementById('https-status');
+            const detailsContainer = document.getElementById('security-details');
+            
+            statusContainer.innerHTML = `
+                <div class="test-result ${report.compliant ? 'pass' : report.issues.length > 0 ? 'fail' : 'warn'}">
+                    <span class="status-indicator status-${report.compliant ? 'pass' : 'fail'}"></span>
+                    <div>
+                        <strong>HTTPS Compliance: ${report.compliant ? 'Passed' : 'Issues Found'}</strong><br>
+                        <small>Score: ${report.score}/100 | Issues: ${report.issues.length} | Warnings: ${report.warnings.length}</small>
+                    </div>
+                </div>
+            `;
+            
+            if (report.issues.length > 0 || report.warnings.length > 0) {
+                detailsContainer.innerHTML = `
+                    <h4>Security Details:</h4>
+                    <pre>${JSON.stringify({
+                        issues: report.issues,
+                        warnings: report.warnings
+                    }, null, 2)}</pre>
+                `;
+            }
+        }
+
+        async function runAllTests() {
+            addLog('Running comprehensive test suite...');
+            testResults = []; // Clear previous results
+            
+            await testContactModal();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await testHTTPSCompliance();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Test page features
+            const hasContactScript = !!document.querySelector('script[src*="contact-us.js"]');
+            addTestResult('Integration', 'Script Loading', 
+                hasContactScript ? 'pass' : 'fail',
+                hasContactScript ? 'Contact script properly loaded' : 'Contact script missing'
+            );
+            
+            // Test CSS loading
+            const hasStyles = document.querySelector('style') || document.querySelector('link[rel="stylesheet"]');
+            addTestResult('Integration', 'Styling', 
+                hasStyles ? 'pass' : 'warn',
+                hasStyles ? 'Styles loaded' : 'No custom styles detected'
+            );
+            
+            // Generate summary
+            const passed = testResults.filter(r => r.status === 'pass').length;
+            const failed = testResults.filter(r => r.status === 'fail').length;
+            const warnings = testResults.filter(r => r.status === 'warn').length;
+            
+            addLog(`Test Summary: ${passed} passed, ${failed} failed, ${warnings} warnings`);
+            
+            // Update contact test results
+            document.getElementById('contact-test-results').innerHTML = `
+                <h4>Test Summary</h4>
+                <div class="test-result ${failed === 0 ? 'pass' : 'warn'}">
+                    <span class="status-indicator status-${failed === 0 ? 'pass' : 'warn'}"></span>
+                    <div>
+                        <strong>Overall Status: ${failed === 0 ? 'All Tests Passed' : 'Some Issues Found'}</strong><br>
+                        <small>${passed} passed, ${failed} failed, ${warnings} warnings</small>
+                    </div>
+                </div>
+            `;
+        }
+
+        function exportReport() {
+            const report = {
+                timestamp: new Date().toISOString(),
+                url: location.href,
+                userAgent: navigator.userAgent,
+                testResults: testResults,
+                httpsReport: window.httpsComplianceReport,
+                technicalLogs: technicalLogs,
+                summary: {
+                    totalTests: testResults.length,
+                    passed: testResults.filter(r => r.status === 'pass').length,
+                    failed: testResults.filter(r => r.status === 'fail').length,
+                    warnings: testResults.filter(r => r.status === 'warn').length
+                }
+            };
+            
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `guidesignal-test-report-${new Date().toISOString().slice(0,16).replace(/:/g, '-')}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            addLog('Test report exported successfully');
+        }
+
+        // Auto-run tests when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            addLog('Page loaded, initializing tests...');
+            
+            setTimeout(() => {
+                addLog('Running automatic test suite...');
+                runAllTests();
+            }, 2000);
+        });
+
+        // Update technical info every 2 seconds
+        setInterval(() => {
+            const info = {
+                timestamp: new Date().toISOString(),
+                protocol: location.protocol,
+                hostname: location.hostname,
+                contactLoaded: !!window.contactModal,
+                httpsCheckerLoaded: !!window.httpsChecker,
+                securityManagerLoaded: !!window.securityManager,
+                serviceWorkerActive: navigator.serviceWorker?.controller ? 'active' : 'inactive',
+                testResults: testResults.length
+            };
+            
+            document.getElementById('technical-logs').textContent = 
+                'Current System Status:\n' + JSON.stringify(info, null, 2) + 
+                '\n\nRecent Logs:\n' + technicalLogs.slice(-10).join('\n');
+        }, 2000);
+    </script>
+</body>
+</html>
