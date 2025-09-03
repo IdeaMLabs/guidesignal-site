@@ -422,32 +422,33 @@
                 <!-- No eye button here - removed as requested -->
             </div>
             
-            <div class="form-group">
-                <label class="form-label">I am a...</label>
-                <div id="role-selection" class="role-selector">
-                    <div class="role-option" data-role="student">
-                        <input type="radio" name="role" value="student" class="role-radio" id="role-student" required>
-                        <div class="role-content">
-                            <div class="role-title">🎓 Student</div>
-                            <div class="role-desc">Looking for internships and entry-level opportunities</div>
-                        </div>
-                    </div>
-                    <div class="role-option" data-role="job-seeker">
-                        <input type="radio" name="role" value="job_seeker" class="role-radio" id="role-job-seeker" required>
-                        <div class="role-content">
-                            <div class="role-title">💼 Job Seeker</div>
-                            <div class="role-desc">Seeking new career opportunities</div>
-                        </div>
-                    </div>
-                    <div class="role-option" data-role="recruiter">
-                        <input type="radio" name="role" value="recruiter" class="role-radio" id="role-recruiter" required>
-                        <div class="role-content">
-                            <div class="role-title">🏢 Recruiter</div>
-                            <div class="role-desc">Posting jobs and hiring talent</div>
-                        </div>
-                    </div>
-                </div>
+            <!-- Role Selection Section (Fix 2) -->
+            <div id="role-selection">
+              <p>I am a…</p>
+              <label>
+                <input type="radio" name="role" value="student" required>
+                🎓 Student — Looking for internships and entry-level opportunities
+              </label><br>
+              <label>
+                <input type="radio" name="role" value="job_seeker" required>
+                💼 Job Seeker — Seeking new career opportunities
+              </label><br>
+              <label>
+                <input type="radio" name="role" value="recruiter" required>
+                🗂 Recruiter — Posting jobs and hiring talent
+              </label>
             </div>
+
+            <script>
+            // Validation to ensure a role must be chosen before form submission
+            document.querySelector("#signup-form").addEventListener("submit", function(e) {
+              const role = document.querySelector("input[name='role']:checked");
+              if (!role) {
+                e.preventDefault();
+                alert("Please select one role before continuing.");
+              }
+            });
+            </script>
             
             <div class="form-group" style="margin-top: 10px;">
                 <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #6c757d; line-height: 1.4;">
