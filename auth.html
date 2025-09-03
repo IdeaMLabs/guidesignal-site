@@ -55,6 +55,37 @@
     
     <title>Sign In - GuideSignal</title>
     <style>
+        /* CSS Variables */
+        :root {
+            /* Color variables */
+            --primary-50: #eff6ff;
+            --primary-500: #4a9eff;
+            --primary-600: #2563eb;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
+            --gray-900: #111827;
+            
+            /* Spacing variables */
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            
+            /* Border radius */
+            --radius: 0.375rem;
+            --radius-lg: 0.5rem;
+            --radius-xl: 0.75rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            /* Transitions */
+            --transition: all 0.2s ease;
+        }
+        
         /* Auth page specific styles */
         body {
             background: linear-gradient(135deg, var(--gray-50) 0%, var(--primary-50) 100%);
@@ -273,18 +304,18 @@
             cursor: pointer;
             padding: 4px;
             font-size: 16px;
-            color: var(--gray-500);
+            color: #6b7280;
             z-index: 1;
             transition: color 0.2s ease;
             user-select: none;
         }
         
         .password-toggle:hover {
-            color: var(--gray-700);
+            color: #374151;
         }
         
         .password-toggle:focus {
-            outline: 2px solid var(--primary-500);
+            outline: 2px solid #4a9eff;
             outline-offset: 2px;
             border-radius: 4px;
         }
@@ -1284,13 +1315,18 @@
             }
         });
 
-        // Password toggle functionality
+        // Password toggle functionality with enhanced debugging
         window.togglePassword = function(inputId) {
+            console.log('togglePassword called with inputId:', inputId);
+            
             const input = document.getElementById(inputId);
             if (!input) {
                 console.error('Input not found:', inputId);
                 return;
             }
+            
+            console.log('Input found:', input);
+            console.log('Current input type:', input.type);
             
             // Find the toggle button - it should be the next sibling or find by class
             let toggle = input.nextElementSibling;
@@ -1304,17 +1340,22 @@
             
             if (!toggle) {
                 console.error('Toggle button not found for:', inputId);
+                console.error('Available buttons in container:', document.querySelectorAll('.password-container .password-toggle'));
                 return;
             }
+            
+            console.log('Toggle button found:', toggle);
             
             if (input.type === 'password') {
                 input.type = 'text';
                 toggle.textContent = '🙈';
                 toggle.setAttribute('aria-label', 'Hide password');
+                console.log('Changed to text type - password visible');
             } else {
                 input.type = 'password';
                 toggle.textContent = '👁️';
                 toggle.setAttribute('aria-label', 'Show password');
+                console.log('Changed to password type - password hidden');
             }
         };
 
