@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="GuideSignal connects job seekers with fast-reply employers. Get responses within 48 hours from verified companies. Free for candidates, transparent pay ranges, AI-powered matching.">
+    <meta name="description" content="GuideSignal: AI-powered job matching platform with 48h response guarantee. Free for candidates, transparent salaries, verified employers. 94.2% matching accuracy beats LinkedIn & Indeed.">
     
     <!-- Security Headers -->
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
-    <meta name="keywords" content="job search, fast reply jobs, hiring platform, AI matching, employment, quick responses, salary transparency">
+    <meta name="keywords" content="AI job matching, fast reply jobs, 48 hour response, salary transparency, job search platform, hiring technology, career matching, employment AI, job board alternative, LinkedIn alternative">
     <meta name="author" content="GuideSignal">
     <meta name="robots" content="index, follow">
     
@@ -20,21 +20,61 @@
         }
         
         // Force HTTPS redirect
-        if (window.location.protocol !== 'https:' && window.location.hostname.includes('guide-signal.com')) {
-            window.location.replace('https://' + window.location.hostname + window.location.pathname + window.location.search + window.location.hash);
-        }
+        // Enhanced HTTPS redirect with improved error handling and domain validation
+        (function() {
+            const isDev = location.hostname === 'localhost' || 
+                         location.hostname === '127.0.0.1' || 
+                         location.hostname.startsWith('192.168.') ||
+                         location.hostname.endsWith('.local');
+            
+            // Force HTTPS in production
+            if (location.protocol !== 'https:' && !isDev) {
+                // Validate domain before redirect
+                const allowedDomains = ['guide-signal.com', 'www.guide-signal.com', 'guidesignal.netlify.app', 'guidesignal.github.io'];
+                const currentDomain = location.hostname.toLowerCase();
+                
+                if (allowedDomains.some(domain => currentDomain.includes(domain)) || currentDomain.includes('guidesignal')) {
+                    const httpsUrl = 'https://' + location.hostname + location.pathname + location.search + location.hash;
+                    console.log('Redirecting to HTTPS:', httpsUrl);
+                    window.location.replace(httpsUrl);
+                } else {
+                    console.warn('Domain not in allowlist, manual HTTPS required for:', currentDomain);
+                }
+            }
+            
+            // Set security headers via meta tags
+            const csp = document.createElement('meta');
+            csp.setAttribute('http-equiv', 'Content-Security-Policy');
+            csp.setAttribute('content', "default-src 'self' https:; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://apis.google.com https://identitytoolkit.googleapis.com https://cdn.emailjs.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://formspree.io https://api.emailjs.com wss: https:; form-action 'self' https://formspree.io https://api.emailjs.com");
+            document.head.appendChild(csp);
+            
+            // HSTS header request
+            if (location.protocol === 'https:') {
+                const hsts = document.createElement('meta');
+                hsts.setAttribute('http-equiv', 'Strict-Transport-Security');
+                hsts.setAttribute('content', 'max-age=31536000; includeSubDomains; preload');
+                document.head.appendChild(hsts);
+            }
+        })();
     </script>
     
     <!-- Preconnect to critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://guide-signal.com">
+    <link rel="dns-prefetch" href="https://guidesignal.netlify.app">
+    <link rel="dns-prefetch" href="https://ideamlabs.github.io">
+    <link rel="stylesheet" href="assets/index-optimized.css">
+    <link rel="preload" href="assets/GuideSignalLogo.webp" as="image" type="image/webp">
+    <link rel="preload" href="scoreboard.json" as="fetch" crossorigin>
+    <link rel="prefetch" href="jobs.html">
+    <link rel="prefetch" href="apply.html">
+    <link rel="prefetch" href="scoreboard.json">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://guide-signal.com">
     <meta property="og:title" content="GuideSignal - AI-Powered Job Matching | Focused Job Matching">
-    <meta property="og:description" content="Advanced ML job matching with guaranteed 48h responses. Superior to LinkedIn & Indeed. 94.2% accuracy, transparent pay, bias-free matching.">
+    <meta property="og:description" content="AI-powered job matching with 48h response guarantee. 94.2% accuracy beats LinkedIn & Indeed. Free for candidates, transparent salaries, verified employers.">
     <meta property="og:image" content="https://guide-signal.com/assets/GuideSignalLogo.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -46,7 +86,7 @@
     <meta name="twitter:creator" content="@guidesignal">
     <meta name="twitter:url" content="https://guide-signal.com">
     <meta name="twitter:title" content="GuideSignal - AI-Powered Job Matching | Focused Job Matching">
-    <meta name="twitter:description" content="Advanced ML job matching with guaranteed 48h responses. Superior to LinkedIn & Indeed. 94.2% accuracy, transparent pay, bias-free matching.">
+    <meta name="twitter:description" content="AI-powered job matching with 48h response guarantee. 94.2% accuracy beats LinkedIn & Indeed. Free for candidates, transparent salaries, verified employers.">
     <meta name="twitter:image" content="https://guide-signal.com/assets/GuideSignalLogo.png">
     
     <!-- Security and Certificate Meta -->
@@ -81,30 +121,22 @@
     
     <!-- Accessibility -->
     <meta name="color-scheme" content="light dark">
-    <meta name="accessibility" content="WCAG AA compliant">"
+    <meta name="accessibility" content="WCAG AA compliant">
+    
+    <!-- Accessibility enhancements -->
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyeMZhrib2Bg-4.woff2">
     
     <title>GuideSignal - AI-Powered Job Matching | Focused Job Matching</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
+        /* Critical above-the-fold styles only */
+        .loading-critical {
             font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             color: #1e3a5f;
             line-height: 1.6;
             min-height: 100vh;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
+        
         .employer-banner {
             background: linear-gradient(135deg, #4a9eff, #1e3a5f);
             color: white;
@@ -113,580 +145,28 @@
             font-weight: 600;
             font-size: 16px;
         }
-
-        .employer-banner a {
-            color: white;
-            text-decoration: none;
-            font-weight: 700;
-            margin: 0 8px;
-            padding: 6px 12px;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            transition: all 0.2s ease;
-        }
-
-        .employer-banner a:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-1px);
-        }
-
-        .mini-stats {
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-            text-align: center;
-            padding: 8px 0;
-            font-size: 13px;
-            color: #6c757d;
-            font-weight: 500;
-        }
-
-        .mini-stats span {
-            color: #1e3a5f;
-            font-weight: 600;
-        }
-
-        .capacity-notice {
-            background: linear-gradient(135deg, #fff3cd, #ffeeba);
-            border: 1px solid #ffc107;
-            color: #856404;
-            padding: 8px 16px;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .capacity-bar {
-            display: inline-block;
-            width: 60px;
-            height: 8px;
-            background: #e9ecef;
-            border-radius: 4px;
-            margin: 0 8px;
-            position: relative;
-            vertical-align: middle;
-        }
-
-        .capacity-fill {
-            height: 100%;
-            background: linear-gradient(135deg, #28a745, #20c997);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-
-        .join-cta-index {
-            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
-            border: 1px solid #4a9eff;
-            color: #1565c0;
-            padding: 8px 16px;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .join-cta-index a {
-            color: #1565c0;
-            text-decoration: none;
-            font-weight: 700;
-            margin-left: 8px;
-        }
-
-        .join-cta-index a:hover {
-            text-decoration: underline;
-        }
-
-        header {
-            padding: 60px 0 40px;
-            text-align: center;
-            background: white;
-            box-shadow: 0 2px 20px rgba(30, 58, 95, 0.08);
-            position: relative;
-        }
-
-        .header-nav {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-
-        .nav-link {
-            color: #4a9eff;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-            margin: 0 4px;
-        }
-
-        .nav-link:hover {
-            background: #4a9eff;
-            color: white;
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .btn-primary-auth {
-            background: #4a9eff;
-            color: white !important;
-            border-radius: 8px;
-            padding: 10px 20px !important;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(74, 158, 255, 0.3);
-            border: 2px solid #4a9eff;
-        }
-
-        .btn-primary-auth:hover {
-            background: #2c8afc;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.4);
-        }
-
-        .btn-secondary-auth {
-            background: transparent;
-            color: #4a9eff !important;
-            border: 2px solid #4a9eff;
-            border-radius: 8px;
-            padding: 8px 18px !important;
-            font-weight: 500;
-        }
-
-        .btn-secondary-auth:hover {
-            background: #4a9eff;
-            color: white !important;
-        }
-
-        .logo {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 30px;
-            background-color: #ffffff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
         
-        .logo img {
-            width: 90%;
-            height: 90%;
-            object-fit: contain;
-            background: #ffffff;
-        }
-
-        h1 {
-            font-size: 48px;
-            font-weight: 300;
-            color: #1e3a5f;
-            margin-bottom: 20px;
-            letter-spacing: -1px;
-        }
-
-        .subtitle {
-            font-size: 20px;
-            color: #6c757d;
-            font-weight: 300;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .hero-section {
-            padding: 80px 0;
-            text-align: center;
-        }
-
-        .hero-title {
-            font-size: 56px;
-            font-weight: 200;
-            color: #1e3a5f;
-            margin-bottom: 30px;
-            letter-spacing: -2px;
-        }
-
-        .hero-description {
-            font-size: 24px;
-            color: #495057;
-            margin-bottom: 60px;
-            font-weight: 300;
-        }
-
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 80px;
-            flex-wrap: wrap;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .scoreboard {
-            padding: 60px 0;
-            background: linear-gradient(135deg, #1e3a5f 0%, #4a9eff 100%);
-            color: white;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            text-align: center;
-        }
-
-        .stat {
-            padding: 20px;
-        }
-
-        .stat-number {
-            font-size: 48px;
-            font-weight: 200;
-            margin-bottom: 10px;
-            color: white;
-        }
-
-        .stat-label {
-            font-size: 16px;
-            opacity: 0.9;
-            margin-bottom: 5px;
-        }
-
-        .stat-unit {
-            font-size: 14px;
-            opacity: 0.7;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 18px 36px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            min-width: 180px;
-        }
-
-        .btn-primary {
-            background: #1e3a5f;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #2c4a6f;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.3);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: #1e3a5f;
-            border: 2px solid #4a9eff;
-        }
-
-        .btn-secondary:hover {
-            background: #4a9eff;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 158, 255, 0.3);
-        }
-
-        .features {
-            padding: 80px 0;
-            background: white;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 60px;
-            text-align: center;
-        }
-
-        .feature {
-            padding: 40px 20px;
-        }
-
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #4a9eff, #1e3a5f);
-            border-radius: 50%;
-            margin: 0 auto 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-        }
-
-        .feature h3 {
-            font-size: 24px;
-            font-weight: 400;
-            margin-bottom: 20px;
-            color: #1e3a5f;
-        }
-
-        .feature p {
-            font-size: 16px;
-            color: #6c757d;
-            line-height: 1.6;
-        }
-
-        .how-it-works {
-            padding: 80px 0;
-            background: #f8f9fa;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 42px;
-            font-weight: 300;
-            color: #1e3a5f;
-            margin-bottom: 60px;
-            letter-spacing: -1px;
-        }
-
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-        }
-
-        .step {
-            background: white;
-            padding: 40px 30px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
-            transition: transform 0.3s ease;
-        }
-
-        .step:hover {
-            transform: translateY(-5px);
-        }
-
-        .step-number {
-            width: 40px;
-            height: 40px;
-            background: #4a9eff;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-weight: 600;
-        }
-
-        .step h4 {
-            font-size: 20px;
-            color: #1e3a5f;
-            margin-bottom: 15px;
-            font-weight: 500;
-        }
-
-        .step p {
-            color: #6c757d;
-            font-size: 14px;
-        }
-
-        .pricing {
-            padding: 80px 0;
-            background: white;
-            text-align: center;
-        }
-
-        .pricing-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .pricing-card {
-            background: white;
-            border: 2px solid #e9ecef;
-            border-radius: 16px;
-            padding: 50px 30px;
-            transition: all 0.3s ease;
-        }
-
-        .pricing-card:hover {
-            border-color: #4a9eff;
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(74, 158, 255, 0.15);
-        }
-
-        .pricing-card.featured {
-            border-color: #4a9eff;
-            background: linear-gradient(135deg, #4a9eff 0%, #1e3a5f 100%);
-            color: white;
-        }
-
-        .pricing-title {
-            font-size: 24px;
-            font-weight: 500;
-            margin-bottom: 10px;
-        }
-
-        .pricing-price {
-            font-size: 48px;
-            font-weight: 200;
-            margin-bottom: 30px;
-        }
-
-        .pricing-features {
-            list-style: none;
-            margin-bottom: 40px;
-        }
-
-        .pricing-features li {
-            padding: 8px 0;
-            font-size: 16px;
-        }
-
-        footer {
-            background: #1e3a5f;
-            color: white;
-            padding: 40px 0;
-            text-align: center;
-        }
-
-        footer p {
-            margin-bottom: 10px;
-            opacity: 0.8;
-        }
-
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 36px;
-            }
-            
-            .hero-description {
-                font-size: 20px;
-            }
-            
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 100%;
-                max-width: 300px;
-            }
-            
-            h1 {
-                font-size: 32px;
-            }
-            
-            .section-title {
-                font-size: 28px;
-            }
-            
-            .logo {
-                width: 120px;
-                height: 120px;
-                margin-bottom: 20px;
-            }
-            
-            .container {
-                padding: 0 15px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 30px;
-            }
-            
-            .features-grid {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-            
-            .steps {
-                grid-template-columns: 1fr;
-                gap: 25px;
-            }
-            
-            .pricing-cards {
-                grid-template-columns: 1fr;
-                gap: 25px;
-            }
-            
-            .mini-stats {
-                font-size: 12px;
-                padding: 6px 0;
-                text-align: left;
-                white-space: nowrap;
-                overflow-x: auto;
-            }
-            
-            .hero-section {
-                padding: 60px 0;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-title {
-                font-size: 28px;
-                line-height: 1.2;
-            }
-            
-            .hero-description {
-                font-size: 18px;
-            }
-            
-            h1 {
-                font-size: 28px;
-            }
-            
-            .section-title {
-                font-size: 24px;
-            }
-            
-            .logo {
-                width: 100px;
-                height: 100px;
-            }
-            
-            .stat-number {
-                font-size: 36px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .mini-stats {
-                font-size: 11px;
-                padding: 5px;
-            }
+        /* Load full styles asynchronously */
+        @media print {
+            .loading-critical { display: none; }
         }
     </style>
 </head>
 <body>
+    <!-- Skip links for screen readers -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#navigation" class="skip-link">Skip to navigation</a>
+    
     <!-- Employer Banner -->
-    <div class="employer-banner">
+    <div class="employer-banner" role="banner">
         Employers pledge 48-hour replies — post today, get fast matches: <a href="post.html">Post free</a> or <a href="/my-jobs">Feature Your Job for $25</a>
     </div>
     
-    <header>
-        <div class="header-nav">
-            <a href="jobs.html" class="nav-link">Fast-Reply Jobs</a>
-            <a href="how.html" class="nav-link">How it Works</a>
-            <a href="faq.html" class="nav-link">FAQ</a>
+    <header role="banner">
+        <nav class="header-nav" id="navigation" role="navigation" aria-label="Main navigation">
+            <a href="jobs.html" class="nav-link" aria-label="Browse fast-reply job opportunities">Fast-Reply Jobs</a>
+            <a href="how.html" class="nav-link" aria-label="Learn how our platform works">How it Works</a>
+            <a href="faq.html" class="nav-link" aria-label="Frequently asked questions">FAQ</a>
             
             <!-- Auth buttons for non-authenticated users -->
             <div id="auth-buttons" class="auth-buttons">
@@ -703,7 +183,16 @@
         </div>
         <div class="container">
             <div class="logo">
-                <img src="assets/GuideSignalLogo.png" alt="GuideSignal Logo - Professional Hiring Platform" width="180" height="180">
+                <picture>
+                    <source srcset="assets/GuideSignalLogo.webp" type="image/webp" onerror="this.remove()">
+                    <source srcset="assets/GuideSignalLogo.svg" type="image/svg+xml" onerror="this.remove()">
+                    <img src="assets/GuideSignalLogo.png" 
+                         alt="GuideSignal Logo - Professional Hiring Platform" 
+                         width="180" height="180" 
+                         loading="eager" 
+                         decoding="sync"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJsb2dvR3JhZGllbnQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM0YTllZmY7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMWUzYTVmO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjkwIiBjeT0iOTAiIHI9Ijg1IiBmaWxsPSJ1cmwoI2xvZ29HcmFkaWVudCkiLz48dGV4dCB4PSI5MCIgeT0iOTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI0OCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+R1M8L3RleHQ+PC9zdmc+';">
+                </picture>
             </div>
             <h1>GuideSignal</h1>
             <p class="subtitle">Guiding talent to opportunity with precision and speed</p>
@@ -731,9 +220,10 @@
         Growing our candidate pool! <a href="auth.html">Join now - Sign up for free →</a>
     </div>
 
-    <section class="hero-section">
-        <div class="container">
-            <h2 class="hero-title">Hear back within 48 hours</h2>
+    <main id="main-content" role="main">
+        <section class="hero-section" aria-labelledby="hero-title">
+            <div class="container">
+            <h2 id="hero-title" class="hero-title">Hear back within 48 hours</h2>
             <p class="hero-description">(from pledged employers)</p>
             
             <div class="cta-buttons" id="main-cta-buttons">
@@ -768,11 +258,11 @@
                 <span id="demo-content">From demo today: 0</span>
             </div>
         </div>
-    </section>
+        </section>
 
-    <section class="scoreboard">
+        <section class="scoreboard" aria-labelledby="stats-title">
         <div class="container">
-            <h2 class="section-title">Live Platform Stats</h2>
+            <h2 id="stats-title" class="section-title">Live Platform Stats</h2>
             <div class="stats-grid">
                 <div class="stat">
                     <div class="stat-number" id="medianReply">--</div>
@@ -907,9 +397,10 @@
                 </p>
             </div>
         </div>
-    </section>
+        </section>
+    </main>
 
-    <footer>
+    <footer role="contentinfo">
         <div class="container">
             <p>&copy; GuideSignal 2025</p>
             <p>Privacy-first job matching.</p>
@@ -924,367 +415,7 @@
         </div>
     </footer>
 
-    <script>
-        // Performance monitoring
-        const performanceMetrics = {
-            startTime: performance.now(),
-            resourceLoadTimes: new Map(),
-            userInteractions: 0
-        };
-        
-        // Error tracking with retry logic
-        const errorTracker = {
-            errors: [],
-            maxRetries: 3,
-            retryDelay: 1000
-        };
-        
-        // Load and display scoreboard stats with improved error handling and performance monitoring
-        async function loadScoreboard(retryCount = 0) {
-            const loadStart = performance.now();
-            
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 8000); // Reduced timeout
-                
-                const response = await fetch(`scoreboard.json?ts=${Date.now()}`, {
-                    signal: controller.signal,
-                    cache: 'no-store', // Ensure fresh data
-                    headers: {
-                        'Cache-Control': 'no-cache, no-store, must-revalidate',
-                        'Pragma': 'no-cache',
-                        'Expires': '0'
-                    }
-                });
-                clearTimeout(timeoutId);
-                
-                if (!response.ok) {
-                    throw new Error(`Scoreboard HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                const loadTime = performance.now() - loadStart;
-                performanceMetrics.resourceLoadTimes.set('scoreboard', loadTime);
-                
-                // Reset error count on successful load
-                errorTracker.errors = errorTracker.errors.filter(e => e.type !== 'scoreboard');
-                
-                // Update stat displays
-                document.getElementById('medianReply').textContent = data.median_reply_hours_24h || '--';
-                document.getElementById('replyRate').textContent = data.last24_replied && data.last24_apps ? `${data.last24_replied}/${data.last24_apps} (${data.reply_rate_24h}%)` : '--%';
-                document.getElementById('interviewRate').textContent = data.interview_rate_7d ? `${data.interview_rate_7d}%` : '--%';
-                document.getElementById('certifiedJobs').textContent = data.certified_jobs || '--';
-                
-                // Update mini stats line and hide when all values are zero
-                const replies = data.last24_replied || 0;
-                const apps = data.last24_apps || 0;
-                const pledged = data.pledged_employers || 0;
-                const tickets = data.open_tickets || 0;
-                const acks = data.acks_pending || 0;
-                
-                document.getElementById('stat-replies').textContent = replies;
-                document.getElementById('stat-apps').textContent = apps;
-                document.getElementById('pledged-employers').textContent = pledged;
-                document.getElementById('open-tickets').textContent = tickets;
-                document.getElementById('acks-pending').textContent = acks;
-                
-                // Hide mini-stats if all values are zero
-                const miniStatsEl = document.getElementById('mini-stats');
-                if (replies === 0 && apps === 0 && pledged === 0 && tickets === 0 && acks === 0) {
-                    miniStatsEl.style.display = 'none';
-                } else {
-                    miniStatsEl.style.display = 'block';
-                }
-                
-                // Update enhanced ML learning info with AI engine integration
-                const trainingEvents = data.training_events || 0;
-                const lastTrained = data.last_trained ? new Date(data.last_trained).toLocaleDateString() : 'Never';
-                const weights = data.ml_weights || {};
-                const mlAccuracy = data.ml_accuracy || 94.2;
-                const predictions24h = data.predictions_24h || 0;
-                
-                const formatWeight = (w) => Math.round((w || 0) * 100) + '%';
-                
-                let mlInfo = '';
-                if (trainingEvents >= 20) {
-                    mlInfo = `🧠 AI Engine: ${mlAccuracy.toFixed(1)}% accuracy • ${predictions24h} predictions today • Learning: ${trainingEvents} outcomes • Last trained: ${lastTrained}`;
-                    mlInfo += ` • Smart Weights: Skills ${formatWeight(weights.skills_weight || 0.3)}, Experience ${formatWeight(weights.experience_weight || 0.25)}, Title ${formatWeight(weights.title_weight || 0.2)}`;
-                } else {
-                    const needed = Math.max(0, 20 - trainingEvents);
-                    mlInfo = `🤖 AI Learning: ${trainingEvents}/20 outcomes collected (${needed} more needed) • Current accuracy: ${mlAccuracy.toFixed(1)}% • Predictions today: ${predictions24h}`;
-                    mlInfo += ` • Using optimized defaults • Next evolution at 20+ outcomes`;
-                }
-                
-                document.getElementById('ml-learning-info').textContent = mlInfo;
-                
-                // Add AI performance indicator
-                const mlStatsEl = document.getElementById('ml-stats');
-                if (mlAccuracy >= 90) {
-                    mlStatsEl.style.background = '#e8f5e8';
-                    mlStatsEl.style.borderColor = '#4ade80';
-                    mlStatsEl.style.color = '#166534';
-                } else if (mlAccuracy >= 80) {
-                    mlStatsEl.style.background = '#e8f4fd';
-                    mlStatsEl.style.borderColor = '#4a9eff';
-                    mlStatsEl.style.color = '#1565c0';
-                } else {
-                    mlStatsEl.style.background = '#fef3c7';
-                    mlStatsEl.style.borderColor = '#f59e0b';
-                    mlStatsEl.style.color = '#92400e';
-                }
-                
-                // Update capacity bar
-                const slotsToday = data.slots_today || 0;
-                const maxSlots = 3;
-                const capacityPercent = Math.max(0, Math.min(100, (slotsToday / maxSlots) * 100));
-                
-                document.getElementById('slots-today').textContent = slotsToday;
-                document.getElementById('next-review').textContent = data.next_review || '-';
-                document.getElementById('capacity-fill').style.width = `${capacityPercent}%`;
-                
-                // Update proof strip - show if intros or interviews > 0
-                const intros = data.intros_7d || 0;
-                const interviews = data.interviews_7d || 0;
-                const proofStripEl = document.getElementById('proof-strip');
-                const proofContentEl = document.getElementById('proof-content');
-                
-                if (intros > 0 || interviews > 0) {
-                    proofContentEl.textContent = `Live this week: ${intros} intros → ${interviews} interviews (7d)`;
-                    proofStripEl.style.display = 'block';
-                } else {
-                    proofStripEl.style.display = 'none';
-                }
-                
-                // Handle demo conversions display
-                const demoConversions = data.demo_conversions_today || 0;
-                const demoStripEl = document.getElementById('demo-conversions');
-                const demoContentEl = document.getElementById('demo-content');
-                
-                if (demoConversions > 0) {
-                    demoContentEl.textContent = `From demo today: ${demoConversions}`;
-                    demoStripEl.style.display = 'block';
-                } else {
-                    demoStripEl.style.display = 'none';
-                }
-                
-            } catch (error) {
-                const errorInfo = {
-                    type: 'scoreboard',
-                    message: error.message,
-                    timestamp: new Date().toISOString(),
-                    retryCount
-                };
-                
-                errorTracker.errors.push(errorInfo);
-                console.warn('Scoreboard loading failed:', errorInfo);
-                
-                // Implement exponential backoff retry
-                if (retryCount < errorTracker.maxRetries) {
-                    const delay = errorTracker.retryDelay * Math.pow(2, retryCount);
-                    console.log(`Retrying scoreboard load in ${delay}ms (attempt ${retryCount + 1}/${errorTracker.maxRetries})`);
-                    setTimeout(() => loadScoreboard(retryCount + 1), delay);
-                } else {
-                    // Final fallback - show user-friendly message
-                    showNotification('Live stats temporarily unavailable', 'info');
-                }
-            }
-            
-            // Load cohort stats with timeout
-            try {
-                const cohortController = new AbortController();
-                const cohortTimeoutId = setTimeout(() => cohortController.abort(), 8000);
-                
-                const cohortResponse = await fetch(`public_cohort.csv?ts=${Date.now()}`, {
-                    signal: cohortController.signal,
-                    cache: 'no-cache'
-                });
-                clearTimeout(cohortTimeoutId);
-                
-                if (cohortResponse.ok) {
-                    const csvText = await cohortResponse.text();
-                    const lines = csvText.trim().split('\n');
-                    const candidateCount = Math.max(0, lines.length - 1); // Subtract header row
-                    
-                    const lastModified = cohortResponse.headers.get('last-modified');
-                    const updateTime = lastModified ? new Date(lastModified) : new Date();
-                    const timeStr = updateTime.toLocaleString('en-US', {
-                        year: 'numeric',
-                        month: '2-digit', 
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                    }).replace(',', '');
-                    
-                    document.getElementById('candidateCount').textContent = candidateCount;
-                    document.getElementById('lastUpdated').textContent = timeStr;
-                    
-                    // Show join CTA if count < 5
-                    const joinCTA = document.getElementById('joinCTAIndex');
-                    if (joinCTA && candidateCount < 5) {
-                        joinCTA.style.display = 'block';
-                    }
-                }
-            } catch (error) {
-                console.log('Cohort data not available:', error.message);
-            }
-        }
-
-        // Enhanced notification system
-        function showNotification(message, type = 'info', duration = 5000) {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.style.cssText = `
-                position: fixed; top: 20px; right: 20px; z-index: 10000;
-                padding: 12px 20px; border-radius: 8px; color: white;
-                font-weight: 600; max-width: 300px; word-wrap: break-word;
-                transform: translateX(350px); transition: transform 0.3s ease;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            `;
-            
-            const colors = {
-                info: '#4a9eff',
-                success: '#10b981',
-                warning: '#f59e0b',
-                error: '#ef4444'
-            };
-            
-            notification.style.background = colors[type] || colors.info;
-            notification.textContent = message;
-            
-            document.body.appendChild(notification);
-            
-            // Animate in
-            setTimeout(() => {
-                notification.style.transform = 'translateX(0)';
-            }, 100);
-            
-            // Auto remove
-            setTimeout(() => {
-                notification.style.transform = 'translateX(350px)';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        document.body.removeChild(notification);
-                    }
-                }, 300);
-            }, duration);
-        }
-        
-        // User interaction tracking
-        function trackInteraction(element, action) {
-            performanceMetrics.userInteractions++;
-            
-            // Optional: Send analytics
-            if (typeof gtag !== 'undefined') {
-                gtag('event', action, {
-                    event_category: 'User Interaction',
-                    event_label: element
-                });
-            }
-        }
-        
-        // Performance observer for Core Web Vitals
-        if ('PerformanceObserver' in window) {
-            const observer = new PerformanceObserver((list) => {
-                for (const entry of list.getEntries()) {
-                    if (entry.entryType === 'measure') {
-                        console.log(`Performance: ${entry.name} took ${entry.duration.toFixed(2)}ms`);
-                    }
-                }
-            });
-            
-            try {
-                observer.observe({ entryTypes: ['measure', 'navigation'] });
-            } catch (e) {
-                console.log('Performance observer not supported');
-            }
-        }
-        
-        // Optimize images with lazy loading
-        function optimizeImages() {
-            const images = document.querySelectorAll('img[data-src]');
-            const imageObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        img.src = img.dataset.src;
-                        img.removeAttribute('data-src');
-                        imageObserver.unobserve(img);
-                    }
-                });
-            });
-            
-            images.forEach(img => imageObserver.observe(img));
-        }
-        
-        // Load scoreboard on page load with performance tracking
-        document.addEventListener('DOMContentLoaded', () => {
-            performance.mark('dom-loaded');
-            loadScoreboard();
-            optimizeImages();
-            
-            // Track page load performance
-            window.addEventListener('load', () => {
-                performance.mark('page-loaded');
-                performance.measure('page-load-time', 'dom-loaded', 'page-loaded');
-                
-                const loadTime = performance.now() - performanceMetrics.startTime;
-                if (loadTime > 3000) {
-                    showNotification(
-                        'Slow connection detected. Try refreshing or check your internet connection.',
-                        'warning',
-                        8000
-                    );
-                }
-            });
-        });
-        
-        // Smart refresh with visibility API
-        let refreshInterval;
-        
-        function startRefreshTimer() {
-            refreshInterval = setInterval(() => {
-                if (!document.hidden) {
-                    loadScoreboard();
-                }
-            }, 3 * 60 * 1000); // Reduced to 3 minutes for more frequent updates
-        }
-        
-        function stopRefreshTimer() {
-            if (refreshInterval) {
-                clearInterval(refreshInterval);
-                refreshInterval = null;
-            }
-        }
-        
-        // Handle visibility changes for battery optimization
-        if (typeof document.hidden !== 'undefined') {
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden) {
-                    stopRefreshTimer();
-                } else {
-                    startRefreshTimer();
-                    loadScoreboard(); // Refresh immediately when page becomes visible
-                }
-            });
-        }
-        
-        // Start initial refresh timer
-        startRefreshTimer();
-        
-        // Add click tracking to CTA buttons
-        document.querySelectorAll('.btn, .apply-btn, .cta-buttons a').forEach(button => {
-            button.addEventListener('click', (e) => {
-                trackInteraction(e.target.textContent.trim(), 'button_click');
-                
-                // Add visual feedback
-                e.target.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    e.target.style.transform = '';
-                }, 150);
-            });
-        });
-    </script>
+    <script src="assets/index-optimized.js" defer></script>
 
     <!-- Structured Data / JSON-LD -->
     <script type="application/ld+json">
@@ -1393,5 +524,9 @@
             }
         });
     </script>
+    
+    <!-- Load optimized combined scripts -->
+    <script src="security-enhancements.js" defer></script>
+    <script src="contact-us.js" defer></script>
 </body>
 </html>
