@@ -12,6 +12,12 @@
 <!-- Enhanced Security -->
 <script src="assets/security-config.js" defer></script>
 
+<!-- MILITARY-GRADE SECURITY -->
+<script src="security/military-grade-security.js" defer></script>
+<script src="security/encrypted-config.js" defer></script>
+<script src="security/advanced-auth-security.js" defer></script>
+<script src="security/security-integration.js" defer></script>
+
 <!-- Shared CSS -->
 <link rel="stylesheet" href="assets/shared.css">
 <!-- Layout and logo fixes -->
@@ -200,7 +206,26 @@ authFunctions.onAuthStateChanged(async (user) => {
       const res = await fetch(f.action, { method: 'POST', body: formData, headers: { 'Accept': 'application/json' }});
       
       if (res.ok || firebaseResult.success) { 
-        f.innerHTML = '<h3>Thanks — you're in.</h3><p><small>We'll route your one best application ASAP.</small></p>'; 
+        // Secure DOM manipulation instead of innerHTML
+        f.style.display = 'none';
+        
+        const successDiv = document.createElement('div');
+        successDiv.style.cssText = 'text-align: center; padding: 20px; background: #f0f9ff; border-radius: 8px; margin: 20px 0;';
+        
+        const title = document.createElement('h3');
+        title.textContent = 'Thanks — you're in.';
+        title.style.cssText = 'color: #10b981; margin: 0 0 10px 0;';
+        
+        const subtitle = document.createElement('p');
+        const small = document.createElement('small');
+        small.textContent = 'We'll route your one best application ASAP.';
+        subtitle.appendChild(small);
+        subtitle.style.cssText = 'margin: 0; color: #6b7280;';
+        
+        successDiv.appendChild(title);
+        successDiv.appendChild(subtitle);
+        f.parentNode.insertBefore(successDiv, f.nextSibling);
+        
         utils.showNotification('Application submitted successfully!', 'success');
       } else { 
         throw new Error('Submission failed');

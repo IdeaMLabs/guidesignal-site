@@ -1,12 +1,12 @@
 {
   "median_reply_hours_24h": 0,
   "reply_rate_24h": 0,
-  "interview_rate_7d": 33.3,
+  "interview_rate_7d": 0,
   "certified_jobs": 0,
   "pledged_employers": 2,
   "open_tickets": 2,
   "acks_pending": 0,
-  "oldest_ticket_hours": 65.4557605925,
+  "oldest_ticket_hours": 283.4605084438889,
   "intro_interview_rate": 33.3,
   "intro_hire_rate": 0.0,
   "training_events": 1,
@@ -19,10 +19,10 @@
     "load_penalty_weight": 0.05,
     "interview_weight": 0.1
   },
-  "slots_today": 0,
-  "next_review": "Tomorrow 10:00 / 16:00 ET",
+  "slots_today": 3,
+  "next_review": "10:00 / 16:00 ET",
   "last24_apps": 0,
   "last24_replied": 0,
   "demo_conversions_today": 0,
-  "last_updated": "2025-09-02T23:54:06.067041"
+  "last_updated": "2025-09-12T01:54:23.144892"
 }
