@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GuideSignal - Jobs that reply</title>
+  <title>GuideSignal - Where a Job Finds You</title>
   
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Find jobs that reply within 48 hours. Recruiters pledge to respond quickly to all applications on GuideSignal.">
+  <meta name="description" content="The fastest way to work where you belong. AI matches your skills with jobs that reply in 48 hours.">
   <meta name="keywords" content="job search, fast replies, career opportunities, recruitment, 48 hour response">
   <meta name="author" content="GuideSignal">
   
@@ -19,15 +19,15 @@
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://guide-signal.com">
-  <meta property="og:title" content="GuideSignal - Jobs that reply">
-  <meta property="og:description" content="Recruiters pledge to respond within 48 hours">
+  <meta property="og:title" content="GuideSignal - Where a Job Finds You">
+  <meta property="og:description" content="The fastest way to work where you belong">
   <meta property="og:site_name" content="GuideSignal">
   
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://guide-signal.com">
-  <meta name="twitter:title" content="GuideSignal - Jobs that reply">
-  <meta name="twitter:description" content="Recruiters pledge to respond within 48 hours">
+  <meta name="twitter:title" content="GuideSignal - Where a Job Finds You">
+  <meta name="twitter:description" content="The fastest way to work where you belong">
   
   <!-- Optimized font loading -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,9 +56,9 @@
   }
   </script>
   
-  <!-- Global CSS Reset and Minimalist Styling -->
+  <!-- Jobs/Ive Minimalist Design System -->
   <style>
-    /* Global Reset Following Jobs/Ive Philosophy */
+    /* Global Reset */
     * {
       margin: 0;
       padding: 0;
@@ -66,213 +66,352 @@
     }
     
     body {
-      font-family: 'Inter', 'Helvetica Neue', sans-serif;
-      color: #333;
-      background: #fff;
-      line-height: 1.6;
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      color: #1a365d;
+      background: #ffffff;
+      line-height: 1.4;
+      overflow-x: hidden;
+    }
+    
+    /* Hero Section - Navy Background */
+    .hero {
+      background: #1a365d;
+      color: #ffffff;
       text-align: center;
+      padding: 120px 20px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 0 20px;
     }
     
-    /* Typography Hierarchy */
-    h1 {
-      color: #000;
+    .hero h1 {
+      font-size: clamp(48px, 8vw, 72px);
       font-weight: 700;
-      font-size: clamp(42px, 8vw, 60px);
-      margin-bottom: 20px;
-      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
     }
     
-    .subhead {
-      font-size: clamp(18px, 4vw, 24px);
-      color: #333;
+    .hero .subheadline {
+      font-size: clamp(20px, 4vw, 28px);
       font-weight: 400;
-      margin-bottom: 60px;
-      max-width: 600px;
-      line-height: 1.5;
+      margin-bottom: 48px;
+      opacity: 0.9;
+      max-width: 500px;
     }
     
-    /* Global Readability Fixes - Mini1 Style */
-    .hero-subtext, p, li, span {
-      color: #333 !important;   /* darker text for readability */
-      font-size: 16px;          /* enforce min body font size */
-      font-weight: 400;         /* normal readable weight */
-      line-height: 1.5;
-    }
-
-    .hero-subtext {
-      font-size: 18px !important;
-      font-weight: 500 !important; /* medium weight for emphasis */
-    }
-
-    h1, h2, h3 {
-      color: #000 !important;
-      font-weight: 700 !important;
-    }
-    
-    p, li {
-      font-size: 16px;
-      color: #333;
-    }
-    
-    /* Single CTA Button */
-    .cta {
-      background: #007bff;
-      color: #fff;
+    .hero .cta-primary {
+      background: #ffffff;
+      color: #1a365d;
       font-size: 18px;
       font-weight: 600;
-      padding: 16px 36px;
+      padding: 18px 40px;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       text-decoration: none;
       display: inline-block;
       transition: all 0.2s ease;
-      margin-bottom: 60px;
-      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+      margin-bottom: 24px;
     }
     
-    .cta:hover {
-      background: #0056b3;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+    .hero .cta-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
     
-    .cta:active {
-      transform: translateY(0);
+    .hero .founding-member {
+      font-size: 14px;
+      opacity: 0.7;
+      color: #cbd5e0;
     }
     
-    /* Large Centered Icon */
-    .hero-icon {
-      width: 120px;
-      height: 120px;
-      margin: 0 auto 60px;
-      background: linear-gradient(135deg, #007bff, #0056b3);
+    /* How It Works Section */
+    .how-it-works {
+      background: #ffffff;
+      padding: 100px 20px;
+      text-align: center;
+    }
+    
+    .steps {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-width: 800px;
+      margin: 0 auto;
+      gap: 60px;
+    }
+    
+    .step {
+      flex: 1;
+      max-width: 200px;
+    }
+    
+    .step-icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 20px;
+      border: 2px solid #1a365d;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      box-shadow: 0 12px 40px rgba(0, 123, 255, 0.25);
-      transition: all 0.3s ease;
+      font-size: 24px;
+      color: #1a365d;
     }
     
-    .hero-icon:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 48px rgba(0, 123, 255, 0.3);
+    .step-text {
+      font-size: 18px;
+      font-weight: 500;
+      color: #1a365d;
+      margin-bottom: 40px;
     }
     
-    .hero-icon::before {
-      content: "💬";
-      font-size: 48px;
-      color: #fff;
+    .early-members {
+      font-size: 14px;
+      color: #718096;
     }
     
-    /* Learn More Link */
-    .learn-more {
-      color: #007bff;
-      text-decoration: none;
+    /* Experience Preview Cards */
+    .experience-preview {
+      background: #ffffff;
+      padding: 80px 20px;
+      text-align: center;
+    }
+    
+    .preview-cards {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+    
+    .preview-card {
+      flex: 1;
+      border: 2px solid #1a365d;
+      border-radius: 8px;
+      padding: 30px 20px;
+      background: #ffffff;
+    }
+    
+    .preview-card h3 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1a365d;
+    }
+    
+    .preview-caption {
+      font-size: 18px;
+      font-weight: 500;
+      color: #1a365d;
+      margin-top: 20px;
+    }
+    
+    /* Recruiter Pledge Section */
+    .recruiter-pledge {
+      background: #ffffff;
+      padding: 80px 20px;
+      text-align: center;
+    }
+    
+    .pledge-badge {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 30px;
+      background: #1a365d;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 32px;
+    }
+    
+    .pledge-text {
+      font-size: 20px;
+      font-weight: 500;
+      color: #1a365d;
+      margin-bottom: 40px;
+    }
+    
+    .cta-secondary {
+      background: #1a365d;
+      color: #ffffff;
       font-size: 16px;
       font-weight: 600;
-      margin-top: 40px;
+      padding: 16px 32px;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
       display: inline-block;
+      transition: all 0.2s ease;
     }
     
-    .learn-more:hover {
-      text-decoration: underline;
+    .cta-secondary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(26, 54, 93, 0.3);
     }
     
-    /* Minimal Footer */
-    .footer {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 14px;
-      color: #333;
+    /* Trust & Fairness Section */
+    .trust-fairness {
+      background: #ffffff;
+      padding: 80px 20px;
+      text-align: center;
+    }
+    
+    .trust-points {
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    
+    .trust-points li {
+      font-size: 18px;
+      color: #1a365d;
+      margin-bottom: 20px;
+      list-style: none;
+      position: relative;
+      padding-left: 30px;
+    }
+    
+    .trust-points li::before {
+      content: "•";
+      color: #1a365d;
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+    }
+    
+    /* Footer CTA */
+    .footer-cta {
+      background: #1a365d;
+      color: #ffffff;
+      padding: 80px 20px;
+      text-align: center;
+    }
+    
+    .footer-cta h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 40px;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    
+    .cta-button {
+      background: #ffffff;
+      color: #1a365d;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 16px 32px;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
     }
     
     /* Mobile Responsive */
     @media (max-width: 768px) {
-      body {
-        padding: 0 15px;
+      .steps {
+        flex-direction: column;
+        gap: 40px;
       }
       
-      h1 {
-        font-size: 42px;
-        margin-bottom: 15px;
+      .preview-cards {
+        flex-direction: column;
+        gap: 20px;
       }
       
-      .subhead {
-        font-size: 18px;
-        margin-bottom: 50px;
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
       }
       
-      .hero-icon {
-        width: 100px;
-        height: 100px;
-        margin-bottom: 50px;
-      }
-      
-      .hero-icon::before {
-        font-size: 40px;
-      }
-      
-      .cta {
-        font-size: 16px;
-        padding: 14px 28px;
-        margin-bottom: 50px;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 36px;
-      }
-      
-      .subhead {
-        font-size: 16px;
-      }
-      
-      .hero-icon {
-        width: 80px;
-        height: 80px;
-        margin-bottom: 40px;
-      }
-      
-      .hero-icon::before {
-        font-size: 32px;
+      .trust-points {
+        text-align: center;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Main Hero Section -->
-  <main>
-    <!-- Large Centered Icon -->
-    <div class="hero-icon" role="img" aria-label="Reply signal icon"></div>
-    
-    <!-- Main Headline -->
-    <h1>Jobs that reply.</h1>
-    
-    <!-- Subhead -->
-    <p class="subhead">Recruiters pledge to respond within 48 hours.</p>
-    
-    <!-- Single CTA -->
-    <a href="auth.html" class="cta">Get Started Free</a>
-    
-    <!-- Learn More Link -->
-    <a href="learn-more.html" class="learn-more">Learn More</a>
-  </main>
-  
-  <!-- Minimal Footer -->
-  <footer class="footer">
-    <p>&copy; 2024 GuideSignal</p>
-  </footer>
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Where a Job Finds You.</h1>
+    <p class="subheadline">The fastest way to work where you belong.</p>
+    <a href="auth.html" class="cta-primary">Get Started Free</a>
+    <p class="founding-member">Be a founding member.</p>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works">
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon">⚡</div>
+        <div class="step-text">Show your skills.</div>
+      </div>
+      <div class="step">
+        <div class="step-icon">🤖</div>
+        <div class="step-text">AI matches you.</div>
+      </div>
+      <div class="step">
+        <div class="step-icon">💬</div>
+        <div class="step-text">Replies in 48 hours.</div>
+      </div>
+    </div>
+    <p class="early-members">Early members get priority visibility.</p>
+  </section>
+
+  <!-- Experience Preview Section -->
+  <section class="experience-preview">
+    <div class="preview-cards">
+      <div class="preview-card">
+        <h3>Fit 82</h3>
+      </div>
+      <div class="preview-card">
+        <h3>Interview Chance 42%</h3>
+      </div>
+      <div class="preview-card">
+        <h3>Reply: 48h</h3>
+      </div>
+    </div>
+    <p class="preview-caption">Clear. Fair. Fast.</p>
+  </section>
+
+  <!-- Recruiter Pledge Section -->
+  <section class="recruiter-pledge">
+    <div class="pledge-badge">✓</div>
+    <h2 class="pledge-text">Stand out. Be first. Be trusted.</h2>
+    <a href="auth.html" class="cta-secondary">Join Free</a>
+  </section>
+
+  <!-- Trust & Fairness Section -->
+  <section class="trust-fairness">
+    <ul class="trust-points">
+      <li>Transparent AI</li>
+      <li>Fair by design</li>
+      <li>Privacy first</li>
+    </ul>
+  </section>
+
+  <!-- Footer CTA -->
+  <section class="footer-cta">
+    <h2>Be a founding member. Join free today.</h2>
+    <div class="cta-buttons">
+      <a href="auth.html?role=jobseeker" class="cta-button">Job Seeker</a>
+      <a href="auth.html?role=recruiter" class="cta-button">Recruiter</a>
+    </div>
+  </section>
   
   <!-- Minimal Analytics (if needed) -->
   <script>
