@@ -5,10 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GuideSignal - Where a Job Finds You</title>
   
+  <!-- SSL/HTTPS Enforcement -->
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains; preload">
+  
   <!-- SEO Meta Tags -->
   <meta name="description" content="The fastest way to work where you belong. AI matches your skills with jobs that reply in 48 hours.">
   <meta name="keywords" content="job search, fast replies, career opportunities, recruitment, 48 hour response">
   <meta name="author" content="GuideSignal">
+  
+  <!-- HTTPS/WWW Redirect Script -->
+  <script>
+    // Force HTTPS and WWW redirect
+    if (location.protocol !== 'https:' || !location.hostname.startsWith('www.')) {
+      const correctUrl = 'https://www.' + location.hostname.replace('www.', '') + location.pathname + location.search;
+      location.replace(correctUrl);
+    }
+  </script>
   
   <!-- MILITARY-GRADE SECURITY -->
   <script src="security/military-grade-security.js" defer></script>
@@ -18,14 +31,14 @@
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://guide-signal.com">
+  <meta property="og:url" content="https://www.guide-signal.com">
   <meta property="og:title" content="GuideSignal - Where a Job Finds You">
   <meta property="og:description" content="The fastest way to work where you belong">
   <meta property="og:site_name" content="GuideSignal">
   
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="https://guide-signal.com">
+  <meta name="twitter:url" content="https://www.guide-signal.com">
   <meta name="twitter:title" content="GuideSignal - Where a Job Finds You">
   <meta name="twitter:description" content="The fastest way to work where you belong">
   
@@ -42,7 +55,7 @@
     "@type": "WebSite",
     "name": "GuideSignal",
     "description": "Job platform with guaranteed 48-hour response times from recruiters",
-    "url": "https://guide-signal.com",
+    "url": "https://www.guide-signal.com",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "/jobs.html?q={search_term_string}",
