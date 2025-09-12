@@ -69,6 +69,16 @@
   }
   </script>
   
+  <!-- Register Optimized Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw-optimized.js')
+          .catch(() => {/* Silently fail if SW not available */});
+      });
+    }
+  </script>
+  
   <!-- Jobs/Ive Minimalist Design System -->
   <style>
     /* Global Reset */
@@ -84,6 +94,43 @@
       background: #ffffff;
       line-height: 1.4;
       overflow-x: hidden;
+    }
+    
+    /* Accessibility Improvements */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 6px;
+      background: #1a365d;
+      color: white;
+      padding: 8px;
+      text-decoration: none;
+      border-radius: 4px;
+      z-index: 1000;
+    }
+    
+    .skip-link:focus {
+      top: 6px;
+    }
+    
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    
+    /* Enhanced Focus Styles */
+    .cta-primary:focus,
+    .cta-secondary:focus,
+    .cta-button:focus {
+      outline: 3px solid #fbbf24;
+      outline-offset: 2px;
     }
     
     /* Hero Section - Navy Background */
@@ -334,6 +381,27 @@
       box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
     }
     
+    /* High Contrast Mode Support */
+    @media (prefers-contrast: high) {
+      .hero {
+        background: #000000;
+      }
+      
+      .preview-card {
+        border-color: #000000;
+        border-width: 3px;
+      }
+    }
+    
+    /* Reduced Motion Support */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    
     /* Mobile Responsive */
     @media (max-width: 768px) {
       .steps {
@@ -358,73 +426,82 @@
   </style>
 </head>
 <body>
+  <!-- Skip to main content for screen readers -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  
   <!-- Hero Section -->
-  <section class="hero">
+  <section class="hero" role="banner">
     <h1>Where a Job Finds You.</h1>
     <p class="subheadline">The fastest way to work where you belong.</p>
-    <a href="auth.html" class="cta-primary">Get Started Free</a>
-    <p class="founding-member">Be a founding member.</p>
+    <a href="auth.html" class="cta-primary" aria-describedby="founding-member">Get Started Free</a>
+    <p class="founding-member" id="founding-member">Be a founding member.</p>
   </section>
 
-  <!-- How It Works Section -->
-  <section class="how-it-works">
-    <div class="steps">
-      <div class="step">
-        <div class="step-icon">⚡</div>
-        <div class="step-text">Show your skills.</div>
+  <!-- Main Content -->
+  <main id="main-content" role="main">
+    <!-- How It Works Section -->
+    <section class="how-it-works" aria-labelledby="how-it-works-heading">
+      <h2 id="how-it-works-heading" class="sr-only">How It Works</h2>
+      <div class="steps" role="list">
+        <div class="step" role="listitem">
+          <div class="step-icon" aria-hidden="true">⚡</div>
+          <div class="step-text">Show your skills.</div>
+        </div>
+        <div class="step" role="listitem">
+          <div class="step-icon" aria-hidden="true">🤖</div>
+          <div class="step-text">AI matches you.</div>
+        </div>
+        <div class="step" role="listitem">
+          <div class="step-icon" aria-hidden="true">💬</div>
+          <div class="step-text">Replies in 48 hours.</div>
+        </div>
       </div>
-      <div class="step">
-        <div class="step-icon">🤖</div>
-        <div class="step-text">AI matches you.</div>
-      </div>
-      <div class="step">
-        <div class="step-icon">💬</div>
-        <div class="step-text">Replies in 48 hours.</div>
-      </div>
-    </div>
-    <p class="early-members">Early members get priority visibility.</p>
-  </section>
+      <p class="early-members">Early members get priority visibility.</p>
+    </section>
 
-  <!-- Experience Preview Section -->
-  <section class="experience-preview">
-    <div class="preview-cards">
-      <div class="preview-card">
-        <h3>Fit 82</h3>
+    <!-- Experience Preview Section -->
+    <section class="experience-preview" aria-labelledby="preview-heading">
+      <h2 id="preview-heading" class="sr-only">Experience Preview</h2>
+      <div class="preview-cards" role="list">
+        <div class="preview-card" role="listitem">
+          <h3><span class="sr-only">Job match score: </span>Fit 82</h3>
+        </div>
+        <div class="preview-card" role="listitem">
+          <h3><span class="sr-only">Estimated </span>Interview Chance 42%</h3>
+        </div>
+        <div class="preview-card" role="listitem">
+          <h3><span class="sr-only">Guaranteed </span>Reply: 48h</h3>
+        </div>
       </div>
-      <div class="preview-card">
-        <h3>Interview Chance 42%</h3>
-      </div>
-      <div class="preview-card">
-        <h3>Reply: 48h</h3>
-      </div>
-    </div>
-    <p class="preview-caption">Clear. Fair. Fast.</p>
-  </section>
+      <p class="preview-caption">Clear. Fair. Fast.</p>
+    </section>
 
-  <!-- Recruiter Pledge Section -->
-  <section class="recruiter-pledge">
-    <div class="pledge-badge">✓</div>
-    <h2 class="pledge-text">Stand out. Be first. Be trusted.</h2>
-    <a href="auth.html" class="cta-secondary">Join Free</a>
-  </section>
+    <!-- Recruiter Pledge Section -->
+    <section class="recruiter-pledge" aria-labelledby="pledge-heading">
+      <div class="pledge-badge" aria-hidden="true">✓</div>
+      <h2 id="pledge-heading" class="pledge-text">Stand out. Be first. Be trusted.</h2>
+      <a href="auth.html" class="cta-secondary">Join Free</a>
+    </section>
 
-  <!-- Trust & Fairness Section -->
-  <section class="trust-fairness">
-    <ul class="trust-points">
-      <li>Transparent AI</li>
-      <li>Fair by design</li>
-      <li>Privacy first</li>
-    </ul>
-  </section>
+    <!-- Trust & Fairness Section -->
+    <section class="trust-fairness" aria-labelledby="trust-heading">
+      <h2 id="trust-heading" class="sr-only">Our Commitments</h2>
+      <ul class="trust-points">
+        <li>Transparent AI</li>
+        <li>Fair by design</li>
+        <li>Privacy first</li>
+      </ul>
+    </section>
+  </main>
 
   <!-- Footer CTA -->
-  <section class="footer-cta">
+  <footer class="footer-cta" role="contentinfo">
     <h2>Be a founding member. Join free today.</h2>
     <div class="cta-buttons">
       <a href="auth.html?role=jobseeker" class="cta-button">Job Seeker</a>
       <a href="auth.html?role=recruiter" class="cta-button">Recruiter</a>
     </div>
-  </section>
+  </footer>
   
   <!-- Minimal Analytics (if needed) -->
   <script>
@@ -443,5 +520,26 @@
 
   <!-- Contact Us Component -->
   <script src="contact-us.js" defer></script>
+  
+  <!-- Performance Monitoring -->
+  <script>
+    // Monitor Core Web Vitals
+    if ('web-vital' in window) {
+      ['FCP', 'LCP', 'CLS', 'FID'].forEach(metric => {
+        new PerformanceObserver(list => {
+          const entries = list.getEntries();
+          entries.forEach(entry => {
+            // Send to analytics (implement as needed)
+            if (typeof gtag !== 'undefined') {
+              gtag('event', metric, {
+                value: Math.round(entry.value),
+                event_category: 'Web Vitals'
+              });
+            }
+          });
+        }).observe({entryTypes: [metric.toLowerCase()]});
+      });
+    }
+  </script>
 </body>
 </html>
