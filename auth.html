@@ -32,39 +32,71 @@
 
     <!-- HTTPS and Certificate Security -->
     <script>
-        // Enhanced HTTPS redirect with improved domain validation
+        // Enhanced HTTPS redirect with comprehensive SSL certificate handling
         (function() {
-            const isDev = location.hostname === 'localhost' || 
-                         location.hostname === '127.0.0.1' || 
-                         location.hostname.startsWith('192.168.') ||
-                         location.hostname.endsWith('.local');
-            
-            // Redirect non-www to www for SSL certificate compatibility
-            if (window.location.hostname === 'guide-signal.com' && !isDev) {
-                window.location.replace('https://www.guide-signal.com' + window.location.pathname + window.location.search + window.location.hash);
+            var isDev = location.hostname === 'localhost' ||
+                       location.hostname === '127.0.0.1' ||
+                       location.hostname.startsWith('192.168.') ||
+                       location.hostname.endsWith('.local');
+
+            console.log('Current hostname:', location.hostname);
+            console.log('Current protocol:', location.protocol);
+
+            // Skip all redirects in development
+            if (isDev) {
+                console.log('Development environment detected, skipping redirects');
                 return;
             }
 
-            // Validate allowed domains (both www and non-www for flexibility)
-            const validDomains = ['www.guide-signal.com', 'guide-signal.com', 'guidesignal.netlify.app', 'guidesignal.github.io'];
-            if (!validDomains.includes(window.location.hostname) && !isDev) {
-                console.error('Auth security: Unauthorized domain detected:', window.location.hostname);
-                return;
-            }
-            
-            // Force HTTPS in production (critical for auth security)
-            if (location.protocol !== 'https:' && !isDev) {
-                const allowedDomains = ['guide-signal.com', 'guidesignal.netlify.app', 'guidesignal.github.io'];
-                const currentDomain = location.hostname.toLowerCase();
-                
-                if (allowedDomains.some(domain => currentDomain.includes(domain))) {
-                    const httpsUrl = 'https://' + location.hostname + location.pathname + location.search + location.hash;
-                    console.log('Auth security: Redirecting to HTTPS:', httpsUrl);
-                    window.location.replace(httpsUrl);
-                } else {
-                    console.error('Auth security: Unauthorized domain detected:', currentDomain);
+            // Primary domain handling for SSL certificate compatibility
+            var currentHost = location.hostname.toLowerCase();
+            var targetDomain = 'www.guide-signal.com';
+
+            // Check if we need to redirect to the canonical domain
+            if (currentHost !== targetDomain) {
+                if (currentHost === 'guide-signal.com' ||
+                    currentHost.includes('github.io') ||
+                    currentHost.includes('githubpages.com') ||
+                    currentHost.includes('github.com')) {
+
+                    console.log('Redirecting to canonical domain:', targetDomain);
+                    var targetUrl = 'https://' + targetDomain + location.pathname + location.search + location.hash;
+                    window.location.replace(targetUrl);
+                    return;
                 }
             }
+
+            // Force HTTPS for all valid domains
+            if (location.protocol !== 'https:') {
+                var httpsUrl = 'https://' + location.hostname + location.pathname + location.search + location.hash;
+                console.log('Forcing HTTPS:', httpsUrl);
+                window.location.replace(httpsUrl);
+                return;
+            }
+
+            // Validate domain after redirects
+            var validDomains = [
+                'www.guide-signal.com',
+                'guide-signal.com',
+                'ideamlabs.github.io',
+                'guidesignal.netlify.app',
+                'guidesignal.github.io'
+            ];
+
+            var isValidDomain = false;
+            for (var i = 0; i < validDomains.length; i++) {
+                if (currentHost === validDomains[i] || currentHost.includes(validDomains[i])) {
+                    isValidDomain = true;
+                    break;
+                }
+            }
+
+            if (!isValidDomain) {
+                console.error('Auth security: Unauthorized domain detected:', currentHost);
+                // Don't block, but log for security monitoring
+            }
+
+            console.log('Domain validation complete for:', currentHost);
         })();
     </script>
     
@@ -472,7 +504,87 @@
         
         /* Adjust input padding to make room for toggle button */
         .password-container .form-input {
-            padding-right: 45px;
+            padding-right: 45px !important;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Enhanced password toggle visibility - Critical Fix */
+        .password-container {
+            position: relative !important;
+        }
+
+        .password-toggle {
+            /* Force absolute positioning and high z-index */
+            position: absolute !important;
+            right: 12px !important;
+            top: 50% !important;
+            z-index: 999 !important; /* Much higher z-index */
+
+            /* Ensure button is always visible */
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+
+            /* Force specific dimensions */
+            width: 24px !important;
+            height: 24px !important;
+            min-width: 24px !important;
+            min-height: 24px !important;
+
+            /* Clear all potential conflicts */
+            background: transparent !important;
+            border: none !important;
+            outline: none !important;
+
+            /* Emoji styling */
+            font-size: 16px !important;
+            line-height: 1 !important;
+            text-align: center !important;
+
+            /* Color and hover states */
+            color: #6b7280 !important;
+            cursor: pointer !important;
+
+            /* Cross-browser transform with fallbacks */
+            -webkit-transform: translateY(-50%) !important;
+            -moz-transform: translateY(-50%) !important;
+            -ms-transform: translateY(-50%) !important;
+            -o-transform: translateY(-50%) !important;
+            transform: translateY(-50%) !important;
+        }
+
+        .password-toggle:hover {
+            color: #374151 !important;
+            opacity: 0.8 !important;
+        }
+
+        .password-toggle:active,
+        .password-toggle:focus {
+            color: #1f2937 !important;
+            outline: 2px solid #4a9eff !important;
+            outline-offset: 2px !important;
+        }
+
+        /* Ensure form-input doesn't interfere */
+        .form-input {
+            position: relative !important;
+            z-index: 1 !important;
+        }
+
+        /* Specific fixes for confirm password field */
+        #signup-password-confirm {
+            padding-right: 50px !important;
+        }
+
+        /* Browser-specific fixes */
+        .ie-browser .password-toggle,
+        .edge-browser .password-toggle {
+            font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif !important;
+        }
+
+        .firefox-browser .password-toggle {
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif !important;
         }
     </style>
 </head>
@@ -647,6 +759,49 @@
     </main>
 
     <script>
+    // Password toggle button initialization and fallback
+    window.initializePasswordToggles = function() {
+        console.log('Initializing password toggle buttons...');
+
+        // Find all password containers
+        var containers = document.querySelectorAll('.password-container');
+
+        containers.forEach ? containers.forEach(function(container) {
+            initializeContainer(container);
+        }) : Array.prototype.forEach.call(containers, function(container) {
+            initializeContainer(container);
+        });
+
+        function initializeContainer(container) {
+            var input = container.querySelector('input[type="password"]');
+            var toggle = container.querySelector('.password-toggle');
+
+            if (input && !toggle) {
+                // Create missing toggle button
+                console.log('Creating missing toggle button for:', input.id);
+                var button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'password-toggle';
+                button.innerHTML = '👁️';
+                button.onclick = function() { window.togglePassword(input.id); };
+                container.appendChild(button);
+            }
+
+            if (toggle) {
+                // Ensure toggle is properly configured
+                toggle.style.position = 'absolute';
+                toggle.style.right = '12px';
+                toggle.style.top = '50%';
+                toggle.style.transform = 'translateY(-50%)';
+                toggle.style.zIndex = '999';
+                toggle.style.display = 'block';
+                toggle.style.visibility = 'visible';
+                toggle.style.opacity = '1';
+                console.log('Toggle button initialized for:', input ? input.id : 'unknown');
+            }
+        }
+    };
+
     // Cross-browser polyfills and compatibility fixes
     (function() {
         // Polyfill for older browsers
@@ -724,6 +879,11 @@
 
         // Generate role-specific fields for AI/ML optimization
         generateRoleSpecificFields(role);
+
+        // Ensure password toggles are initialized after form is shown
+        setTimeout(function() {
+            window.initializePasswordToggles();
+        }, 100);
     };
 
     // Generate role-specific fields optimized for AI/ML matching
@@ -949,6 +1109,32 @@
         document.querySelector(`input[name="signup-role"][value="${role}"]`).checked = true;
         proceedToSignup();
     };
+
+    // Initialize password toggles when DOM is ready
+    (function() {
+        function initWhenReady() {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(window.initializePasswordToggles, 100);
+                });
+            } else {
+                setTimeout(window.initializePasswordToggles, 100);
+            }
+        }
+
+        // Also initialize when window loads (fallback)
+        if (window.addEventListener) {
+            window.addEventListener('load', function() {
+                setTimeout(window.initializePasswordToggles, 200);
+            });
+        } else if (window.attachEvent) {
+            window.attachEvent('onload', function() {
+                setTimeout(window.initializePasswordToggles, 200);
+            });
+        }
+
+        initWhenReady();
+    })();
 
     // Global password toggle function (must be outside ES module for onclick access)
     window.togglePassword = function(inputId) {
