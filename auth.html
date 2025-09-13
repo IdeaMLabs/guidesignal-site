@@ -39,8 +39,14 @@
                          location.hostname.startsWith('192.168.') ||
                          location.hostname.endsWith('.local');
             
-            // Support both www and non-www domains
-            const validDomains = ['www.guide-signal.com', 'guide-signal.com'];
+            // Redirect www to non-www for SSL certificate compatibility
+            if (window.location.hostname === 'www.guide-signal.com' && !isDev) {
+                window.location.replace('https://guide-signal.com' + window.location.pathname + window.location.search + window.location.hash);
+                return;
+            }
+
+            // Validate allowed domains
+            const validDomains = ['guide-signal.com', 'guidesignal.netlify.app', 'guidesignal.github.io'];
             if (!validDomains.includes(window.location.hostname) && !isDev) {
                 console.error('Auth security: Unauthorized domain detected:', window.location.hostname);
                 return;
@@ -418,16 +424,40 @@
             position: absolute;
             right: 12px;
             top: 50%;
+
+            /* Cross-browser transform */
+            -webkit-transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            -o-transform: translateY(-50%);
             transform: translateY(-50%);
+
             background: none;
             border: none;
             cursor: pointer;
             padding: 4px;
             font-size: 16px;
             color: #6b7280;
-            z-index: 1;
+            z-index: 10; /* Increased z-index for better visibility */
+
+            /* Cross-browser transitions */
+            -webkit-transition: color 0.2s ease;
+            -moz-transition: color 0.2s ease;
+            -ms-transition: color 0.2s ease;
+            -o-transition: color 0.2s ease;
             transition: color 0.2s ease;
+
+            /* Cross-browser user-select */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
             user-select: none;
+
+            /* Ensure visibility across browsers */
+            display: inline-block;
+            min-width: 24px;
+            min-height: 24px;
+            line-height: 1;
         }
         
         .password-toggle:hover {
