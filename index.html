@@ -14,11 +14,11 @@
   <meta name="keywords" content="job search, fast replies, career opportunities, recruitment, 48 hour response">
   <meta name="author" content="GuideSignal">
   
-  <!-- HTTPS/Non-WWW Redirect Script -->
+  <!-- HTTPS/WWW Redirect Script -->
   <script>
-    // Force HTTPS and redirect www to non-www for SSL certificate compatibility
-    if (location.protocol !== 'https:' || location.hostname.startsWith('www.')) {
-      const correctUrl = 'https://' + location.hostname.replace('www.', '') + location.pathname + location.search;
+    // Force HTTPS and redirect non-www to www for SSL certificate compatibility
+    if (location.protocol !== 'https:' || !location.hostname.startsWith('www.')) {
+      const correctUrl = 'https://www.' + location.hostname.replace('www.', '') + location.pathname + location.search;
       location.replace(correctUrl);
     }
   </script>
@@ -31,14 +31,14 @@
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://guide-signal.com">
+  <meta property="og:url" content="https://www.guide-signal.com">
   <meta property="og:title" content="GuideSignal - Where a Job Finds You">
   <meta property="og:description" content="The fastest way to work where you belong">
   <meta property="og:site_name" content="GuideSignal">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="https://guide-signal.com">
+  <meta name="twitter:url" content="https://www.guide-signal.com">
   <meta name="twitter:title" content="GuideSignal - Where a Job Finds You">
   <meta name="twitter:description" content="The fastest way to work where you belong">
   

@@ -39,14 +39,14 @@
                          location.hostname.startsWith('192.168.') ||
                          location.hostname.endsWith('.local');
             
-            // Redirect www to non-www for SSL certificate compatibility
-            if (window.location.hostname === 'www.guide-signal.com' && !isDev) {
-                window.location.replace('https://guide-signal.com' + window.location.pathname + window.location.search + window.location.hash);
+            // Redirect non-www to www for SSL certificate compatibility
+            if (window.location.hostname === 'guide-signal.com' && !isDev) {
+                window.location.replace('https://www.guide-signal.com' + window.location.pathname + window.location.search + window.location.hash);
                 return;
             }
 
-            // Validate allowed domains
-            const validDomains = ['guide-signal.com', 'guidesignal.netlify.app', 'guidesignal.github.io'];
+            // Validate allowed domains (both www and non-www for flexibility)
+            const validDomains = ['www.guide-signal.com', 'guide-signal.com', 'guidesignal.netlify.app', 'guidesignal.github.io'];
             if (!validDomains.includes(window.location.hostname) && !isDev) {
                 console.error('Auth security: Unauthorized domain detected:', window.location.hostname);
                 return;
