@@ -103,18 +103,22 @@
             var currentHost = location.hostname.toLowerCase();
             var targetDomain = 'www.guide-signal.com';
 
-            // Check if we need to redirect to the canonical domain
-            if (currentHost !== targetDomain) {
-                if (currentHost === 'guide-signal.com' ||
-                    currentHost.includes('github.io') ||
-                    currentHost.includes('githubpages.com') ||
-                    currentHost.includes('github.com')) {
+            // Redirect non-www to www (consistent with CNAME and index.html)
+            if (currentHost === 'guide-signal.com' && location.protocol === 'https:') {
+                console.log('Redirecting apex domain to www subdomain');
+                var targetUrl = 'https://www.guide-signal.com' + location.pathname + location.search + location.hash;
+                window.location.replace(targetUrl);
+                return;
+            }
 
-                    console.log('Redirecting to canonical domain:', targetDomain);
-                    var targetUrl = 'https://' + targetDomain + location.pathname + location.search + location.hash;
-                    window.location.replace(targetUrl);
-                    return;
-                }
+            // Redirect GitHub Pages domains to custom domain
+            if (currentHost.includes('github.io') ||
+                currentHost.includes('githubpages.com') ||
+                currentHost.includes('github.com')) {
+                console.log('Redirecting GitHub Pages to custom domain');
+                var targetUrl = 'https://www.guide-signal.com' + location.pathname + location.search + location.hash;
+                window.location.replace(targetUrl);
+                return;
             }
 
             // Force HTTPS for all valid domains
@@ -125,10 +129,10 @@
                 return;
             }
 
-            // Validate domain after redirects
+            // Validate domain after redirects (should be www.guide-signal.com after redirects)
             var validDomains = [
                 'www.guide-signal.com',
-                'guide-signal.com',
+                'guide-signal.com', // Temporary during redirect
                 'ideamlabs.github.io',
                 'guidesignal.netlify.app',
                 'guidesignal.github.io'
@@ -144,7 +148,9 @@
 
             if (!isValidDomain) {
                 console.error('Auth security: Unauthorized domain detected:', currentHost);
-                // Don't block, but log for security monitoring
+                // Log for security monitoring but don't block in case of legitimate access
+            } else {
+                console.log('Domain validation successful for:', currentHost);
             }
 
             console.log('Domain validation complete for:', currentHost);
