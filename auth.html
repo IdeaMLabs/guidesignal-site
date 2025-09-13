@@ -5,6 +5,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <!-- Cross-browser detection and compatibility -->
+    <script>
+        // Browser detection for compatibility fixes
+        (function() {
+            var isIE = false || !!document.documentMode;
+            var isEdge = !isIE && !!window.StyleMedia;
+            var isFirefox = typeof InstallTrigger !== 'undefined';
+            var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+            var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+
+            // Add browser class to body for CSS targeting
+            window.addEventListener ? window.addEventListener('load', function() {
+                var body = document.body;
+                if (isIE) body.className += ' ie-browser';
+                if (isEdge) body.className += ' edge-browser';
+                if (isFirefox) body.className += ' firefox-browser';
+                if (isChrome) body.className += ' chrome-browser';
+                if (isSafari) body.className += ' safari-browser';
+            }) : window.attachEvent('onload', function() {
+                var body = document.body;
+                if (isIE) body.className += ' ie-browser ie-fallback';
+            });
+        })();
+    </script>
+
     <!-- HTTPS and Certificate Security -->
     <script>
         // Enhanced HTTPS redirect with improved domain validation
@@ -67,7 +92,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <style>
-        /* CSS Variables */
+        /* CSS Variables with IE11 fallbacks */
         :root {
             /* Color variables */
             --primary-50: #eff6ff;
@@ -78,33 +103,76 @@
             --gray-200: #e5e7eb;
             --gray-600: #4b5563;
             --gray-900: #111827;
-            
+
             /* Spacing variables */
             --space-3: 0.75rem;
             --space-4: 1rem;
             --space-6: 1.5rem;
             --space-8: 2rem;
-            
+
             /* Border radius */
             --radius: 0.375rem;
             --radius-lg: 0.5rem;
             --radius-xl: 0.75rem;
-            
-            /* Shadows */
+
+            /* Shadows with cross-browser support */
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
             --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            
+
             /* Transitions */
             --transition: all 0.2s ease;
         }
+
+        /* IE11 and older browser fallbacks */
+        .ie-fallback {
+            /* Color fallbacks */
+            color: #111827;
+            background-color: #f9fafb;
+        }
+
+        .ie-fallback .auth-card {
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+        }
+
+        .ie-fallback .btn {
+            background-color: #4a9eff;
+            color: #ffffff;
+            padding: 0.75rem 1rem;
+        }
         
-        /* Auth page specific styles */
+        /* Auth page specific styles with cross-browser compatibility */
         body {
+            /* Cross-browser gradient support */
+            background: #f9fafb; /* Fallback for IE */
+            background: -webkit-linear-gradient(135deg, var(--gray-50) 0%, var(--primary-50) 100%);
+            background: -moz-linear-gradient(135deg, var(--gray-50) 0%, var(--primary-50) 100%);
+            background: -ms-linear-gradient(135deg, var(--gray-50) 0%, var(--primary-50) 100%);
+            background: -o-linear-gradient(135deg, var(--gray-50) 0%, var(--primary-50) 100%);
             background: linear-gradient(135deg, var(--gray-50) 0%, var(--primary-50) 100%);
+
+            /* Cross-browser flexbox support */
+            display: -webkit-box;      /* Safari 6.1+ */
+            display: -webkit-flex;     /* Safari 6.1+ */
+            display: -moz-box;         /* Firefox 19 */
+            display: -ms-flexbox;      /* IE 10 */
             display: flex;
+
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -moz-box-align: center;
+            -ms-flex-align: center;
             align-items: center;
+
+            -webkit-box-pack: center;
+            -webkit-justify-content: center;
+            -moz-box-pack: center;
+            -ms-flex-pack: center;
             justify-content: center;
+
             min-height: 100vh;
+            min-height: -webkit-fill-available; /* Safari mobile fix */
         }
         
         .auth-container {
@@ -154,24 +222,54 @@
         }
         
         .auth-tabs {
+            /* Cross-browser flexbox */
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-box;
+            display: -ms-flexbox;
             display: flex;
+
             margin-bottom: var(--space-6);
             background: var(--gray-100);
+
+            /* Cross-browser border-radius */
+            -webkit-border-radius: var(--radius);
+            -moz-border-radius: var(--radius);
             border-radius: var(--radius);
+
             padding: 4px;
         }
         
         .auth-tab {
+            /* Cross-browser flex */
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            -moz-box-flex: 1;
+            -ms-flex: 1;
             flex: 1;
+
             padding: var(--space-3);
             text-align: center;
             background: transparent;
             border: none;
+
+            /* Cross-browser border-radius with calc fallback */
+            border-radius: 4px; /* IE fallback */
+            -webkit-border-radius: calc(var(--radius) - 2px);
+            -moz-border-radius: calc(var(--radius) - 2px);
             border-radius: calc(var(--radius) - 2px);
+
             cursor: pointer;
             font-weight: 500;
             color: var(--gray-600);
+
+            /* Cross-browser transitions */
+            -webkit-transition: var(--transition);
+            -moz-transition: var(--transition);
+            -ms-transition: var(--transition);
+            -o-transition: var(--transition);
             transition: var(--transition);
+
             font-family: inherit;
         }
         
@@ -302,7 +400,17 @@
         /* Password Container and Toggle Styles */
         .password-container {
             position: relative;
+            /* Cross-browser flexbox */
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-box;
+            display: -ms-flexbox;
             display: flex;
+
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -moz-box-align: center;
+            -ms-flex-align: center;
             align-items: center;
         }
         
@@ -509,16 +617,63 @@
     </main>
 
     <script>
+    // Cross-browser polyfills and compatibility fixes
+    (function() {
+        // Polyfill for older browsers
+        if (!document.querySelector) {
+            document.querySelector = function(selector) {
+                return document.getElementById(selector.replace('#', '')) || document.getElementsByClassName(selector.replace('.', ''))[0];
+            };
+        }
+
+        if (!document.querySelectorAll) {
+            document.querySelectorAll = function(selector) {
+                if (selector.startsWith('.')) {
+                    return document.getElementsByClassName(selector.replace('.', ''));
+                }
+                return document.getElementsByTagName(selector);
+            };
+        }
+
+        // IE polyfill for classList
+        if (!Element.prototype.classList) {
+            Element.prototype.classList = {
+                add: function(className) {
+                    if (!this.contains(className)) {
+                        this.className += ' ' + className;
+                    }
+                },
+                remove: function(className) {
+                    this.className = this.className.replace(new RegExp('(^|\\s)' + className + '(\\s|$)'), ' ').trim();
+                },
+                contains: function(className) {
+                    return this.className.indexOf(className) !== -1;
+                }
+            };
+        }
+
+        // Cross-browser event listener
+        window.addCrossBrowserEvent = function(element, event, handler) {
+            if (element.addEventListener) {
+                element.addEventListener(event, handler, false);
+            } else if (element.attachEvent) {
+                element.attachEvent('on' + event, handler);
+            } else {
+                element['on' + event] = handler;
+            }
+        };
+    })();
+
     // Proceed to signup form with selected role
     window.proceedToSignup = function() {
-        const selectedRole = document.querySelector('input[name="signup-role"]:checked');
+        var selectedRole = document.querySelector('input[name="signup-role"]:checked');
 
         if (!selectedRole) {
             alert('Please select your account type to continue.');
             return;
         }
 
-        const role = selectedRole.value;
+        var role = selectedRole.value;
 
         // Hide the choice screen
         document.getElementById('signup-choice').style.display = 'none';
@@ -543,8 +698,18 @@
 
     // Generate role-specific fields optimized for AI/ML matching
     function generateRoleSpecificFields(role) {
-        const container = document.getElementById('role-specific-fields');
-        let fieldsHTML = '';
+        var container = document.getElementById('role-specific-fields');
+        var fieldsHTML = '';
+
+        // Cross-browser innerHTML fallback
+        function setInnerHTML(element, html) {
+            try {
+                element.innerHTML = html;
+            } catch(e) {
+                // IE fallback
+                element.outerHTML = '<div id="' + element.id + '">' + html + '</div>';
+            }
+        }
 
         if (role === 'student') {
             fieldsHTML = `
@@ -744,7 +909,8 @@
                 </div>`;
         }
 
-        container.innerHTML = fieldsHTML;
+        // Use cross-browser innerHTML method
+        setInnerHTML(container, fieldsHTML);
     }
 
     // Legacy function for backward compatibility
