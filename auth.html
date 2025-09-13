@@ -723,9 +723,17 @@
             
             <div class="form-group">
                 <label class="form-label">Confirm Password</label>
-                <div class="password-container">
-                    <input type="password" class="form-input" id="signup-password-confirm" required>
-                    <button type="button" class="password-toggle" onclick="togglePassword('signup-password-confirm')">
+                <div class="password-container" style="position: relative !important; display: flex !important; align-items: center !important;">
+                    <input type="password" class="form-input" id="signup-password-confirm" required style="padding-right: 50px !important; width: 100% !important;">
+                    <button type="button" class="password-toggle" onclick="togglePassword('signup-password-confirm')"
+                            style="position: absolute !important; right: 12px !important; top: 50% !important;
+                                   transform: translateY(-50%) !important; z-index: 999 !important;
+                                   background: transparent !important; border: none !important;
+                                   font-size: 16px !important; cursor: pointer !important;
+                                   color: #6b7280 !important; display: block !important;
+                                   visibility: visible !important; opacity: 1 !important;
+                                   width: 24px !important; height: 24px !important;
+                                   line-height: 1 !important; text-align: center !important;">
                         👁️
                     </button>
                 </div>
@@ -759,6 +767,87 @@
     </main>
 
     <script>
+    // Specific function to ensure confirm password eye button visibility
+    window.ensureConfirmPasswordEyeButton = function() {
+        console.log('Ensuring confirm password eye button visibility...');
+
+        var confirmPasswordInput = document.getElementById('signup-password-confirm');
+        var confirmPasswordContainer = confirmPasswordInput ? confirmPasswordInput.parentNode : null;
+        var existingToggle = confirmPasswordContainer ? confirmPasswordContainer.querySelector('.password-toggle') : null;
+
+        if (!confirmPasswordInput) {
+            console.error('Confirm password input not found');
+            return;
+        }
+
+        if (!confirmPasswordContainer || !confirmPasswordContainer.classList.contains('password-container')) {
+            console.error('Confirm password container not found or incorrectly structured');
+            return;
+        }
+
+        // Force container styling
+        confirmPasswordContainer.style.position = 'relative';
+        confirmPasswordContainer.style.display = 'flex';
+        confirmPasswordContainer.style.alignItems = 'center';
+
+        // Force input styling
+        confirmPasswordInput.style.paddingRight = '50px';
+        confirmPasswordInput.style.width = '100%';
+
+        if (existingToggle) {
+            // Force existing toggle visibility and positioning
+            existingToggle.style.position = 'absolute';
+            existingToggle.style.right = '12px';
+            existingToggle.style.top = '50%';
+            existingToggle.style.transform = 'translateY(-50%)';
+            existingToggle.style.zIndex = '999';
+            existingToggle.style.display = 'block';
+            existingToggle.style.visibility = 'visible';
+            existingToggle.style.opacity = '1';
+            existingToggle.style.background = 'transparent';
+            existingToggle.style.border = 'none';
+            existingToggle.style.fontSize = '16px';
+            existingToggle.style.cursor = 'pointer';
+            existingToggle.style.color = '#6b7280';
+            existingToggle.style.width = '24px';
+            existingToggle.style.height = '24px';
+            existingToggle.style.lineHeight = '1';
+            existingToggle.style.textAlign = 'center';
+
+            console.log('Confirm password eye button styling enforced');
+        } else {
+            // Create missing toggle button
+            console.log('Creating missing confirm password eye button');
+            var newToggle = document.createElement('button');
+            newToggle.type = 'button';
+            newToggle.className = 'password-toggle';
+            newToggle.innerHTML = '👁️';
+            newToggle.onclick = function() { window.togglePassword('signup-password-confirm'); };
+
+            // Apply direct styling
+            newToggle.style.position = 'absolute';
+            newToggle.style.right = '12px';
+            newToggle.style.top = '50%';
+            newToggle.style.transform = 'translateY(-50%)';
+            newToggle.style.zIndex = '999';
+            newToggle.style.display = 'block';
+            newToggle.style.visibility = 'visible';
+            newToggle.style.opacity = '1';
+            newToggle.style.background = 'transparent';
+            newToggle.style.border = 'none';
+            newToggle.style.fontSize = '16px';
+            newToggle.style.cursor = 'pointer';
+            newToggle.style.color = '#6b7280';
+            newToggle.style.width = '24px';
+            newToggle.style.height = '24px';
+            newToggle.style.lineHeight = '1';
+            newToggle.style.textAlign = 'center';
+
+            confirmPasswordContainer.appendChild(newToggle);
+            console.log('Confirm password eye button created and styled');
+        }
+    };
+
     // Password toggle button initialization and fallback
     window.initializePasswordToggles = function() {
         console.log('Initializing password toggle buttons...');
@@ -883,7 +972,14 @@
         // Ensure password toggles are initialized after form is shown
         setTimeout(function() {
             window.initializePasswordToggles();
+            // Specifically ensure confirm password eye button
+            window.ensureConfirmPasswordEyeButton();
         }, 100);
+
+        // Additional check after a longer delay
+        setTimeout(function() {
+            window.ensureConfirmPasswordEyeButton();
+        }, 500);
     };
 
     // Generate role-specific fields optimized for AI/ML matching
@@ -1115,21 +1211,35 @@
         function initWhenReady() {
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', function() {
-                    setTimeout(window.initializePasswordToggles, 100);
+                    setTimeout(function() {
+                        window.initializePasswordToggles();
+                        window.ensureConfirmPasswordEyeButton();
+                    }, 100);
                 });
             } else {
-                setTimeout(window.initializePasswordToggles, 100);
+                setTimeout(function() {
+                    window.initializePasswordToggles();
+                    window.ensureConfirmPasswordEyeButton();
+                }, 100);
             }
         }
 
         // Also initialize when window loads (fallback)
         if (window.addEventListener) {
             window.addEventListener('load', function() {
-                setTimeout(window.initializePasswordToggles, 200);
+                setTimeout(function() {
+                    window.initializePasswordToggles();
+                    window.ensureConfirmPasswordEyeButton();
+                }, 200);
+                // Additional delayed check for confirm password specifically
+                setTimeout(window.ensureConfirmPasswordEyeButton, 1000);
             });
         } else if (window.attachEvent) {
             window.attachEvent('onload', function() {
-                setTimeout(window.initializePasswordToggles, 200);
+                setTimeout(function() {
+                    window.initializePasswordToggles();
+                    window.ensureConfirmPasswordEyeButton();
+                }, 200);
             });
         }
 
