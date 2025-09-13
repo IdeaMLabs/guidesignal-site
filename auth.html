@@ -473,10 +473,14 @@
             
             <div class="form-group">
                 <label class="form-label">Confirm Password</label>
-                <input type="password" class="form-input" id="signup-password-confirm" required>
+                <div class="password-container">
+                    <input type="password" class="form-input" id="signup-password-confirm" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('signup-password-confirm')">
+                        👁️
+                    </button>
+                </div>
                 <div class="field-error" id="signup-password-confirm-error"></div>
                 <div class="field-success" id="signup-password-confirm-success"></div>
-                <!-- No eye button here - removed as requested -->
             </div>
             
             <!-- Selected Role (hidden input) -->
@@ -486,6 +490,9 @@
                 <strong id="role-display" style="color: var(--primary-600);"></strong>
                 <button type="button" onclick="switchTab('signup-choice', document.querySelector('.auth-tab:not(.active)'))" style="margin-left: 12px; background: none; border: none; color: var(--primary-500); text-decoration: underline; cursor: pointer; font-size: 14px;">Change</button>
             </div>
+
+            <!-- Role-Specific Fields Container -->
+            <div id="role-specific-fields"></div>
             
             <div class="form-group" style="margin-top: 10px;">
                 <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #6c757d; line-height: 1.4;">
@@ -529,7 +536,216 @@
             'recruiter': '🗂️ Recruiter'
         };
         document.getElementById('role-display').textContent = roleNames[role];
+
+        // Generate role-specific fields for AI/ML optimization
+        generateRoleSpecificFields(role);
     };
+
+    // Generate role-specific fields optimized for AI/ML matching
+    function generateRoleSpecificFields(role) {
+        const container = document.getElementById('role-specific-fields');
+        let fieldsHTML = '';
+
+        if (role === 'student') {
+            fieldsHTML = `
+                <!-- Student-Specific Fields for AI/ML Optimization -->
+                <div class="form-section" style="margin-bottom: 20px; padding: 16px; background: #f8fafc; border-radius: var(--radius); border-left: 4px solid #4a9eff;">
+                    <h3 style="color: var(--primary-600); font-size: 16px; margin-bottom: 16px;">📚 Academic Profile (For Better Job Matching)</h3>
+
+                    <div class="form-group">
+                        <label class="form-label">University/School</label>
+                        <input type="text" class="form-input" id="university" name="university" placeholder="e.g., Stanford University" required>
+                        <div class="field-error" id="university-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Major/Field of Study</label>
+                        <input type="text" class="form-input" id="major" name="major" placeholder="e.g., Computer Science, Business" required>
+                        <div class="field-error" id="major-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Graduation Year</label>
+                        <select class="form-input" id="graduation-year" name="graduation_year" required>
+                            <option value="">Select year...</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">GPA (Optional - Helps with competitive positions)</label>
+                        <input type="number" class="form-input" id="gpa" name="gpa" min="0" max="4" step="0.1" placeholder="3.5">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Skills & Technologies</label>
+                        <textarea class="form-input" id="skills" name="skills" placeholder="Python, JavaScript, React, Data Analysis, etc." rows="3" required></textarea>
+                        <small style="color: var(--gray-600);">List technical skills, programming languages, tools, etc.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Looking for</label>
+                        <select class="form-input" id="opportunity-type" name="opportunity_type" required>
+                            <option value="">Select...</option>
+                            <option value="internship">Internships</option>
+                            <option value="part-time">Part-time jobs</option>
+                            <option value="entry-level">Entry-level full-time</option>
+                            <option value="co-op">Co-op programs</option>
+                            <option value="research">Research positions</option>
+                        </select>
+                    </div>
+                </div>`;
+
+        } else if (role === 'job_seeker') {
+            fieldsHTML = `
+                <!-- Job Seeker-Specific Fields for AI/ML Optimization -->
+                <div class="form-section" style="margin-bottom: 20px; padding: 16px; background: #f8fafc; border-radius: var(--radius); border-left: 4px solid #4a9eff;">
+                    <h3 style="color: var(--primary-600); font-size: 16px; margin-bottom: 16px;">💼 Professional Profile (For Precise Job Matching)</h3>
+
+                    <div class="form-group">
+                        <label class="form-label">Current Job Title</label>
+                        <input type="text" class="form-input" id="current-title" name="current_title" placeholder="e.g., Software Engineer, Marketing Manager" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Years of Experience</label>
+                        <select class="form-input" id="experience-years" name="experience_years" required>
+                            <option value="">Select...</option>
+                            <option value="0-1">0-1 years</option>
+                            <option value="1-3">1-3 years</option>
+                            <option value="3-5">3-5 years</option>
+                            <option value="5-10">5-10 years</option>
+                            <option value="10+">10+ years</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Industry</label>
+                        <select class="form-input" id="industry" name="industry" required>
+                            <option value="">Select industry...</option>
+                            <option value="technology">Technology</option>
+                            <option value="finance">Finance</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="consulting">Consulting</option>
+                            <option value="education">Education</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="retail">Retail</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Key Skills & Expertise</label>
+                        <textarea class="form-input" id="skills" name="skills" placeholder="Project Management, Python, Sales, Leadership, etc." rows="3" required></textarea>
+                        <small style="color: var(--gray-600);">Include both technical and soft skills</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Desired Salary Range</label>
+                        <select class="form-input" id="salary-range" name="salary_range">
+                            <option value="">Prefer not to say</option>
+                            <option value="30-50k">$30,000 - $50,000</option>
+                            <option value="50-75k">$50,000 - $75,000</option>
+                            <option value="75-100k">$75,000 - $100,000</option>
+                            <option value="100-150k">$100,000 - $150,000</option>
+                            <option value="150k+">$150,000+</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Preferred Work Environment</label>
+                        <select class="form-input" id="work-environment" name="work_environment">
+                            <option value="remote">Remote</option>
+                            <option value="hybrid">Hybrid</option>
+                            <option value="onsite">On-site</option>
+                            <option value="flexible">Flexible</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Location Preferences</label>
+                        <input type="text" class="form-input" id="location" name="location" placeholder="e.g., San Francisco, CA or Remote">
+                    </div>
+                </div>`;
+
+        } else if (role === 'recruiter') {
+            fieldsHTML = `
+                <!-- Recruiter-Specific Fields for AI/ML Optimization -->
+                <div class="form-section" style="margin-bottom: 20px; padding: 16px; background: #f8fafc; border-radius: var(--radius); border-left: 4px solid #4a9eff;">
+                    <h3 style="color: var(--primary-600); font-size: 16px; margin-bottom: 16px;">🗂️ Recruiter Profile (For Smart Candidate Matching)</h3>
+
+                    <div class="form-group">
+                        <label class="form-label">Company Name</label>
+                        <input type="text" class="form-input" id="company" name="company" placeholder="e.g., Google, Startup Inc." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Company Size</label>
+                        <select class="form-input" id="company-size" name="company_size" required>
+                            <option value="">Select...</option>
+                            <option value="1-10">1-10 employees</option>
+                            <option value="11-50">11-50 employees</option>
+                            <option value="51-200">51-200 employees</option>
+                            <option value="201-500">201-500 employees</option>
+                            <option value="500+">500+ employees</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Industry</label>
+                        <select class="form-input" id="company-industry" name="company_industry" required>
+                            <option value="">Select industry...</option>
+                            <option value="technology">Technology</option>
+                            <option value="finance">Finance</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="consulting">Consulting</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="retail">Retail</option>
+                            <option value="education">Education</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Typical Roles You Hire For</label>
+                        <textarea class="form-input" id="hiring-roles" name="hiring_roles" placeholder="Software Engineers, Sales, Marketing, Interns, etc." rows="2" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Hiring Volume per Month</label>
+                        <select class="form-input" id="hiring-volume" name="hiring_volume" required>
+                            <option value="">Select...</option>
+                            <option value="1-5">1-5 hires</option>
+                            <option value="6-15">6-15 hires</option>
+                            <option value="16-30">16-30 hires</option>
+                            <option value="30+">30+ hires</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Response Time Commitment</label>
+                        <select class="form-input" id="response-time" name="response_time" required>
+                            <option value="">Select...</option>
+                            <option value="24-hours">Within 24 hours</option>
+                            <option value="48-hours">Within 48 hours (GuideSignal Standard)</option>
+                            <option value="1-week">Within 1 week</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Company Location</label>
+                        <input type="text" class="form-input" id="company-location" name="company_location" placeholder="e.g., San Francisco, CA" required>
+                    </div>
+                </div>`;
+        }
+
+        container.innerHTML = fieldsHTML;
+    }
 
     // Legacy function for backward compatibility
     window.showSignupForm = function(role) {
