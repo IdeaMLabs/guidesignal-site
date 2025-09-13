@@ -38,50 +38,72 @@ class GuideSignalAIEngine {
         }
     }
 
-    // Main job matching function
-    async matchJobs(userProfile, jobListings) {
+    // Optimized job matching function - addresses 0% conversion rates
+    async matchJobs(userProfile, jobListings, behaviorData = {}) {
         if (!this.isInitialized) await this.initialize();
         
         const startTime = performance.now();
         
         try {
-            // Extract skills from user profile
-            const extractedSkills = await this.skillsExtractor.extractSkills(userProfile);
+            // Initialize optimized matching engine
+            const optimizedEngine = new (await import('./optimized-matching-engine.js')).default();
             
-            // Score each job
-            const scoredJobs = await Promise.all(
-                jobListings.map(async (job) => {
-                    const score = await this.mlEngine.calculateMatchScore(extractedSkills, job);
-                    const neuralScore = await this.neuralNetworks.enhanceScore(score, userProfile, job);
+            // Get behavioral data for better matching
+            const enhancedBehaviorData = {
+                ...behaviorData,
+                profile_completeness: this.calculateProfileCompleteness(userProfile),
+                recent_activity: behaviorData.recent_activity || 0,
+                application_success_rate: behaviorData.application_success_rate || 0
+            };
+            
+            // Use optimized matching with quality gates
+            const highQualityMatches = await optimizedEngine.matchMultipleJobs(
+                userProfile, 
+                jobListings, 
+                enhancedBehaviorData
+            );
+            
+            // Fallback to neural enhancement for top matches
+            const enhancedMatches = await Promise.all(
+                highQualityMatches.map(async (match) => {
+                    const neuralScore = await this.neuralNetworks.enhanceScore(
+                        match.score, 
+                        userProfile, 
+                        match.job
+                    );
                     
                     return {
-                        ...job,
-                        matchScore: neuralScore,
-                        reasoning: this.generateMatchReasoning(extractedSkills, job)
+                        ...match.job,
+                        matchScore: Math.max(match.score, neuralScore), // Take higher score
+                        optimizedScore: match.score,
+                        confidence: match.confidence,
+                        reasoning: match.explanation,
+                        breakdown: match.breakdown
                     };
                 })
             );
             
-            // Sort by score and apply predictive analytics
-            const rankedJobs = scoredJobs
-                .sort((a, b) => b.matchScore - a.matchScore)
-                .slice(0, 50); // Top 50 matches
-            
-            // Add success predictions
+            // Add success predictions with higher threshold
             const jobsWithPredictions = await this.predictiveAnalytics.addSuccessPredictions(
-                rankedJobs,
+                enhancedMatches,
                 userProfile
             );
             
+            // Filter for only high-confidence matches to improve conversion
+            const highConfidenceJobs = jobsWithPredictions.filter(job => 
+                job.confidence >= 0.6 && job.matchScore >= 0.65
+            );
+            
             const processingTime = performance.now() - startTime;
-            this.updateMetrics(processingTime, jobsWithPredictions.length);
+            this.updateMetrics(processingTime, highConfidenceJobs.length);
             
             return {
                 success: true,
-                jobs: jobsWithPredictions,
+                jobs: highConfidenceJobs,
                 metrics: {
                     processingTime: Math.round(processingTime),
                     totalJobsAnalyzed: jobListings.length,
+                    qualityMatches: highConfidenceJobs.length,
                     topMatches: jobsWithPredictions.length,
                     averageScore: this.calculateAverageScore(jobsWithPredictions)
                 }
@@ -133,6 +155,31 @@ class GuideSignalAIEngine {
             ...this.performanceMetrics,
             accuracy: Math.round(this.performanceMetrics.accuracy * 100) / 100
         };
+    }
+
+    // Profile completeness calculation for behavioral matching
+    calculateProfileCompleteness(userProfile) {
+        let completeness = 0;
+        const requiredFields = ['name', 'email', 'skills', 'experience'];
+        const optionalFields = ['education', 'location', 'phone', 'summary'];
+        
+        // Required fields (70% weight)
+        const requiredScore = requiredFields.filter(field => 
+            userProfile[field] && userProfile[field].toString().trim().length > 0
+        ).length / requiredFields.length;
+        
+        // Optional fields (30% weight)  
+        const optionalScore = optionalFields.filter(field => 
+            userProfile[field] && userProfile[field].toString().trim().length > 0
+        ).length / optionalFields.length;
+        
+        completeness = (requiredScore * 0.7) + (optionalScore * 0.3);
+        
+        // Bonus for detailed fields
+        if (userProfile.skills && userProfile.skills.length > 3) completeness += 0.05;
+        if (userProfile.experience && userProfile.experience.length > 100) completeness += 0.05;
+        
+        return Math.min(1.0, completeness);
     }
 }
 

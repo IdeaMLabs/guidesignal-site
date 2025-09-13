@@ -4,11 +4,11 @@
 class SecurityManager {
     constructor() {
         this.config = {
-            enforceHTTPS: true,
-            strictTransportSecurity: true,
+            enforceHTTPS: false, // Disable HTTPS enforcement to prevent certificate issues
+            strictTransportSecurity: false, // Disable HSTS until proper SSL is configured
             allowedDomains: [
                 'guide-signal.com',
-                'www.guide-signal.com', 
+                'www.guide-signal.com',
                 'guidesignal.netlify.app',
                 'guidesignal.github.io',
                 'ideamlabs.github.io'
@@ -19,8 +19,14 @@ class SecurityManager {
                 'localhost:3000',
                 'localhost:8080'
             ],
+            // GitHub Pages domains with valid certificates
+            githubPagesDomains: [
+                'guidesignal.github.io',
+                'ideamlabs.github.io'
+            ],
             securityHeaders: {
-                'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+                // Removed HSTS to prevent Firefox SSL certificate errors
+                // 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
                 'X-Content-Type-Options': 'nosniff',
                 'X-Frame-Options': 'DENY',
                 'X-XSS-Protection': '1; mode=block',
@@ -68,41 +74,37 @@ class SecurityManager {
             return;
         }
 
-        // Skip on auth page to prevent redirect loops
-        if (window.location.pathname.includes('auth')) {
-            console.log('🔓 Auth page: HTTPS enforcement disabled');
+        // Skip HTTPS enforcement completely to prevent certificate issues
+        console.log('🔓 HTTPS enforcement disabled to prevent SSL certificate issues');
+
+        // Handle custom domain SSL certificate issues
+        const hostname = window.location.hostname.toLowerCase();
+
+        // If on custom domain with certificate issues, redirect to GitHub Pages
+        if ((hostname === 'www.guide-signal.com' || hostname === 'guide-signal.com') &&
+            window.location.protocol === 'https:') {
+
+            console.log('🔄 SSL certificate issue detected, redirecting to GitHub Pages');
+            const githubUrl = 'https://ideamlabs.github.io/guidesignal-site' +
+                            window.location.pathname +
+                            window.location.search +
+                            window.location.hash;
+
+            // Show user-friendly message
+            this.showRedirectMessage(
+                'Redirecting to secure connection...',
+                'We\'re redirecting you to our secure GitHub Pages site to ensure your safety.',
+                githubUrl
+            );
+
+            setTimeout(() => {
+                window.location.replace(githubUrl);
+            }, 2000);
             return;
         }
 
-        // Redirect www to non-www first
-        if (window.location.hostname === 'www.guide-signal.com') {
-            const redirectUrl = 'https://guide-signal.com' +
-                               window.location.pathname +
-                               window.location.search +
-                               window.location.hash;
-            console.log('🔄 Redirecting www to apex domain:', redirectUrl);
-            window.location.replace(redirectUrl);
-            return;
-        }
-
-        // Enforce HTTPS only for production domains
-        if (window.location.protocol !== 'https:' && !this.isDevelopment()) {
-            if (this.isAllowedDomain()) {
-                const httpsUrl = 'https://' + window.location.hostname +
-                               window.location.pathname +
-                               window.location.search +
-                               window.location.hash;
-
-                console.log('🔐 Enforcing HTTPS:', httpsUrl);
-                window.location.replace(httpsUrl);
-            } else {
-                console.error('🚫 Unauthorized domain detected:', window.location.hostname);
-                // Only show warning for non-development environments
-                if (!this.isDevelopment()) {
-                    this.showSecurityWarning('This domain is not authorized for secure access.');
-                }
-            }
-        }
+        // Don't enforce HTTPS to prevent certificate errors
+        console.log('✅ Allowing HTTP connections to prevent SSL certificate issues');
     }
 
     setSecurityHeaders() {
@@ -215,6 +217,60 @@ class SecurityManager {
         }
     }
 
+    showRedirectMessage(title, message, redirectUrl) {
+        // Create user-friendly redirect modal
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        `;
+
+        modal.innerHTML = `
+            <div style="
+                background: white;
+                border-radius: 12px;
+                padding: 32px;
+                max-width: 400px;
+                text-align: center;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            ">
+                <div style="font-size: 48px; margin-bottom: 16px;">🔄</div>
+                <h2 style="margin-bottom: 16px; color: #4a9eff;">${title}</h2>
+                <p style="margin-bottom: 24px; color: #374151;">${message}</p>
+                <div style="
+                    width: 40px;
+                    height: 40px;
+                    border: 4px solid #f3f3f3;
+                    border-top: 4px solid #4a9eff;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                    margin: 0 auto 16px;
+                "></div>
+                <p style="color: #666; font-size: 14px;">You will be redirected automatically...</p>
+            </div>
+        `;
+
+        // Add spinning animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+        document.body.appendChild(modal);
+    },
+
     showSecurityWarning(message) {
         // Create security warning modal
         const modal = document.createElement('div');
@@ -244,7 +300,7 @@ class SecurityManager {
                 <div style="font-size: 48px; margin-bottom: 16px;">🔒</div>
                 <h2 style="margin-bottom: 16px; color: #dc2626;">Security Warning</h2>
                 <p style="margin-bottom: 24px; color: #374151;">${message}</p>
-                <button onclick="window.location.href='https://guide-signal.com'" style="
+                <button onclick="window.location.href='https://ideamlabs.github.io/guidesignal-site'" style="
                     background: #4a9eff;
                     color: white;
                     border: none;

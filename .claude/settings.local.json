@@ -36,7 +36,8 @@
       "Bash(rg:*)",
       "Bash(unzip:*)",
       "Bash(xargs ls:*)",
-      "Bash(sort:*)"
+      "Bash(sort:*)",
+      "Bash(echo $HOSTNAME)"
     ],
     "deny": [],
     "ask": []
