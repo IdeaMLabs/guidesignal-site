@@ -3,11 +3,11 @@
 <head>
     <!-- Updated: 2025-01-23 with radio buttons and readability fixes -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     
     <!-- Cross-browser detection and compatibility -->
     <script>
-        // Browser detection for compatibility fixes
+        // Browser and mobile device detection for compatibility fixes
         (function() {
             var isIE = false || !!document.documentMode;
             var isEdge = !isIE && !!window.StyleMedia;
@@ -15,18 +15,69 @@
             var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
             var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
 
-            // Add browser class to body for CSS targeting
-            window.addEventListener ? window.addEventListener('load', function() {
-                var body = document.body;
+            // Mobile device detection
+            var isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            var isAndroid = /Android/i.test(navigator.userAgent);
+            var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+            // Mobile viewport height fix
+            if (isMobile || isTouchDevice) {
+                function setMobileVH() {
+                    var vh = window.innerHeight * 0.01;
+                    document.documentElement.style.setProperty('--vh', vh + 'px');
+                }
+                setMobileVH();
+
+                if (window.addEventListener) {
+                    window.addEventListener('resize', setMobileVH);
+                    window.addEventListener('orientationchange', function() {
+                        setTimeout(setMobileVH, 100);
+                    });
+                } else if (window.attachEvent) {
+                    window.attachEvent('onresize', setMobileVH);
+                }
+            }
+
+            // Add browser and device classes to body for CSS targeting
+            function addClasses() {
+                var body = document.body || document.getElementsByTagName('body')[0];
+                if (!body) return;
+
                 if (isIE) body.className += ' ie-browser';
                 if (isEdge) body.className += ' edge-browser';
                 if (isFirefox) body.className += ' firefox-browser';
                 if (isChrome) body.className += ' chrome-browser';
                 if (isSafari) body.className += ' safari-browser';
-            }) : window.attachEvent('onload', function() {
-                var body = document.body;
-                if (isIE) body.className += ' ie-browser ie-fallback';
-            });
+                if (isMobile) body.className += ' mobile-device';
+                if (isIOS) body.className += ' ios-device';
+                if (isAndroid) body.className += ' android-device';
+                if (isTouchDevice) body.className += ' touch-device';
+            }
+
+            // Add classes when DOM is ready
+            if (document.readyState === 'loading') {
+                if (document.addEventListener) {
+                    document.addEventListener('DOMContentLoaded', addClasses);
+                } else if (document.attachEvent) {
+                    document.attachEvent('onreadystatechange', function() {
+                        if (document.readyState === 'complete') addClasses();
+                    });
+                }
+            } else {
+                addClasses();
+            }
+
+            // Fallback for window load
+            if (window.addEventListener) {
+                window.addEventListener('load', addClasses);
+            } else if (window.attachEvent) {
+                window.attachEvent('onload', function() {
+                    addClasses();
+                    var body = document.body;
+                    if (isIE && body) body.className += ' ie-fallback';
+                });
+            }
         })();
     </script>
 
@@ -249,13 +300,111 @@
             font-weight: 600;
         }
         
-        @media (max-width: 480px) {
+        /* Mobile and responsive design fixes */
+        @media (max-width: 768px) {
+            body {
+                /* Mobile viewport fixes */
+                min-height: 100vh;
+                min-height: calc(var(--vh, 1vh) * 100); /* Mobile viewport fix */
+                min-height: -webkit-fill-available;
+                min-height: stretch;
+                padding: 0;
+                margin: 0;
+                overflow-x: hidden;
+            }
+
             .auth-container {
                 padding: var(--space-3);
+                min-height: 100vh;
+                min-height: calc(var(--vh, 1vh) * 100); /* Mobile viewport fix */
+                min-height: -webkit-fill-available;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                box-sizing: border-box;
             }
-            
+
             .auth-card {
                 padding: var(--space-6);
+                margin: var(--space-4) 0;
+                border-radius: var(--radius-lg);
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+
+            /* Mobile form improvements */
+            .form-input {
+                font-size: 16px !important; /* Prevent zoom on iOS */
+                padding: 12px 16px;
+                min-height: 44px; /* Touch target size */
+            }
+
+            .btn {
+                min-height: 48px; /* Touch target size */
+                font-size: 16px;
+                padding: 12px 24px;
+            }
+
+            /* Mobile role selector */
+            .role-option {
+                padding: 16px 12px;
+                min-height: 60px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .role-radio {
+                width: 20px;
+                height: 20px;
+                min-width: 20px;
+                min-height: 20px;
+            }
+
+            /* Mobile password toggle */
+            .password-toggle {
+                min-width: 44px !important;
+                min-height: 44px !important;
+                font-size: 18px !important;
+                right: 8px !important;
+                touch-action: manipulation;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: var(--space-2);
+            }
+
+            .auth-card {
+                padding: var(--space-4);
+                margin: var(--space-2) 0;
+            }
+
+            .auth-title {
+                font-size: 1.25rem;
+            }
+
+            /* Smaller form elements for very small screens */
+            .form-input {
+                padding: 10px 12px;
+            }
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .password-toggle:hover {
+                color: #6b7280 !important;
+                opacity: 1 !important;
+            }
+
+            .role-option:hover {
+                transform: none;
+                background: var(--gray-50);
+            }
+
+            .btn:hover {
+                transform: none;
             }
         }
         
@@ -1233,6 +1382,14 @@
                 }, 200);
                 // Additional delayed check for confirm password specifically
                 setTimeout(window.ensureConfirmPasswordEyeButton, 1000);
+                // Mobile-specific initialization
+                if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                    setTimeout(function() {
+                        console.log('Mobile device detected, running additional initialization');
+                        window.initializePasswordToggles();
+                        window.ensureConfirmPasswordEyeButton();
+                    }, 2000);
+                }
             });
         } else if (window.attachEvent) {
             window.attachEvent('onload', function() {
@@ -1241,6 +1398,19 @@
                     window.ensureConfirmPasswordEyeButton();
                 }, 200);
             });
+        }
+
+        // Mobile-specific event listeners
+        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+            if (window.addEventListener) {
+                window.addEventListener('touchstart', function() {
+                    // Ensure forms are initialized on first touch
+                    setTimeout(function() {
+                        window.initializePasswordToggles();
+                        window.ensureConfirmPasswordEyeButton();
+                    }, 100);
+                }, { once: true });
+            }
         }
 
         initWhenReady();
