@@ -81,8 +81,39 @@
         })();
     </script>
 
-    <!-- Simplified domain handling to prevent reload loops -->
+    <!-- Version checking and cache busting -->
     <script>
+        // Force latest auth version load
+        console.log('🚀 Loading GuideSignal Auth v2 - Complete Signup Functionality');
+
+        // Version check and force refresh if needed
+        const currentVersion = 'auth-v2-20250913-complete-signup';
+        const lastVersion = localStorage.getItem('guidesignal-auth-version');
+
+        if (lastVersion !== currentVersion) {
+            console.log('🔄 New auth version detected, forcing refresh...');
+            localStorage.setItem('guidesignal-auth-version', currentVersion);
+
+            // Clear all cached auth data
+            localStorage.removeItem('auth-cache-timestamp');
+            sessionStorage.clear();
+
+            // Clear service worker cache
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    names.forEach(name => {
+                        caches.delete(name);
+                    });
+                });
+            }
+
+            // Reload with cache bypass if not already done
+            if (!window.location.search.includes('v=' + currentVersion)) {
+                window.location.href = window.location.href + (window.location.search ? '&' : '?') + 'v=' + currentVersion + '&t=' + Date.now();
+                return;
+            }
+        }
+
         // Simplified domain handling - no redirects during auth flow
         (function() {
             var isDev = location.hostname === 'localhost' ||
@@ -124,7 +155,7 @@
     
     <title>Sign In - GuideSignal</title>
     <!-- Password toggle fix deployed: 2025-01-08 16:45 UTC -->
-    <meta name="cache-bust" content="password-toggle-fix-v1-20250108-1645">
+    <meta name="cache-bust" content="complete-signup-v2-20250913-latest-final">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">

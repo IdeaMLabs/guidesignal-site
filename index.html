@@ -4,20 +4,52 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GuideSignal - Where a Job Finds You</title>
-  
-  <!-- SSL/HTTPS Enforcement -->
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-  <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains; preload">
+
+  <!-- Cache Busting - Force Latest Version -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="cache-bust" content="v2-20250913-latest-<?php echo time(); ?>">
   
   <!-- SEO Meta Tags -->
   <meta name="description" content="The fastest way to work where you belong. AI matches your skills with jobs that reply in 48 hours.">
   <meta name="keywords" content="job search, fast replies, career opportunities, recruitment, 48 hour response">
   <meta name="author" content="GuideSignal">
   
-  <!-- HTTPS/WWW Redirect Script -->
+  <!-- Cache Busting and Version Check -->
   <script>
-    // Force HTTPS and redirect non-www to www for SSL certificate compatibility
-    if (location.protocol !== 'https:' || !location.hostname.startsWith('www.')) {
+    // Force latest version load and clear cache
+    console.log('🚀 Loading GuideSignal v2 - Latest Version');
+
+    // Clear any cached data that might show old version
+    if ('caches' in window) {
+      caches.keys().then(names => {
+        names.forEach(name => {
+          caches.delete(name);
+        });
+      });
+    }
+
+    // Force refresh if old version detected
+    const currentVersion = 'v2-20250913-complete-signup';
+    const lastVersion = localStorage.getItem('guidesignal-version');
+
+    if (lastVersion !== currentVersion) {
+      console.log('🔄 New version detected, forcing refresh...');
+      localStorage.setItem('guidesignal-version', currentVersion);
+
+      // Clear all storage
+      localStorage.removeItem('cache-timestamp');
+      sessionStorage.clear();
+
+      // Reload with cache bypass
+      if (!window.location.search.includes('v=' + currentVersion)) {
+        window.location.href = window.location.href + (window.location.search ? '&' : '?') + 'v=' + currentVersion + '&t=' + Date.now();
+      }
+    }
+
+    // Skip SSL redirects for now (using GitHub Pages domain)
+    if (false && location.protocol !== 'https:' || !location.hostname.startsWith('www.')) {
       const correctUrl = 'https://www.' + location.hostname.replace('www.', '') + location.pathname + location.search;
       location.replace(correctUrl);
     }
