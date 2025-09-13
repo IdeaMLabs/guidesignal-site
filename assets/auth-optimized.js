@@ -3,6 +3,7 @@
  * Extracted from auth.html for better caching and performance
  */
 import { authFunctions, utils, USER_ROLES } from './firebase-config-optimized.js';
+import OptimizedMatchingEngine from './optimized-matching-engine.js';
 
 // State management
 let currentTab = 'signin';
@@ -46,8 +47,8 @@ window.switchTab = function(tab, clickedElement) {
     }
     
     // Animate form transition
-    const currentForm = document.getElementById(previousTab + '-form');
-    const newForm = document.getElementById(tab + '-form');
+    const currentForm = document.getElementById(previousTab + '-form') || document.getElementById(previousTab);
+    const newForm = document.getElementById(tab + '-form') || document.getElementById(tab);
     
     if (currentForm) {
         currentForm.style.opacity = '0';

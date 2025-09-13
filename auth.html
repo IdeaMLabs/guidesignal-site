@@ -14,9 +14,10 @@
                          location.hostname.startsWith('192.168.') ||
                          location.hostname.endsWith('.local');
             
-            // Redirect www to non-www
-            if (window.location.hostname === 'www.guide-signal.com') {
-                window.location.replace('https://guide-signal.com' + window.location.pathname + window.location.search + window.location.hash);
+            // Support both www and non-www domains
+            const validDomains = ['www.guide-signal.com', 'guide-signal.com'];
+            if (!validDomains.includes(window.location.hostname) && !isDev) {
+                console.error('Auth security: Unauthorized domain detected:', window.location.hostname);
                 return;
             }
             
@@ -351,7 +352,7 @@
 
             <div class="auth-tabs">
                 <button class="auth-tab active" onclick="switchTab('signin', this)">Sign In</button>
-                <button class="auth-tab" onclick="switchTab('signup', this)">Sign Up</button>
+                <button class="auth-tab" onclick="switchTab('signup-choice', this)">Sign Up</button>
             </div>
 
             <div id="error-message" class="error-message" style="display: none;"></div>
@@ -389,6 +390,40 @@
                 <span class="btn-text">Sign In</span>
             </button>
         </form>
+
+        <!-- Sign Up Role Selection -->
+        <div id="signup-choice" class="auth-form" style="display: none;">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <h2 style="color: var(--gray-900); font-size: 1.25rem; font-weight: 600; margin-bottom: 8px;">I am a...</h2>
+                <p style="color: var(--gray-600); font-size: 0.9rem;">Choose your account type to get started</p>
+            </div>
+
+            <div class="role-selector" style="gap: 16px;">
+                <button type="button" class="role-option" onclick="showSignupForm('student')" style="justify-content: center; text-align: center; padding: 20px;">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">🎓</div>
+                    <div>
+                        <div style="font-size: 18px; font-weight: 600; color: var(--gray-900); margin-bottom: 4px;">Student</div>
+                        <div style="font-size: 14px; color: var(--gray-600);">Looking for internships and entry-level opportunities</div>
+                    </div>
+                </button>
+
+                <button type="button" class="role-option" onclick="showSignupForm('job_seeker')" style="justify-content: center; text-align: center; padding: 20px;">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">💼</div>
+                    <div>
+                        <div style="font-size: 18px; font-weight: 600; color: var(--gray-900); margin-bottom: 4px;">Job Seeker</div>
+                        <div style="font-size: 14px; color: var(--gray-600);">Seeking new career opportunities</div>
+                    </div>
+                </button>
+
+                <button type="button" class="role-option" onclick="showSignupForm('recruiter')" style="justify-content: center; text-align: center; padding: 20px;">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">🗂️</div>
+                    <div>
+                        <div style="font-size: 18px; font-weight: 600; color: var(--gray-900); margin-bottom: 4px;">Recruiter</div>
+                        <div style="font-size: 14px; color: var(--gray-600);">Posting jobs and hiring talent</div>
+                    </div>
+                </button>
+            </div>
+        </div>
 
         <!-- Sign Up Form -->
         <form id="signup-form" class="auth-form" style="display: none;">
@@ -431,33 +466,13 @@
                 <!-- No eye button here - removed as requested -->
             </div>
             
-            <!-- Role Selection Section (Fix 2) -->
-            <div id="role-selection">
-              <p>I am a…</p>
-              <label>
-                <input type="radio" name="role" value="student" required>
-                🎓 Student — Looking for internships and entry-level opportunities
-              </label><br>
-              <label>
-                <input type="radio" name="role" value="job_seeker" required>
-                💼 Job Seeker — Seeking new career opportunities
-              </label><br>
-              <label>
-                <input type="radio" name="role" value="recruiter" required>
-                🗂 Recruiter — Posting jobs and hiring talent
-              </label>
+            <!-- Selected Role (hidden input) -->
+            <input type="hidden" id="selected-role" name="role" required>
+            <div style="margin-bottom: 16px; padding: 12px; background: var(--gray-50); border-radius: var(--radius); text-align: center;">
+                <span style="color: var(--gray-600); font-size: 14px;">Signing up as: </span>
+                <strong id="role-display" style="color: var(--primary-600);"></strong>
+                <button type="button" onclick="switchTab('signup-choice', document.querySelector('.auth-tab:not(.active)'))" style="margin-left: 12px; background: none; border: none; color: var(--primary-500); text-decoration: underline; cursor: pointer; font-size: 14px;">Change</button>
             </div>
-
-            <script>
-            // Validation to ensure a role must be chosen before form submission
-            document.querySelector("#signup-form").addEventListener("submit", function(e) {
-              const role = document.querySelector("input[name='role']:checked");
-              if (!role) {
-                e.preventDefault();
-                alert("Please select one role before continuing.");
-              }
-            });
-            </script>
             
             <div class="form-group" style="margin-top: 10px;">
                 <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #6c757d; line-height: 1.4;">
@@ -474,6 +489,26 @@
     </main>
 
     <script>
+    // Show signup form with pre-selected role
+    window.showSignupForm = function(role) {
+        // Hide the choice screen
+        document.getElementById('signup-choice').style.display = 'none';
+
+        // Show the signup form
+        document.getElementById('signup-form').style.display = 'block';
+
+        // Set the selected role
+        document.getElementById('selected-role').value = role;
+
+        // Update role display
+        const roleNames = {
+            'student': '🎓 Student',
+            'job_seeker': '💼 Job Seeker',
+            'recruiter': '🗂️ Recruiter'
+        };
+        document.getElementById('role-display').textContent = roleNames[role];
+    };
+
     // Global password toggle function (must be outside ES module for onclick access)
     window.togglePassword = function(inputId) {
         console.log('togglePassword called with inputId:', inputId);
@@ -521,6 +556,8 @@
 
     <!-- Optimized External Auth Module -->
     <script type="module" src="assets/auth-optimized.js"></script>
+    <script type="module" src="assets/real-time-communication.js"></script>
+    <script type="module" src="assets/advanced-analytics.js"></script>
 
     <!-- Contact Us Component -->
     <script src="contact-us.js" defer></script>
