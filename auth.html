@@ -916,7 +916,77 @@
     </main>
 
     <script>
-    // Specific function to ensure confirm password eye button visibility
+    // CRITICAL: Force confirm password eye button to appear
+    window.forceConfirmPasswordEyeButton = function() {
+        console.log('FORCING confirm password eye button creation...');
+
+        var confirmPasswordInput = document.getElementById('signup-password-confirm');
+        if (!confirmPasswordInput) {
+            console.error('Confirm password input not found - retrying in 500ms');
+            setTimeout(window.forceConfirmPasswordEyeButton, 500);
+            return;
+        }
+
+        var confirmPasswordContainer = confirmPasswordInput.parentNode;
+
+        // Remove any existing toggle buttons first
+        var existingToggles = confirmPasswordContainer.querySelectorAll('.password-toggle');
+        for (var i = 0; i < existingToggles.length; i++) {
+            existingToggles[i].remove();
+        }
+
+        // Create new toggle button with absolute positioning
+        var eyeButton = document.createElement('button');
+        eyeButton.type = 'button';
+        eyeButton.className = 'password-toggle confirm-password-toggle';
+        eyeButton.innerHTML = '👁️';
+        eyeButton.setAttribute('onclick', "togglePassword('signup-password-confirm')");
+
+        // Apply critical styling directly
+        eyeButton.style.cssText = [
+            'position: absolute !important',
+            'right: 12px !important',
+            'top: 50% !important',
+            'transform: translateY(-50%) !important',
+            'z-index: 9999 !important',
+            'background: transparent !important',
+            'border: none !important',
+            'font-size: 18px !important',
+            'cursor: pointer !important',
+            'color: #6b7280 !important',
+            'display: block !important',
+            'visibility: visible !important',
+            'opacity: 1 !important',
+            'width: 30px !important',
+            'height: 30px !important',
+            'min-width: 30px !important',
+            'min-height: 30px !important',
+            'line-height: 1 !important',
+            'text-align: center !important',
+            'padding: 0 !important',
+            'margin: 0 !important',
+            'font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif !important'
+        ].join('; ');
+
+        // Ensure container is relative positioned
+        confirmPasswordContainer.style.position = 'relative';
+        confirmPasswordInput.style.paddingRight = '45px';
+
+        // Insert the button
+        confirmPasswordContainer.appendChild(eyeButton);
+
+        // Add click handler as backup
+        eyeButton.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.togglePassword('signup-password-confirm');
+        };
+
+        console.log('Confirm password eye button FORCED into existence:', eyeButton);
+        return eyeButton;
+    };
+
+    // Enhanced function to ensure confirm password eye button visibility
     window.ensureConfirmPasswordEyeButton = function() {
         console.log('Ensuring confirm password eye button visibility...');
 
@@ -1121,14 +1191,18 @@
         // Ensure password toggles are initialized after form is shown
         setTimeout(function() {
             window.initializePasswordToggles();
-            // Specifically ensure confirm password eye button
-            window.ensureConfirmPasswordEyeButton();
+            // FORCE confirm password eye button to appear
+            window.forceConfirmPasswordEyeButton();
         }, 100);
 
-        // Additional check after a longer delay
+        // Additional FORCE checks after longer delays
         setTimeout(function() {
-            window.ensureConfirmPasswordEyeButton();
+            window.forceConfirmPasswordEyeButton();
         }, 500);
+
+        setTimeout(function() {
+            window.forceConfirmPasswordEyeButton();
+        }, 1000);
     };
 
     // Generate role-specific fields optimized for AI/ML matching
@@ -1362,13 +1436,13 @@
                 document.addEventListener('DOMContentLoaded', function() {
                     setTimeout(function() {
                         window.initializePasswordToggles();
-                        window.ensureConfirmPasswordEyeButton();
+                        window.forceConfirmPasswordEyeButton();
                     }, 100);
                 });
             } else {
                 setTimeout(function() {
                     window.initializePasswordToggles();
-                    window.ensureConfirmPasswordEyeButton();
+                    window.forceConfirmPasswordEyeButton();
                 }, 100);
             }
         }
@@ -1378,24 +1452,25 @@
             window.addEventListener('load', function() {
                 setTimeout(function() {
                     window.initializePasswordToggles();
-                    window.ensureConfirmPasswordEyeButton();
+                    window.forceConfirmPasswordEyeButton();
                 }, 200);
-                // Additional delayed check for confirm password specifically
-                setTimeout(window.ensureConfirmPasswordEyeButton, 1000);
+                // Additional FORCE checks for confirm password specifically
+                setTimeout(window.forceConfirmPasswordEyeButton, 1000);
+                setTimeout(window.forceConfirmPasswordEyeButton, 2000);
                 // Mobile-specific initialization
                 if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                     setTimeout(function() {
-                        console.log('Mobile device detected, running additional initialization');
+                        console.log('Mobile device detected, FORCING confirm password eye button');
                         window.initializePasswordToggles();
-                        window.ensureConfirmPasswordEyeButton();
-                    }, 2000);
+                        window.forceConfirmPasswordEyeButton();
+                    }, 3000);
                 }
             });
         } else if (window.attachEvent) {
             window.attachEvent('onload', function() {
                 setTimeout(function() {
                     window.initializePasswordToggles();
-                    window.ensureConfirmPasswordEyeButton();
+                    window.forceConfirmPasswordEyeButton();
                 }, 200);
             });
         }
@@ -1404,10 +1479,10 @@
         if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
             if (window.addEventListener) {
                 window.addEventListener('touchstart', function() {
-                    // Ensure forms are initialized on first touch
+                    // FORCE forms to be initialized on first touch
                     setTimeout(function() {
                         window.initializePasswordToggles();
-                        window.ensureConfirmPasswordEyeButton();
+                        window.forceConfirmPasswordEyeButton();
                     }, 100);
                 }, { once: true });
             }
