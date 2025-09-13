@@ -81,79 +81,27 @@
         })();
     </script>
 
-    <!-- HTTPS and Certificate Security -->
+    <!-- Simplified domain handling to prevent reload loops -->
     <script>
-        // Enhanced HTTPS redirect with comprehensive SSL certificate handling
+        // Simplified domain handling - no redirects during auth flow
         (function() {
             var isDev = location.hostname === 'localhost' ||
                        location.hostname === '127.0.0.1' ||
                        location.hostname.startsWith('192.168.') ||
                        location.hostname.endsWith('.local');
 
-            console.log('Current hostname:', location.hostname);
-            console.log('Current protocol:', location.protocol);
-
-            // Skip all redirects in development
-            if (isDev) {
-                console.log('Development environment detected, skipping redirects');
+            // Skip all redirects in development or during auth
+            if (isDev || location.pathname.includes('auth')) {
+                console.log('Skipping redirects for auth page');
                 return;
             }
 
-            // Primary domain handling for SSL certificate compatibility
-            var currentHost = location.hostname.toLowerCase();
-            var targetDomain = 'www.guide-signal.com';
-
-            // Redirect non-www to www (consistent with CNAME and index.html)
-            if (currentHost === 'guide-signal.com' && location.protocol === 'https:') {
-                console.log('Redirecting apex domain to www subdomain');
-                var targetUrl = 'https://www.guide-signal.com' + location.pathname + location.search + location.hash;
-                window.location.replace(targetUrl);
-                return;
-            }
-
-            // Redirect GitHub Pages domains to custom domain
-            if (currentHost.includes('github.io') ||
-                currentHost.includes('githubpages.com') ||
-                currentHost.includes('github.com')) {
-                console.log('Redirecting GitHub Pages to custom domain');
-                var targetUrl = 'https://www.guide-signal.com' + location.pathname + location.search + location.hash;
-                window.location.replace(targetUrl);
-                return;
-            }
-
-            // Force HTTPS for all valid domains
-            if (location.protocol !== 'https:') {
+            // Only handle HTTPS upgrade, no domain redirects during auth
+            if (location.protocol === 'http:' && !isDev) {
                 var httpsUrl = 'https://' + location.hostname + location.pathname + location.search + location.hash;
-                console.log('Forcing HTTPS:', httpsUrl);
+                console.log('Upgrading to HTTPS:', httpsUrl);
                 window.location.replace(httpsUrl);
-                return;
             }
-
-            // Validate domain after redirects (should be www.guide-signal.com after redirects)
-            var validDomains = [
-                'www.guide-signal.com',
-                'guide-signal.com', // Temporary during redirect
-                'ideamlabs.github.io',
-                'guidesignal.netlify.app',
-                'guidesignal.github.io'
-            ];
-
-            var isValidDomain = false;
-            for (var i = 0; i < validDomains.length; i++) {
-                if (currentHost === validDomains[i] || currentHost.includes(validDomains[i])) {
-                    isValidDomain = true;
-                    break;
-                }
-            }
-
-            if (!isValidDomain) {
-                console.error('Auth security: Unauthorized domain detected:', currentHost);
-                // Log for security monitoring but don't block in case of legitimate access
-            } else {
-                console.log('Domain validation successful for:', currentHost);
-            }
-
-            console.log('Domain validation complete for:', currentHost);
         })();
     </script>
     
@@ -164,14 +112,8 @@
     <meta name="description" content="Sign in or sign up for GuideSignal - Connect students with fast-reply employers">
     <meta name="robots" content="noindex, nofollow">
     
-    <!-- Enhanced Security -->
-    <script src="assets/security-config.js" defer></script>
-    
-    <!-- MILITARY-GRADE SECURITY -->
-    <script src="security/military-grade-security.js" defer></script>
-    <script src="security/encrypted-config.js" defer></script>
-    <script src="security/advanced-auth-security.js" defer></script>
-    <script src="security/security-integration.js" defer></script>
+    <!-- Simplified Security - reduce potential conflicts -->
+    <script src="assets/security-config.js" defer onerror="console.log('Security config not loaded')"></script>
     
     <!-- Shared CSS -->
     <link rel="stylesheet" href="assets/shared.css">
@@ -664,82 +606,59 @@
             z-index: 1;
         }
 
-        /* Enhanced password toggle visibility - Critical Fix */
+        /* Simplified password toggle - remove !important overuse */
         .password-container {
-            position: relative !important;
+            position: relative;
+            display: flex;
+            align-items: center;
         }
 
         .password-toggle {
-            /* Force absolute positioning and high z-index */
-            position: absolute !important;
-            right: 12px !important;
-            top: 50% !important;
-            z-index: 999 !important; /* Much higher z-index */
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            z-index: 10;
 
-            /* Ensure button is always visible */
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-            /* Force specific dimensions */
-            width: 24px !important;
-            height: 24px !important;
-            min-width: 24px !important;
-            min-height: 24px !important;
+            width: 32px;
+            height: 32px;
 
-            /* Clear all potential conflicts */
-            background: transparent !important;
-            border: none !important;
-            outline: none !important;
+            background: transparent;
+            border: none;
+            cursor: pointer;
 
-            /* Emoji styling */
-            font-size: 16px !important;
-            line-height: 1 !important;
-            text-align: center !important;
+            font-size: 18px;
+            color: #6b7280;
 
-            /* Color and hover states */
-            color: #6b7280 !important;
-            cursor: pointer !important;
-
-            /* Cross-browser transform with fallbacks */
-            -webkit-transform: translateY(-50%) !important;
-            -moz-transform: translateY(-50%) !important;
-            -ms-transform: translateY(-50%) !important;
-            -o-transform: translateY(-50%) !important;
-            transform: translateY(-50%) !important;
+            transform: translateY(-50%);
+            transition: color 0.2s ease;
         }
 
         .password-toggle:hover {
-            color: #374151 !important;
-            opacity: 0.8 !important;
+            color: #374151;
         }
 
-        .password-toggle:active,
         .password-toggle:focus {
-            color: #1f2937 !important;
-            outline: 2px solid #4a9eff !important;
-            outline-offset: 2px !important;
+            outline: 2px solid #4a9eff;
+            outline-offset: 2px;
+            border-radius: 4px;
         }
 
-        /* Ensure form-input doesn't interfere */
-        .form-input {
-            position: relative !important;
-            z-index: 1 !important;
+        .password-container .form-input {
+            padding-right: 45px;
         }
 
-        /* Specific fixes for confirm password field */
-        #signup-password-confirm {
-            padding-right: 50px !important;
-        }
-
-        /* Browser-specific fixes */
-        .ie-browser .password-toggle,
-        .edge-browser .password-toggle {
-            font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif !important;
-        }
-
-        .firefox-browser .password-toggle {
-            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif !important;
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .password-toggle {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+                touch-action: manipulation;
+            }
         }
     </style>
 </head>
@@ -878,17 +797,9 @@
             
             <div class="form-group">
                 <label class="form-label">Confirm Password</label>
-                <div class="password-container" style="position: relative !important; display: flex !important; align-items: center !important;">
-                    <input type="password" class="form-input" id="signup-password-confirm" required style="padding-right: 50px !important; width: 100% !important;">
-                    <button type="button" class="password-toggle" onclick="togglePassword('signup-password-confirm')"
-                            style="position: absolute !important; right: 12px !important; top: 50% !important;
-                                   transform: translateY(-50%) !important; z-index: 999 !important;
-                                   background: transparent !important; border: none !important;
-                                   font-size: 16px !important; cursor: pointer !important;
-                                   color: #6b7280 !important; display: block !important;
-                                   visibility: visible !important; opacity: 1 !important;
-                                   width: 24px !important; height: 24px !important;
-                                   line-height: 1 !important; text-align: center !important;">
+                <div class="password-container">
+                    <input type="password" class="form-input" id="signup-password-confirm" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('signup-password-confirm')">
                         👁️
                     </button>
                 </div>
@@ -922,199 +833,90 @@
     </main>
 
     <script>
-    // CRITICAL: Force confirm password eye button to appear
-    window.forceConfirmPasswordEyeButton = function() {
-        console.log('FORCING confirm password eye button creation...');
-
-        var confirmPasswordInput = document.getElementById('signup-password-confirm');
-        if (!confirmPasswordInput) {
-            console.error('Confirm password input not found - retrying in 500ms');
-            setTimeout(window.forceConfirmPasswordEyeButton, 500);
-            return;
-        }
-
-        var confirmPasswordContainer = confirmPasswordInput.parentNode;
-
-        // Remove any existing toggle buttons first
-        var existingToggles = confirmPasswordContainer.querySelectorAll('.password-toggle');
-        for (var i = 0; i < existingToggles.length; i++) {
-            existingToggles[i].remove();
-        }
-
-        // Create new toggle button with absolute positioning
-        var eyeButton = document.createElement('button');
-        eyeButton.type = 'button';
-        eyeButton.className = 'password-toggle confirm-password-toggle';
-        eyeButton.innerHTML = '👁️';
-        eyeButton.setAttribute('onclick', "togglePassword('signup-password-confirm')");
-
-        // Apply critical styling directly
-        eyeButton.style.cssText = [
-            'position: absolute !important',
-            'right: 12px !important',
-            'top: 50% !important',
-            'transform: translateY(-50%) !important',
-            'z-index: 9999 !important',
-            'background: transparent !important',
-            'border: none !important',
-            'font-size: 18px !important',
-            'cursor: pointer !important',
-            'color: #6b7280 !important',
-            'display: block !important',
-            'visibility: visible !important',
-            'opacity: 1 !important',
-            'width: 30px !important',
-            'height: 30px !important',
-            'min-width: 30px !important',
-            'min-height: 30px !important',
-            'line-height: 1 !important',
-            'text-align: center !important',
-            'padding: 0 !important',
-            'margin: 0 !important',
-            'font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif !important'
-        ].join('; ');
-
-        // Ensure container is relative positioned
-        confirmPasswordContainer.style.position = 'relative';
-        confirmPasswordInput.style.paddingRight = '45px';
-
-        // Insert the button
-        confirmPasswordContainer.appendChild(eyeButton);
-
-        // Add click handler as backup
-        eyeButton.onclick = function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            window.togglePassword('signup-password-confirm');
-        };
-
-        console.log('Confirm password eye button FORCED into existence:', eyeButton);
-        return eyeButton;
-    };
-
-    // Enhanced function to ensure confirm password eye button visibility
-    window.ensureConfirmPasswordEyeButton = function() {
-        console.log('Ensuring confirm password eye button visibility...');
-
-        var confirmPasswordInput = document.getElementById('signup-password-confirm');
-        var confirmPasswordContainer = confirmPasswordInput ? confirmPasswordInput.parentNode : null;
-        var existingToggle = confirmPasswordContainer ? confirmPasswordContainer.querySelector('.password-toggle') : null;
-
-        if (!confirmPasswordInput) {
-            console.error('Confirm password input not found');
-            return;
-        }
-
-        if (!confirmPasswordContainer || !confirmPasswordContainer.classList.contains('password-container')) {
-            console.error('Confirm password container not found or incorrectly structured');
-            return;
-        }
-
-        // Force container styling
-        confirmPasswordContainer.style.position = 'relative';
-        confirmPasswordContainer.style.display = 'flex';
-        confirmPasswordContainer.style.alignItems = 'center';
-
-        // Force input styling
-        confirmPasswordInput.style.paddingRight = '50px';
-        confirmPasswordInput.style.width = '100%';
-
-        if (existingToggle) {
-            // Force existing toggle visibility and positioning
-            existingToggle.style.position = 'absolute';
-            existingToggle.style.right = '12px';
-            existingToggle.style.top = '50%';
-            existingToggle.style.transform = 'translateY(-50%)';
-            existingToggle.style.zIndex = '999';
-            existingToggle.style.display = 'block';
-            existingToggle.style.visibility = 'visible';
-            existingToggle.style.opacity = '1';
-            existingToggle.style.background = 'transparent';
-            existingToggle.style.border = 'none';
-            existingToggle.style.fontSize = '16px';
-            existingToggle.style.cursor = 'pointer';
-            existingToggle.style.color = '#6b7280';
-            existingToggle.style.width = '24px';
-            existingToggle.style.height = '24px';
-            existingToggle.style.lineHeight = '1';
-            existingToggle.style.textAlign = 'center';
-
-            console.log('Confirm password eye button styling enforced');
-        } else {
-            // Create missing toggle button
-            console.log('Creating missing confirm password eye button');
-            var newToggle = document.createElement('button');
-            newToggle.type = 'button';
-            newToggle.className = 'password-toggle';
-            newToggle.innerHTML = '👁️';
-            newToggle.onclick = function() { window.togglePassword('signup-password-confirm'); };
-
-            // Apply direct styling
-            newToggle.style.position = 'absolute';
-            newToggle.style.right = '12px';
-            newToggle.style.top = '50%';
-            newToggle.style.transform = 'translateY(-50%)';
-            newToggle.style.zIndex = '999';
-            newToggle.style.display = 'block';
-            newToggle.style.visibility = 'visible';
-            newToggle.style.opacity = '1';
-            newToggle.style.background = 'transparent';
-            newToggle.style.border = 'none';
-            newToggle.style.fontSize = '16px';
-            newToggle.style.cursor = 'pointer';
-            newToggle.style.color = '#6b7280';
-            newToggle.style.width = '24px';
-            newToggle.style.height = '24px';
-            newToggle.style.lineHeight = '1';
-            newToggle.style.textAlign = 'center';
-
-            confirmPasswordContainer.appendChild(newToggle);
-            console.log('Confirm password eye button created and styled');
-        }
-    };
-
-    // Password toggle button initialization and fallback
+    // Simplified password toggle initialization
     window.initializePasswordToggles = function() {
-        console.log('Initializing password toggle buttons...');
+        console.log('Initializing password toggles...');
 
-        // Find all password containers
         var containers = document.querySelectorAll('.password-container');
-
-        containers.forEach ? containers.forEach(function(container) {
-            initializeContainer(container);
-        }) : Array.prototype.forEach.call(containers, function(container) {
-            initializeContainer(container);
-        });
-
-        function initializeContainer(container) {
+        for (var i = 0; i < containers.length; i++) {
+            var container = containers[i];
             var input = container.querySelector('input[type="password"]');
             var toggle = container.querySelector('.password-toggle');
 
-            if (input && !toggle) {
-                // Create missing toggle button
-                console.log('Creating missing toggle button for:', input.id);
-                var button = document.createElement('button');
-                button.type = 'button';
-                button.className = 'password-toggle';
-                button.innerHTML = '👁️';
-                button.onclick = function() { window.togglePassword(input.id); };
-                container.appendChild(button);
-            }
-
-            if (toggle) {
-                // Ensure toggle is properly configured
+            if (input && toggle) {
+                // Ensure proper styling
+                container.style.position = 'relative';
                 toggle.style.position = 'absolute';
                 toggle.style.right = '12px';
                 toggle.style.top = '50%';
                 toggle.style.transform = 'translateY(-50%)';
-                toggle.style.zIndex = '999';
-                toggle.style.display = 'block';
-                toggle.style.visibility = 'visible';
-                toggle.style.opacity = '1';
-                console.log('Toggle button initialized for:', input ? input.id : 'unknown');
+                toggle.style.zIndex = '10';
+                toggle.style.display = 'flex';
+                toggle.style.alignItems = 'center';
+                toggle.style.justifyContent = 'center';
+                console.log('Password toggle initialized for:', input.id);
             }
         }
     };
+
+    // Simple mobile-safe password toggle function
+    window.togglePassword = function(inputId) {
+        console.log('Toggling password for:', inputId);
+
+        var input = document.getElementById(inputId);
+        if (!input) {
+            console.error('Input not found:', inputId);
+            return;
+        }
+
+        var container = input.closest('.password-container');
+        var toggle = container ? container.querySelector('.password-toggle') : null;
+
+        if (!toggle) {
+            console.error('Toggle button not found for:', inputId);
+            return;
+        }
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            toggle.textContent = '🙈';
+            toggle.setAttribute('aria-label', 'Hide password');
+        } else {
+            input.type = 'password';
+            toggle.textContent = '👁️';
+            toggle.setAttribute('aria-label', 'Show password');
+        }
+    };
+
+    // Initialize page when DOM is ready - simplified approach
+    function initializePage() {
+        console.log('Initializing auth page...');
+
+        // Initialize password toggles
+        window.initializePasswordToggles();
+
+        // Set up form handlers without complex dependencies
+        var signinForm = document.getElementById('signin-form');
+        var signupForm = document.getElementById('signup-form');
+
+        if (signinForm) {
+            signinForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('Signin form submitted');
+                // Basic signin logic here
+            });
+        }
+
+        if (signupForm) {
+            signupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('Signup form submitted');
+                // Basic signup logic here
+            });
+        }
+
+        console.log('Auth page initialized successfully');
+    }
 
     // Cross-browser polyfills and compatibility fixes
     (function() {
@@ -1194,21 +996,10 @@
         // Generate role-specific fields for AI/ML optimization
         generateRoleSpecificFields(role);
 
-        // Ensure password toggles are initialized after form is shown
+        // Initialize password toggles after form is shown
         setTimeout(function() {
             window.initializePasswordToggles();
-            // FORCE confirm password eye button to appear
-            window.forceConfirmPasswordEyeButton();
         }, 100);
-
-        // Additional FORCE checks after longer delays
-        setTimeout(function() {
-            window.forceConfirmPasswordEyeButton();
-        }, 500);
-
-        setTimeout(function() {
-            window.forceConfirmPasswordEyeButton();
-        }, 1000);
     };
 
     // Generate role-specific fields optimized for AI/ML matching
@@ -1435,119 +1226,21 @@
         proceedToSignup();
     };
 
-    // Initialize password toggles when DOM is ready
-    (function() {
-        function initWhenReady() {
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', function() {
-                    setTimeout(function() {
-                        window.initializePasswordToggles();
-                        window.forceConfirmPasswordEyeButton();
-                    }, 100);
-                });
-            } else {
-                setTimeout(function() {
-                    window.initializePasswordToggles();
-                    window.forceConfirmPasswordEyeButton();
-                }, 100);
-            }
-        }
+    // Simple initialization when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializePage);
+    } else {
+        initializePage();
+    }
 
-        // Also initialize when window loads (fallback)
-        if (window.addEventListener) {
-            window.addEventListener('load', function() {
-                setTimeout(function() {
-                    window.initializePasswordToggles();
-                    window.forceConfirmPasswordEyeButton();
-                }, 200);
-                // Additional FORCE checks for confirm password specifically
-                setTimeout(window.forceConfirmPasswordEyeButton, 1000);
-                setTimeout(window.forceConfirmPasswordEyeButton, 2000);
-                // Mobile-specific initialization
-                if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                    setTimeout(function() {
-                        console.log('Mobile device detected, FORCING confirm password eye button');
-                        window.initializePasswordToggles();
-                        window.forceConfirmPasswordEyeButton();
-                    }, 3000);
-                }
-            });
-        } else if (window.attachEvent) {
-            window.attachEvent('onload', function() {
-                setTimeout(function() {
-                    window.initializePasswordToggles();
-                    window.forceConfirmPasswordEyeButton();
-                }, 200);
-            });
-        }
+    // Fallback initialization on window load
+    window.addEventListener('load', function() {
+        setTimeout(initializePage, 100);
+    });
 
-        // Mobile-specific event listeners
-        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-            if (window.addEventListener) {
-                window.addEventListener('touchstart', function() {
-                    // FORCE forms to be initialized on first touch
-                    setTimeout(function() {
-                        window.initializePasswordToggles();
-                        window.forceConfirmPasswordEyeButton();
-                    }, 100);
-                }, { once: true });
-            }
-        }
-
-        initWhenReady();
-    })();
-
-    // Global password toggle function (must be outside ES module for onclick access)
-    window.togglePassword = function(inputId) {
-        console.log('togglePassword called with inputId:', inputId);
-        
-        const input = document.getElementById(inputId);
-        if (!input) {
-            console.error('Input not found:', inputId);
-            return;
-        }
-        
-        console.log('Input found:', input);
-        console.log('Current input type:', input.type);
-        
-        // Find the toggle button - it should be the next sibling or find by class
-        let toggle = input.nextElementSibling;
-        if (!toggle || !toggle.classList.contains('password-toggle')) {
-            // Fallback: look for the toggle button in the same container
-            const container = input.closest('.password-container');
-            if (container) {
-                toggle = container.querySelector('.password-toggle');
-            }
-        }
-        
-        if (!toggle) {
-            console.error('Toggle button not found for:', inputId);
-            console.error('Available buttons in container:', document.querySelectorAll('.password-container .password-toggle'));
-            return;
-        }
-        
-        console.log('Toggle button found:', toggle);
-        
-        if (input.type === 'password') {
-            input.type = 'text';
-            toggle.textContent = '🙈';
-            toggle.setAttribute('aria-label', 'Hide password');
-            console.log('Changed to text type - password visible');
-        } else {
-            input.type = 'password';
-            toggle.textContent = '👁️';
-            toggle.setAttribute('aria-label', 'Show password');
-            console.log('Changed to password type - password hidden');
-        }
-    };
     </script>
 
-    <!-- Optimized External Auth Module -->
-    <script type="module" src="assets/auth-optimized.js"></script>
-    <script type="module" src="assets/real-time-communication.js"></script>
-    <script type="module" src="assets/advanced-analytics.js"></script>
-
-    <!-- Contact Us Component -->
-    <script src="contact-us.js" defer></script>
+    <!-- Simplified external dependencies -->
+    <script src="assets/auth-optimized.js" defer onerror="console.log('Auth module failed to load')"></script>
 </body>
 </html>

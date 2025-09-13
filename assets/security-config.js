@@ -42,9 +42,16 @@ class SecurityManager {
 
     isDevelopment() {
         const hostname = window.location.hostname.toLowerCase();
+        const protocol = window.location.protocol;
+
+        // Allow file:// protocol for local development
+        if (protocol === 'file:') {
+            return true;
+        }
+
         return this.config.developmentDomains.some(domain => {
             return hostname === domain || hostname.startsWith(domain);
-        }) || hostname.includes('local') || hostname.startsWith('192.168.');
+        }) || hostname.includes('local') || hostname.startsWith('192.168.') || hostname === '';
     }
 
     isAllowedDomain() {
@@ -55,36 +62,45 @@ class SecurityManager {
     }
 
     enforceSecureConnection() {
-        // Skip in development
+        // Skip in development (including file:// protocol)
         if (this.isDevelopment()) {
             console.log('🔓 Development mode: HTTPS enforcement disabled');
             return;
         }
 
+        // Skip on auth page to prevent redirect loops
+        if (window.location.pathname.includes('auth')) {
+            console.log('🔓 Auth page: HTTPS enforcement disabled');
+            return;
+        }
+
         // Redirect www to non-www first
         if (window.location.hostname === 'www.guide-signal.com') {
-            const redirectUrl = 'https://guide-signal.com' + 
-                               window.location.pathname + 
-                               window.location.search + 
+            const redirectUrl = 'https://guide-signal.com' +
+                               window.location.pathname +
+                               window.location.search +
                                window.location.hash;
             console.log('🔄 Redirecting www to apex domain:', redirectUrl);
             window.location.replace(redirectUrl);
             return;
         }
 
-        // Enforce HTTPS
-        if (window.location.protocol !== 'https:') {
+        // Enforce HTTPS only for production domains
+        if (window.location.protocol !== 'https:' && !this.isDevelopment()) {
             if (this.isAllowedDomain()) {
-                const httpsUrl = 'https://' + window.location.hostname + 
-                               window.location.pathname + 
-                               window.location.search + 
+                const httpsUrl = 'https://' + window.location.hostname +
+                               window.location.pathname +
+                               window.location.search +
                                window.location.hash;
-                
+
                 console.log('🔐 Enforcing HTTPS:', httpsUrl);
                 window.location.replace(httpsUrl);
             } else {
                 console.error('🚫 Unauthorized domain detected:', window.location.hostname);
-                this.showSecurityWarning('This domain is not authorized for secure access.');
+                // Only show warning for non-development environments
+                if (!this.isDevelopment()) {
+                    this.showSecurityWarning('This domain is not authorized for secure access.');
+                }
             }
         }
     }
