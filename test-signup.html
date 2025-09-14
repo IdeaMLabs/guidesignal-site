@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Signup Flow Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-results {
+            background: #f0f8ff;
+            border: 1px solid #4a9eff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .success {
+            color: #059669;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        .test-step {
+            margin: 10px 0;
+            padding: 8px;
+            background: #f9fafb;
+            border-radius: 4px;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        .test-controls {
+            margin: 20px 0;
+        }
+        button {
+            background: #4a9eff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Auth Signup Flow Test Results</h1>
+
+    <div class="test-controls">
+        <button onclick="runAutomatedTest()">🚀 Run Automated Test</button>
+        <button onclick="clearResults()">🧹 Clear Results</button>
+        <button onclick="reloadFrame()">🔄 Reload Auth Page</button>
+    </div>
+
+    <div id="test-results" class="test-results">
+        <h3>Test Results:</h3>
+        <div id="results-content">Click "Run Automated Test" to begin testing...</div>
+    </div>
+
+    <iframe id="auth-frame" src="auth.html"></iframe>
+
+    <script>
+        let testResults = [];
+
+        function logResult(message, type = 'info') {
+            testResults.push({
+                timestamp: new Date().toLocaleTimeString(),
+                message: message,
+                type: type
+            });
+            updateResultsDisplay();
+        }
+
+        function updateResultsDisplay() {
+            const content = document.getElementById('results-content');
+            const html = testResults.map(result => {
+                const className = result.type === 'success' ? 'success' : result.type === 'error' ? 'error' : '';
+                return `<div class="test-step ${className}">[${result.timestamp}] ${result.message}</div>`;
+            }).join('');
+            content.innerHTML = html || 'No test results yet...';
+        }
+
+        function clearResults() {
+            testResults = [];
+            updateResultsDisplay();
+        }
+
+        function reloadFrame() {
+            document.getElementById('auth-frame').src = 'auth.html?' + Date.now();
+            logResult('Auth page reloaded', 'info');
+        }
+
+        async function runAutomatedTest() {
+            logResult('🧪 Starting automated signup flow test...', 'info');
+            clearResults();
+            logResult('🧪 Starting automated signup flow test...', 'info');
+
+            try {
+                const frame = document.getElementById('auth-frame');
+                const frameDoc = frame.contentDocument || frame.contentWindow.document;
+                const frameWindow = frame.contentWindow;
+
+                // Wait for page to load
+                logResult('⏳ Waiting for auth page to load...', 'info');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Check if required functions exist
+                if (typeof frameWindow.testSignupFlow !== 'function') {
+                    logResult('❌ testSignupFlow function not found', 'error');
+                    return;
+                }
+
+                logResult('✅ Found testSignupFlow function', 'success');
+
+                // Run the test
+                logResult('🚀 Executing testSignupFlow()...', 'info');
+                frameWindow.testSignupFlow();
+
+                // Wait for test to complete
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Check results
+                await checkTestResults(frameWindow, frameDoc);
+
+            } catch (error) {
+                logResult(`❌ Test failed with error: ${error.message}`, 'error');
+                console.error('Test error:', error);
+            }
+        }
+
+        async function checkTestResults(frameWindow, frameDoc) {
+            // Check if we're on the signup form
+            const signupForm = frameDoc.getElementById('signup-form');
+            if (!signupForm || signupForm.style.display === 'none') {
+                logResult('❌ Signup form not visible', 'error');
+                return;
+            }
+
+            logResult('✅ Signup form is visible', 'success');
+
+            // Check if fields are filled
+            const testFields = [
+                'signup-name',
+                'signup-email',
+                'signup-password',
+                'signup-password-confirm',
+                'university',
+                'major',
+                'graduation-year',
+                'opportunity-type'
+            ];
+
+            let filledFields = 0;
+            testFields.forEach(fieldId => {
+                const field = frameDoc.getElementById(fieldId);
+                if (field && field.value) {
+                    filledFields++;
+                    logResult(`✅ Field '${fieldId}' filled: "${field.value}"`, 'success');
+                } else {
+                    logResult(`⚠️ Field '${fieldId}' not found or empty`, 'error');
+                }
+            });
+
+            logResult(`📊 ${filledFields}/${testFields.length} fields filled`, filledFields === testFields.length ? 'success' : 'error');
+
+            // Check password toggles
+            const passwordToggles = frameDoc.querySelectorAll('.password-toggle');
+            logResult(`✅ Found ${passwordToggles.length} password toggle buttons`, 'success');
+
+            // Check if terms are accepted
+            const termsCheckbox = frameDoc.getElementById('terms-agreement');
+            if (termsCheckbox && termsCheckbox.checked) {
+                logResult('✅ Terms agreement checked', 'success');
+            } else {
+                logResult('❌ Terms agreement not checked', 'error');
+            }
+
+            // Check button state
+            const signupBtn = frameDoc.getElementById('signup-btn');
+            if (signupBtn) {
+                const isEnabled = !signupBtn.disabled;
+                const isBlue = signupBtn.style.backgroundColor === 'rgb(74, 158, 255)' ||
+                              signupBtn.style.backgroundColor === '#4a9eff' ||
+                              signupBtn.classList.contains('btn-enabled');
+
+                logResult(`🔘 Signup button enabled: ${isEnabled}`, isEnabled ? 'success' : 'error');
+                logResult(`🎨 Signup button is blue: ${isBlue}`, isBlue ? 'success' : 'error');
+
+                if (isEnabled && isBlue) {
+                    logResult('🎉 SUCCESS: Button is blue and ready for submission!', 'success');
+                } else {
+                    logResult('❌ FAIL: Button is not in the expected state', 'error');
+                }
+            } else {
+                logResult('❌ Signup button not found', 'error');
+            }
+
+            // Test password toggle functionality
+            if (passwordToggles.length > 0) {
+                logResult('🧪 Testing password toggle functionality...', 'info');
+                const firstToggle = passwordToggles[0];
+                const passwordInput = firstToggle.parentElement.querySelector('input');
+
+                if (passwordInput) {
+                    const originalType = passwordInput.type;
+                    firstToggle.click();
+
+                    setTimeout(() => {
+                        const newType = passwordInput.type;
+                        if (originalType !== newType) {
+                            logResult(`✅ Password toggle working: ${originalType} → ${newType}`, 'success');
+                        } else {
+                            logResult('❌ Password toggle not working', 'error');
+                        }
+                    }, 100);
+                }
+            }
+
+            // Final summary
+            logResult('📋 TEST COMPLETE - Check results above', 'info');
+        }
+
+        // Auto-run test when iframe loads
+        document.getElementById('auth-frame').onload = function() {
+            setTimeout(() => {
+                logResult('📄 Auth page loaded in iframe', 'success');
+            }, 500);
+        };
+    </script>
+</body>
+</html>
