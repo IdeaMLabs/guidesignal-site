@@ -523,19 +523,30 @@
             line-height: 1.4;
         }
         
-        /* Selected State Styling */
+        /* Enhanced Selected State Styling */
         .role-option.selected {
             border-color: var(--primary-500);
             background: #f0f8ff;
             box-shadow: 0 4px 12px rgba(74, 158, 255, 0.2);
+            transform: translateY(-2px);
         }
-        
+
         .role-option.selected .role-title {
             color: var(--primary-600);
         }
-        
+
         .role-option.selected .role-desc {
             color: #555;
+        }
+
+        .role-option.selected::before {
+            content: '✓';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            color: var(--primary-600);
+            font-weight: bold;
+            font-size: 18px;
         }
         
         /* Animation for selection change */
@@ -846,7 +857,7 @@
                 </label>
             </div>
 
-            <button type="button" class="btn" onclick="proceedToSignup()" style="margin-top: 24px; width: 100%;">
+            <button type="button" class="btn btn-disabled" id="continue-btn" onclick="proceedToSignup()" style="margin-top: 24px; width: 100%;" disabled>
                 <span class="btn-text">Continue</span>
             </button>
         </div>
@@ -1088,6 +1099,9 @@
             document.getElementById('signin-form').style.display = 'block';
             document.getElementById('signup-choice').style.display = 'none';
             document.getElementById('signup-form').style.display = 'none';
+
+            // Setup role selection handlers for continue button
+            setupRoleSelectionHandlers();
 
             // Set up complete form handlers
             var signinForm = document.getElementById('signin-form');
@@ -1831,7 +1845,106 @@
         }, 100);
     }
 
-    // Make test function globally available for console testing
+    // Setup role selection handlers for continue button
+    function setupRoleSelectionHandlers() {
+        var roleRadios = document.querySelectorAll('input[name="signup-role"]');
+        var continueBtn = document.getElementById('continue-btn');
+
+        if (!continueBtn) {
+            console.warn('Continue button not found');
+            return;
+        }
+
+        // Initially disable the continue button
+        updateContinueButtonState(false);
+
+        // Add event listeners to all role radio buttons
+        for (var i = 0; i < roleRadios.length; i++) {
+            roleRadios[i].addEventListener('change', function() {
+                updateContinueButtonState(true);
+
+                // Add visual selection feedback
+                var roleOptions = document.querySelectorAll('.role-option');
+                for (var j = 0; j < roleOptions.length; j++) {
+                    roleOptions[j].classList.remove('selected');
+                }
+
+                // Add selected class to the chosen option
+                var selectedOption = this.closest('.role-option');
+                if (selectedOption) {
+                    selectedOption.classList.add('selected');
+                }
+            });
+        }
+    }
+
+    // Update continue button state with visual feedback
+    function updateContinueButtonState(isEnabled) {
+        var continueBtn = document.getElementById('continue-btn');
+        if (!continueBtn) return;
+
+        if (isEnabled) {
+            continueBtn.disabled = false;
+            continueBtn.className = 'btn btn-enabled';
+            continueBtn.style.backgroundColor = '#4a9eff';
+            continueBtn.style.color = 'white';
+            continueBtn.style.cursor = 'pointer';
+            continueBtn.style.boxShadow = '0 2px 4px rgba(74, 158, 255, 0.2)';
+        } else {
+            continueBtn.disabled = true;
+            continueBtn.className = 'btn btn-disabled';
+            continueBtn.style.backgroundColor = '#d1d5db';
+            continueBtn.style.color = '#9ca3af';
+            continueBtn.style.cursor = 'not-allowed';
+            continueBtn.style.boxShadow = 'none';
+        }
+    }
+
+    // Test continue button functionality
+    window.testContinueButton = function() {
+        console.log('🧪 Testing continue button functionality...');
+
+        // Switch to signup tab first
+        switchTab('signup-choice', document.querySelector('.auth-tab:last-child'));
+
+        setTimeout(function() {
+            var continueBtn = document.getElementById('continue-btn');
+            var roles = ['student', 'job_seeker', 'recruiter'];
+
+            console.log('🔘 Initial continue button state:', {
+                disabled: continueBtn.disabled,
+                className: continueBtn.className,
+                backgroundColor: continueBtn.style.backgroundColor
+            });
+
+            // Test each role selection
+            roles.forEach(function(role, index) {
+                setTimeout(function() {
+                    console.log(`🎯 Testing ${role} selection...`);
+
+                    var radioBtn = document.querySelector(`input[name="signup-role"][value="${role}"]`);
+                    if (radioBtn) {
+                        radioBtn.checked = true;
+                        radioBtn.dispatchEvent(new Event('change'));
+
+                        setTimeout(function() {
+                            console.log(`✅ ${role} selected - Button state:`, {
+                                disabled: continueBtn.disabled,
+                                className: continueBtn.className,
+                                backgroundColor: continueBtn.style.backgroundColor
+                            });
+
+                            if (index === roles.length - 1) {
+                                console.log('🎉 Continue button test completed!');
+                            }
+                        }, 100);
+                    }
+                }, index * 1000);
+            });
+        }, 500);
+    };
+
+    // Make test functions globally available for console testing
     window.fillTestData = fillTestData;
 
     </script>
