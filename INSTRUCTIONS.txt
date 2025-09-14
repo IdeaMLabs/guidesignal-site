@@ -1,32 +1,30 @@
-# INSTRUCTIONS — Signup + Signin Completion Fix
+# INSTRUCTIONS — Continue Button Fix
 
-This patch ensures the full flow works:
+This patch ensures the "Continue" button enables properly when a role is selected.
 
-1. SIGNUP
-   - "Continue" enables on role selection.
-   - "Create Account" enables only when all fields are valid.
-   - Inline errors show under the form.
-   - On success:
-     - Green message: "🎉 Account created successfully!"
-     - Auto-redirects to Sign In form after 2 seconds.
+## Problem in current file
+1. Inline stubs redefine `updateButtons()` and `updateSignupButtonState()` to no-ops, breaking logic.
+2. The button starts with `class="btn btn-disabled" disabled`. Even if the disabled attribute is removed, the `btn-disabled` class keeps it gray/inactive.
 
-2. SIGNIN
-   - "Sign In" button activates only if email + password filled.
-   - If invalid credentials → show ❌ error in red (#signin-error).
-   - If valid → show ✅ success in green (#signin-success) and redirect to /dashboard.html.
+## Fix
+1. Remove or comment out the inline stub functions that log "…". They override your real logic.
+   Example:
+   ```js
+   // window.updateButtons = function(){ console.log('…'); };
+   // window.updateSignupButtonState = function(){ console.log('…'); };
+   ```
 
-How to use:
-1. Save `signupSigninFix.js` into your script folder.
-2. Link in `auth.html`:
-   <script src="signupSigninFix.js" defer></script>
-3. Ensure you have these containers in HTML:
-   - #error-message (signup errors)
-   - #success-message (signup success)
-   - #signin-error (signin errors)
-   - #signin-success (signin success)
-4. Remove conflicting old functions like updateButtons().
+2. Add `continueButtonFix.js` to your project and include it in `auth.html`:
+   ```html
+   <script src="continueButtonFix.js" defer></script>
+   ```
 
-End Result:
-✅ Signup works, confirms, redirects to signin.  
-✅ Signin validates, confirms, redirects to dashboard.  
-✅ Smooth, error-free user flow.
+3. This script:
+   - Watches all `input[name="role"]` radios.
+   - Enables the "Continue" button immediately when one is selected.
+   - Removes the `btn-disabled` class so the button looks and acts active.
+   - Syncs the hidden `#selected-role` field with the chosen value.
+
+## End Result
+- Selecting any role makes the "Continue" button turn blue and clickable.
+- No more stuck/gray button due to `btn-disabled` class.

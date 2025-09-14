@@ -149,6 +149,7 @@
     <!-- COMMENTED OUT: Replaced by signupSigninFix.js for complete signup/signin flow -->
     <script src="passwordToggleFix_v2.js" defer onerror="console.log('Password toggle fix v2 not loaded')"></script>
     <script src="signupSigninFix.js" defer onerror="console.log('Signup signin fix not loaded')"></script>
+    <script src="continueButtonFix.js" defer onerror="console.log('Continue button fix not loaded')"></script>
     
     <!-- Shared CSS -->
     <link rel="stylesheet" href="assets/shared.css">
@@ -1084,6 +1085,9 @@
         console.log('Password toggles handled by passwordToggleFix_v2.js');
     };
 
+    // COMMENTED OUT: Stub functions were interfering with continueButtonFix.js
+    // Let the real validation scripts (signupSigninFix.js + continueButtonFix.js) handle button logic
+    /*
     // NEW: signupSigninFix.js handles all button validation automatically
     // Stub functions to prevent errors from existing calls
     window.updateButtons = function() {
@@ -1092,6 +1096,7 @@
     window.updateSignupButtonState = function() {
         console.log('Signup button validation handled by signupSigninFix.js');
     };
+    */
 
     /*
     // Password Toggle Fix - Toggle function for any input ID
