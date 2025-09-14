@@ -1345,12 +1345,23 @@
             // Initialize password toggles first
             window.initializePasswordToggles();
 
-            // Initialize button validation according to buttonValidationFix instructions
+            // Initialize button validation - use available function from signupSigninFix.js
             document.querySelectorAll('input').forEach(function(el) {
-                el.addEventListener('input', updateButtons);
-                el.addEventListener('change', updateButtons);
+                el.addEventListener('input', function() {
+                    if (typeof updateSignupButtonState === 'function') {
+                        updateSignupButtonState(false);
+                    }
+                });
+                el.addEventListener('change', function() {
+                    if (typeof updateSignupButtonState === 'function') {
+                        updateSignupButtonState(false);
+                    }
+                });
             });
-            updateButtons(); // initial call
+            // Initial call to update button state
+            if (typeof updateSignupButtonState === 'function') {
+                updateSignupButtonState(false);
+            }
 
             // Set default tab state
             document.getElementById('signin-form').style.display = 'block';
@@ -1572,10 +1583,21 @@
 
             // Re-attach button validation listeners for dynamically generated fields
             document.querySelectorAll('input').forEach(function(el) {
-                el.addEventListener('input', updateButtons);
-                el.addEventListener('change', updateButtons);
+                el.addEventListener('input', function() {
+                    if (typeof updateSignupButtonState === 'function') {
+                        updateSignupButtonState(false);
+                    }
+                });
+                el.addEventListener('change', function() {
+                    if (typeof updateSignupButtonState === 'function') {
+                        updateSignupButtonState(false);
+                    }
+                });
             });
-            updateButtons(); // Update button states after form reveal
+            // Update button states after form reveal
+            if (typeof updateSignupButtonState === 'function') {
+                updateSignupButtonState(false);
+            }
         }, 200);
     };
 
