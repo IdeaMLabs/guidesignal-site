@@ -145,6 +145,7 @@
     
     <!-- Simplified Security - reduce potential conflicts -->
     <script src="assets/security-config.js" defer onerror="console.log('Security config not loaded')"></script>
+    <script src="roleButtonFix.js" defer onerror="console.log('Role button fix not loaded')"></script>
     
     <!-- Shared CSS -->
     <link rel="stylesheet" href="assets/shared.css">
@@ -983,6 +984,8 @@
 
     <script>
     // Button Validation Fix - according to instructions in buttonValidationFix.js
+    // COMMENTED OUT: Old updateButtons() replaced by roleButtonFix.js version with hidden role sync
+    /*
     function updateButtons() {
         const roleSelected = document.querySelector('input[name="role"]:checked');
         const pwdInput = document.getElementById('signup-password');
@@ -1021,6 +1024,7 @@
             }
         }
     }
+    */
 
     // Password Toggle Fix - Initialize toggles for ALL password containers
     window.initializePasswordToggles = function() {
@@ -1288,6 +1292,8 @@
         }
     }
 
+    // COMMENTED OUT: Old enableSignupButton() replaced by roleButtonFix.js updateButtons()
+    /*
     function enableSignupButton() {
         var signupBtn = document.getElementById('create-account-btn');
         var selectedRole = document.getElementById('selected-role').value;
@@ -1299,6 +1305,7 @@
             signupBtn.disabled = true;
         }
     }
+    */
 
     // Initialize page when DOM is ready - complete functionality
     function initializePage() {
@@ -1528,10 +1535,9 @@
             console.log('Role-specific fields generation skipped - function not available');
         }
 
-        // Initialize password toggles and enable signup button
+        // Initialize password toggles and refresh button states
         setTimeout(function() {
             window.initializePasswordToggles();
-            updateSignupButtonState(false);
             setupRealTimeValidation();
 
             // Re-attach button validation listeners for dynamically generated fields
@@ -1540,7 +1546,7 @@
                 el.addEventListener('change', updateButtons);
             });
             updateButtons(); // Update button states after form reveal
-        }, 100);
+        }, 200);
     };
 
     // Generate role-specific fields optimized for AI/ML matching

@@ -1,30 +1,33 @@
-# INSTRUCTIONS for Agent — Button Validation Fix
+# INSTRUCTIONS for Agent — Role + Button Fix
 
-This package includes `buttonValidationFix.js`, which ensures the Continue and Create Account buttons behave correctly.
+This package includes `roleButtonFix.js`, which ensures both the Continue and Create Account buttons activate properly.
 
 ## What the Agent Must Do
 
-1. **Continue Button**
+1. **Hidden Role Sync**
+   - Radio buttons for roles (Student, Job Seeker, Recruiter) must update the hidden input `#selected-role` immediately on change.
+   - This ensures the role is carried forward into the signup form.
+
+2. **Continue Button**
    - ID: `continue-btn`
-   - Should be disabled by default.
-   - Becomes active (blue, clickable) when any role radio button is selected (`name="role"`).
+   - Disabled by default.
+   - Becomes active as soon as a role is selected.
 
-2. **Create Account Button**
+3. **Create Account Button**
    - ID: `create-account-btn`
-   - Should be disabled by default.
-   - Becomes active when ALL of the following are true:
+   - Disabled by default.
+   - Becomes active only when:
      - A role is selected
-     - Password and Confirm Password fields are filled (`id="signup-password"`, `id="signup-password-confirm"`) and match
-     - Terms checkbox (`id="terms"`) is checked
+     - Password + Confirm Password are filled and match (`#signup-password`, `#signup-password-confirm`)
+     - Terms checkbox (`#terms`) is checked
 
-3. **Visual States**
-   - Disabled button: gray background, gray text, not clickable.
-   - Active button: blue background, white text, clickable.
+4. **Form Reveal**
+   - At the end of `proceedToSignup()`, `updateButtons()` is re-run (with a slight delay) so button states refresh once the signup form is visible.
 
-4. **How It Works**
-   - `updateButtons()` checks the above conditions and updates button states accordingly.
-   - Event listeners are attached to all input fields and the terms checkbox so the buttons update in real-time.
+5. **Remove Old Conflicting Functions**
+   - Remove or comment out any older functions like `enableSignupButton()` so `updateButtons()` is the only validation function controlling button state.
 
 ## End Result
-- Users cannot proceed until conditions are met.
-- Signup flow feels smooth and professional, preventing incomplete or invalid submissions.
+- **Continue** button turns blue immediately on role selection.
+- **Create Account** button turns blue only when all signup requirements are met.
+- Signup flow works reliably with hidden role syncing and unified validation.
