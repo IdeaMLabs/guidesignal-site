@@ -1085,18 +1085,15 @@
         console.log('Password toggles handled by passwordToggleFix_v2.js');
     };
 
-    // COMMENTED OUT: Stub functions were interfering with continueButtonFix.js
-    // Let the real validation scripts (signupSigninFix.js + continueButtonFix.js) handle button logic
-    /*
-    // NEW: signupSigninFix.js handles all button validation automatically
-    // Stub functions to prevent errors from existing calls
+    // Stub function to bridge internal updateButtons calls to external updateSignupButtonState
     window.updateButtons = function() {
-        console.log('Button validation handled by signupSigninFix.js');
+        // Delegate to the external signupSigninFix.js updateSignupButtonState function
+        if (typeof updateSignupButtonState === 'function') {
+            updateSignupButtonState(false);
+        }
     };
-    window.updateSignupButtonState = function() {
-        console.log('Signup button validation handled by signupSigninFix.js');
-    };
-    */
+
+    // NOTE: updateSignupButtonState is provided by signupSigninFix.js - don't override it here
 
     /*
     // Password Toggle Fix - Toggle function for any input ID
@@ -1371,12 +1368,26 @@
             // REMOVED: setupRoleSelectionHandlers() - now handled by continueButtonFix.js
             // This was causing conflicts with the external continue button handler
 
-            // Initialize continue button state (will be handled by continueButtonFix.js)
+            // Initialize continue button state and handle conflicts between scripts
             var continueBtn = document.getElementById('continue-btn');
             if (continueBtn) {
                 continueBtn.disabled = true;
                 continueBtn.classList.add('btn-disabled');
                 continueBtn.classList.remove('active');
+
+                // Override signupSigninFix.js continue button handling with continueButtonFix.js style
+                setTimeout(function() {
+                    document.querySelectorAll("input[name='role']").forEach(function(radio) {
+                        radio.addEventListener('change', function() {
+                            // Apply continueButtonFix.js styling when role is selected
+                            if (radio.checked) {
+                                continueBtn.disabled = false;
+                                continueBtn.classList.add('active');
+                                continueBtn.classList.remove('disabled', 'btn-disabled');
+                            }
+                        });
+                    });
+                }, 100);
             }
 
             // Set up complete form handlers
