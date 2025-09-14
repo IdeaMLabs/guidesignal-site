@@ -37,7 +37,8 @@
       "Bash(unzip:*)",
       "Bash(xargs ls:*)",
       "Bash(sort:*)",
-      "Bash(echo $HOSTNAME)"
+      "Bash(echo $HOSTNAME)",
+      "Bash(gh repo view:*)"
     ],
     "deny": [],
     "ask": []
