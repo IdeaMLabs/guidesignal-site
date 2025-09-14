@@ -682,6 +682,64 @@
             padding-right: 45px;
         }
 
+        /* Enhanced button state styling with animations */
+        .btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-disabled {
+            background-color: #d1d5db !important;
+            color: #9ca3af !important;
+            cursor: not-allowed !important;
+            opacity: 0.6;
+        }
+
+        .btn-enabled {
+            background-color: #4a9eff !important;
+            color: white !important;
+            cursor: pointer !important;
+            box-shadow: 0 2px 4px rgba(74, 158, 255, 0.2);
+            opacity: 1;
+        }
+
+        .btn-enabled:hover {
+            background-color: #3b82f6 !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(74, 158, 255, 0.3);
+        }
+
+        .btn-enabled:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(74, 158, 255, 0.2);
+        }
+
+        /* Field validation styling */
+        .field-error {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            min-height: 1.25rem;
+        }
+
+        .field-success {
+            color: #059669;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            min-height: 1.25rem;
+        }
+
+        .form-input.error {
+            border-color: #dc2626;
+            box-shadow: 0 0 0 1px #dc2626;
+        }
+
+        .form-input.success {
+            border-color: #059669;
+            box-shadow: 0 0 0 1px #059669;
+        }
+
         /* Mobile optimizations */
         @media (max-width: 768px) {
             .password-toggle {
@@ -856,7 +914,7 @@
                 </label>
             </div>
             
-            <button type="submit" class="btn" id="signup-btn" disabled>
+            <button type="submit" class="btn btn-disabled" id="signup-btn" disabled>
                 <span class="btn-text">Create Account</span>
             </button>
         </form>
@@ -1036,10 +1094,15 @@
             var signupForm = document.getElementById('signup-form');
             var termsCheckbox = document.getElementById('terms-agreement');
 
-            // Terms checkbox handler
+            // Terms checkbox handler with enhanced validation
             if (termsCheckbox) {
-                termsCheckbox.addEventListener('change', enableSignupButton);
+                termsCheckbox.addEventListener('change', function() {
+                    updateSignupButtonState(false);
+                });
             }
+
+            // Setup real-time validation for all forms
+            setupRealTimeValidation();
 
             // Signin form handler
             if (signinForm) {
@@ -1091,7 +1154,7 @@
                         document.getElementById('role-display').textContent = '';
                         switchTab('signin', document.querySelector('.auth-tab'));
 
-                        // Pre-fill signin email
+                        // Pre-fill signin email for better UX
                         document.getElementById('signin-email').value = email;
 
                         successDiv.style.display = 'none';
@@ -1191,7 +1254,8 @@
         // Initialize password toggles and enable signup button
         setTimeout(function() {
             window.initializePasswordToggles();
-            enableSignupButton();
+            updateSignupButtonState(false);
+            setupRealTimeValidation();
         }, 100);
     };
 
@@ -1565,6 +1629,132 @@
     // Make function globally available
     window.generateRoleSpecificFields = generateRoleSpecificFields;
 
+    // Real-time validation setup for better user experience
+    function setupRealTimeValidation() {
+        var fields = ['signup-name', 'signup-email', 'signup-password', 'signup-password-confirm'];
+
+        fields.forEach(function(fieldId) {
+            var field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('input', function() {
+                    validateFieldRealTime(fieldId);
+                    setTimeout(function() { updateSignupButtonState(false); }, 100);
+                });
+                field.addEventListener('blur', function() {
+                    validateFieldRealTime(fieldId);
+                });
+            }
+        });
+
+        // Setup terms checkbox validation
+        var termsCheckbox = document.getElementById('terms-agreement');
+        if (termsCheckbox) {
+            termsCheckbox.addEventListener('change', function() {
+                updateSignupButtonState(false);
+            });
+        }
+
+        // Setup role-specific field validation when they're added
+        var roleFields = document.getElementById('role-specific-fields');
+        if (roleFields) {
+            roleFields.addEventListener('change', function() {
+                updateSignupButtonState(false);
+            });
+            roleFields.addEventListener('input', function() {
+                updateSignupButtonState(false);
+            });
+        }
+    }
+
+    // Individual field validation with immediate feedback
+    function validateFieldRealTime(fieldId) {
+        var field = document.getElementById(fieldId);
+        var errorElement = document.getElementById(fieldId + '-error');
+        var successElement = document.getElementById(fieldId + '-success');
+
+        if (!field) return;
+
+        var value = field.value.trim();
+        var isValid = false;
+        var errorMessage = '';
+        var successMessage = '';
+
+        // Clear previous states
+        field.classList.remove('error', 'success');
+        if (errorElement) errorElement.textContent = '';
+        if (successElement) successElement.textContent = '';
+
+        switch (fieldId) {
+            case 'signup-name':
+                if (!value) {
+                    errorMessage = 'Name is required';
+                } else if (value.length < 2) {
+                    errorMessage = 'Name must be at least 2 characters';
+                } else {
+                    isValid = true;
+                    successMessage = '✓ Valid name';
+                }
+                break;
+
+            case 'signup-email':
+                var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!value) {
+                    errorMessage = 'Email is required';
+                } else if (!emailRegex.test(value)) {
+                    errorMessage = 'Please enter a valid email address';
+                } else {
+                    isValid = true;
+                    successMessage = '✓ Valid email';
+                }
+                break;
+
+            case 'signup-password':
+                if (!value) {
+                    errorMessage = 'Password is required';
+                } else if (value.length < 8) {
+                    errorMessage = 'Password must be at least 8 characters';
+                } else {
+                    var strength = calculatePasswordStrength(value);
+                    if (strength < 3) {
+                        errorMessage = 'Password is weak. Add numbers, symbols, or make it longer';
+                    } else {
+                        isValid = true;
+                        successMessage = '✓ Strong password';
+                    }
+                }
+
+                // Also validate confirm password if it has a value
+                var confirmField = document.getElementById('signup-password-confirm');
+                if (confirmField && confirmField.value) {
+                    validateFieldRealTime('signup-password-confirm');
+                }
+                break;
+
+            case 'signup-password-confirm':
+                var passwordField = document.getElementById('signup-password');
+                var passwordValue = passwordField ? passwordField.value : '';
+
+                if (!value) {
+                    errorMessage = 'Please confirm your password';
+                } else if (value !== passwordValue) {
+                    errorMessage = 'Passwords do not match';
+                } else if (passwordValue) {
+                    isValid = true;
+                    successMessage = '✓ Passwords match';
+                }
+                break;
+        }
+
+        // Apply validation results
+        if (isValid) {
+            field.classList.add('success');
+            if (successElement) successElement.textContent = successMessage;
+        } else if (errorMessage) {
+            field.classList.add('error');
+            if (errorElement) errorElement.textContent = errorMessage;
+        }
+    }
+
     // Legacy function for backward compatibility
     window.showSignupForm = function(role) {
         // Set the role and proceed
@@ -1583,6 +1773,66 @@
     window.addEventListener('load', function() {
         setTimeout(initializePage, 100);
     });
+
+    // Test signup flow with example data (for demonstration purposes)
+    window.testSignupFlow = function() {
+        console.log('🧪 Testing complete signup flow...');
+
+        // Switch to signup tab
+        switchTab('signup-choice', document.querySelector('.auth-tab:last-child'));
+
+        // Select student role
+        setTimeout(function() {
+            var studentRadio = document.querySelector('input[name="signup-role"][value="student"]');
+            if (studentRadio) {
+                studentRadio.checked = true;
+                proceedToSignup();
+
+                // Fill in the form with test data
+                setTimeout(function() {
+                    fillTestData();
+                }, 500);
+            }
+        }, 200);
+    };
+
+    // Fill form with test data for demonstration
+    function fillTestData() {
+        var testData = {
+            'signup-name': 'John Doe',
+            'signup-email': 'john.doe@stanford.edu',
+            'signup-password': 'SecurePass123!',
+            'signup-password-confirm': 'SecurePass123!',
+            'university': 'Stanford University',
+            'major': 'Computer Science',
+            'graduation-year': '2025',
+            'opportunity-type': 'internship'
+        };
+
+        Object.keys(testData).forEach(function(fieldId) {
+            var field = document.getElementById(fieldId);
+            if (field) {
+                field.value = testData[fieldId];
+                // Trigger validation
+                validateFieldRealTime(fieldId);
+            }
+        });
+
+        // Check terms agreement
+        var termsCheckbox = document.getElementById('terms-agreement');
+        if (termsCheckbox) {
+            termsCheckbox.checked = true;
+        }
+
+        // Update button state
+        setTimeout(function() {
+            updateSignupButtonState(false);
+            console.log('✅ Test data filled. Button should now be blue and enabled.');
+        }, 100);
+    }
+
+    // Make test function globally available for console testing
+    window.fillTestData = fillTestData;
 
     </script>
 
