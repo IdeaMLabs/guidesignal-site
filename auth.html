@@ -726,6 +726,27 @@
             box-shadow: 0 1px 2px rgba(74, 158, 255, 0.2);
         }
 
+        /* Button validation states according to buttonValidationFix instructions */
+        .btn.disabled {
+            background-color: #9ca3af !important;
+            color: #6b7280 !important;
+            cursor: not-allowed !important;
+            border-color: #9ca3af !important;
+        }
+
+        .btn.active {
+            background-color: #4a9eff !important;
+            color: white !important;
+            cursor: pointer !important;
+            border-color: #4a9eff !important;
+            box-shadow: 0 2px 4px rgba(74, 158, 255, 0.2);
+        }
+
+        .btn.active:hover {
+            background-color: #3b82f6 !important;
+            transform: translateY(-1px);
+        }
+
         /* Field validation styling */
         .field-error {
             color: #dc2626;
@@ -851,7 +872,7 @@
 
             <div class="role-selector" style="gap: 16px;">
                 <label class="role-option" style="justify-content: flex-start; text-align: left; padding: 20px; cursor: pointer;">
-                    <input type="radio" name="signup-role" value="student" class="role-radio" style="margin-right: 12px;">
+                    <input type="radio" name="role" value="student" class="role-radio" style="margin-right: 12px;">
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <div style="font-size: 2rem;">🎓</div>
                         <div>
@@ -862,7 +883,7 @@
                 </label>
 
                 <label class="role-option" style="justify-content: flex-start; text-align: left; padding: 20px; cursor: pointer;">
-                    <input type="radio" name="signup-role" value="job_seeker" class="role-radio" style="margin-right: 12px;">
+                    <input type="radio" name="role" value="job_seeker" class="role-radio" style="margin-right: 12px;">
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <div style="font-size: 2rem;">💼</div>
                         <div>
@@ -873,7 +894,7 @@
                 </label>
 
                 <label class="role-option" style="justify-content: flex-start; text-align: left; padding: 20px; cursor: pointer;">
-                    <input type="radio" name="signup-role" value="recruiter" class="role-radio" style="margin-right: 12px;">
+                    <input type="radio" name="role" value="recruiter" class="role-radio" style="margin-right: 12px;">
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <div style="font-size: 2rem;">🗂️</div>
                         <div>
@@ -948,12 +969,12 @@
             
             <div class="form-group" style="margin-top: 10px;">
                 <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #6c757d; line-height: 1.4;">
-                    <input type="checkbox" id="terms-agreement" required style="margin-top: 2px; flex-shrink: 0;">
+                    <input type="checkbox" id="terms" required style="margin-top: 2px; flex-shrink: 0;">
                     <span>I agree to the <a href="/terms.html" target="_blank" style="color: #4a9eff; text-decoration: none;">Terms</a> and <a href="/privacy.html" target="_blank" style="color: #4a9eff; text-decoration: none;">Privacy Policy</a></span>
                 </label>
             </div>
             
-            <button type="submit" class="btn btn-disabled" id="signup-btn" disabled>
+            <button type="submit" class="btn btn-disabled" id="create-account-btn" disabled>
                 <span class="btn-text">Create Account</span>
             </button>
         </form>
@@ -961,6 +982,46 @@
     </main>
 
     <script>
+    // Button Validation Fix - according to instructions in buttonValidationFix.js
+    function updateButtons() {
+        const roleSelected = document.querySelector('input[name="role"]:checked');
+        const pwdInput = document.getElementById('signup-password');
+        const confirmPwdInput = document.getElementById('signup-password-confirm');
+        const termsCheckbox = document.getElementById('terms');
+
+        const pwd = pwdInput ? pwdInput.value : "";
+        const confirmPwd = confirmPwdInput ? confirmPwdInput.value : "";
+        const termsChecked = termsCheckbox ? termsCheckbox.checked : false;
+
+        // Continue Button
+        const continueBtn = document.getElementById('continue-btn');
+        if (continueBtn) {
+            if (roleSelected) {
+                continueBtn.disabled = false;
+                continueBtn.classList.add('active');
+                continueBtn.classList.remove('disabled');
+            } else {
+                continueBtn.disabled = true;
+                continueBtn.classList.add('disabled');
+                continueBtn.classList.remove('active');
+            }
+        }
+
+        // Create Account Button
+        const createBtn = document.getElementById('create-account-btn');
+        if (createBtn) {
+            if (roleSelected && pwd && confirmPwd && pwd === confirmPwd && termsChecked) {
+                createBtn.disabled = false;
+                createBtn.classList.add('active');
+                createBtn.classList.remove('disabled');
+            } else {
+                createBtn.disabled = true;
+                createBtn.classList.add('disabled');
+                createBtn.classList.remove('active');
+            }
+        }
+    }
+
     // Password Toggle Fix - Initialize toggles for ALL password containers
     window.initializePasswordToggles = function() {
         console.log('Initializing password toggles...');
@@ -1069,7 +1130,7 @@
         var password = document.getElementById('signup-password').value;
         var passwordConfirm = document.getElementById('signup-password-confirm').value;
         var selectedRole = document.getElementById('selected-role').value;
-        var termsCheckbox = document.getElementById('terms-agreement');
+        var termsCheckbox = document.getElementById('terms');
 
         var errors = [];
 
@@ -1228,9 +1289,9 @@
     }
 
     function enableSignupButton() {
-        var signupBtn = document.getElementById('signup-btn');
+        var signupBtn = document.getElementById('create-account-btn');
         var selectedRole = document.getElementById('selected-role').value;
-        var termsCheckbox = document.getElementById('terms-agreement');
+        var termsCheckbox = document.getElementById('terms');
 
         if (selectedRole && termsCheckbox && termsCheckbox.checked) {
             signupBtn.disabled = false;
@@ -1247,6 +1308,13 @@
             // Initialize password toggles first
             window.initializePasswordToggles();
 
+            // Initialize button validation according to buttonValidationFix instructions
+            document.querySelectorAll('input').forEach(function(el) {
+                el.addEventListener('input', updateButtons);
+                el.addEventListener('change', updateButtons);
+            });
+            updateButtons(); // initial call
+
             // Set default tab state
             document.getElementById('signin-form').style.display = 'block';
             document.getElementById('signup-choice').style.display = 'none';
@@ -1258,7 +1326,7 @@
             // Set up complete form handlers
             var signinForm = document.getElementById('signin-form');
             var signupForm = document.getElementById('signup-form');
-            var termsCheckbox = document.getElementById('terms-agreement');
+            var termsCheckbox = document.getElementById('terms');
 
             // Terms checkbox handler with enhanced validation
             if (termsCheckbox) {
@@ -1427,7 +1495,7 @@
 
     // Proceed to signup form with selected role
     window.proceedToSignup = function() {
-        var selectedRole = document.querySelector('input[name="signup-role"]:checked');
+        var selectedRole = document.querySelector('input[name="role"]:checked');
 
         if (!selectedRole) {
             alert('Please select your account type to continue.');
@@ -1465,6 +1533,13 @@
             window.initializePasswordToggles();
             updateSignupButtonState(false);
             setupRealTimeValidation();
+
+            // Re-attach button validation listeners for dynamically generated fields
+            document.querySelectorAll('input').forEach(function(el) {
+                el.addEventListener('input', updateButtons);
+                el.addEventListener('change', updateButtons);
+            });
+            updateButtons(); // Update button states after form reveal
         }, 100);
     };
 
@@ -1709,7 +1784,7 @@
         });
 
         // Setup terms checkbox validation
-        var termsCheckbox = document.getElementById('terms-agreement');
+        var termsCheckbox = document.getElementById('terms');
         if (termsCheckbox) {
             termsCheckbox.addEventListener('change', function() {
                 updateSignupButtonState(false);
@@ -1820,7 +1895,7 @@
     // Legacy function for backward compatibility
     window.showSignupForm = function(role) {
         // Set the role and proceed
-        document.querySelector(`input[name="signup-role"][value="${role}"]`).checked = true;
+        document.querySelector(`input[name="role"][value="${role}"]`).checked = true;
         proceedToSignup();
     };
 
@@ -1830,7 +1905,7 @@
         setTimeout(function() {
             switchTab('signup-choice', document.querySelector('.auth-tab:last-child'));
             setTimeout(function() {
-                var studentRadio = document.querySelector('input[name="signup-role"][value="student"]');
+                var studentRadio = document.querySelector('input[name="role"][value="student"]');
                 if (studentRadio) {
                     studentRadio.checked = true;
                     proceedToSignup();
@@ -1849,7 +1924,7 @@
 
         setTimeout(function() {
             // Select student role
-            var studentRadio = document.querySelector('input[name="signup-role"][value="student"]');
+            var studentRadio = document.querySelector('input[name="role"][value="student"]');
             if (studentRadio) {
                 studentRadio.checked = true;
                 proceedToSignup();
@@ -1876,7 +1951,7 @@
                         if (opportunityType) opportunityType.value = 'internship';
 
                         // Accept terms
-                        var termsCheckbox = document.getElementById('terms-agreement');
+                        var termsCheckbox = document.getElementById('terms');
                         if (termsCheckbox) termsCheckbox.checked = true;
 
                         setTimeout(function() {
@@ -1888,7 +1963,7 @@
                                 console.log('🎉 Student validation PASSED! Signup ready.');
 
                                 // Try to submit
-                                var createAccountBtn = document.getElementById('signup-btn');
+                                var createAccountBtn = document.getElementById('create-account-btn');
                                 if (createAccountBtn && !createAccountBtn.disabled) {
                                     console.log('✅ Create Account button is enabled and ready');
                                     createAccountBtn.click();
@@ -1916,7 +1991,7 @@
 
         setTimeout(function() {
             // Select recruiter role
-            var recruiterRadio = document.querySelector('input[name="signup-role"][value="recruiter"]');
+            var recruiterRadio = document.querySelector('input[name="role"][value="recruiter"]');
             if (recruiterRadio) {
                 recruiterRadio.checked = true;
                 proceedToSignup();
@@ -1947,7 +2022,7 @@
                         if (companyLocation) companyLocation.value = 'San Francisco, CA';
 
                         // Accept terms
-                        var termsCheckbox = document.getElementById('terms-agreement');
+                        var termsCheckbox = document.getElementById('terms');
                         if (termsCheckbox) termsCheckbox.checked = true;
 
                         setTimeout(function() {
@@ -1959,7 +2034,7 @@
                                 console.log('🎉 Recruiter validation PASSED! Signup ready.');
 
                                 // Try to submit
-                                var createAccountBtn = document.getElementById('signup-btn');
+                                var createAccountBtn = document.getElementById('create-account-btn');
                                 if (createAccountBtn && !createAccountBtn.disabled) {
                                     console.log('✅ Create Account button is enabled and ready');
                                     createAccountBtn.click();
@@ -1987,7 +2062,7 @@
 
         setTimeout(function() {
             // Select job seeker role
-            var jobSeekerRadio = document.querySelector('input[name="signup-role"][value="job_seeker"]');
+            var jobSeekerRadio = document.querySelector('input[name="role"][value="job_seeker"]');
             if (jobSeekerRadio) {
                 jobSeekerRadio.checked = true;
                 proceedToSignup();
@@ -2014,7 +2089,7 @@
                         if (workEnvironment) workEnvironment.value = 'hybrid';
 
                         // Accept terms
-                        var termsCheckbox = document.getElementById('terms-agreement');
+                        var termsCheckbox = document.getElementById('terms');
                         if (termsCheckbox) termsCheckbox.checked = true;
 
                         setTimeout(function() {
@@ -2026,7 +2101,7 @@
                                 console.log('🎉 Job seeker validation PASSED! Signup ready.');
 
                                 // Try to submit
-                                var createAccountBtn = document.getElementById('signup-btn');
+                                var createAccountBtn = document.getElementById('create-account-btn');
                                 if (createAccountBtn && !createAccountBtn.disabled) {
                                     console.log('✅ Create Account button is enabled and ready');
                                     createAccountBtn.click();
@@ -2053,7 +2128,7 @@
             roles.forEach(function(role, index) {
                 setTimeout(function() {
                     console.log(`🎯 Testing ${role} selection...`);
-                    var radioBtn = document.querySelector(`input[name="signup-role"][value="${role}"]`);
+                    var radioBtn = document.querySelector(`input[name="role"][value="${role}"]`);
                     if (radioBtn) {
                         radioBtn.checked = true;
                         radioBtn.dispatchEvent(new Event('change'));
@@ -2084,7 +2159,7 @@
 
         // Select student role
         setTimeout(function() {
-            var studentRadio = document.querySelector('input[name="signup-role"][value="student"]');
+            var studentRadio = document.querySelector('input[name="role"][value="student"]');
             if (studentRadio) {
                 studentRadio.checked = true;
                 proceedToSignup();
@@ -2120,7 +2195,7 @@
         });
 
         // Check terms agreement
-        var termsCheckbox = document.getElementById('terms-agreement');
+        var termsCheckbox = document.getElementById('terms');
         if (termsCheckbox) {
             termsCheckbox.checked = true;
         }
@@ -2134,7 +2209,7 @@
 
     // Setup role selection handlers for continue button
     function setupRoleSelectionHandlers() {
-        var roleRadios = document.querySelectorAll('input[name="signup-role"]');
+        var roleRadios = document.querySelectorAll('input[name="role"]');
         var continueBtn = document.getElementById('continue-btn');
 
         if (!continueBtn) {
@@ -2209,7 +2284,7 @@
                 setTimeout(function() {
                     console.log(`🎯 Testing ${role} selection...`);
 
-                    var radioBtn = document.querySelector(`input[name="signup-role"][value="${role}"]`);
+                    var radioBtn = document.querySelector(`input[name="role"][value="${role}"]`);
                     if (radioBtn) {
                         radioBtn.checked = true;
                         radioBtn.dispatchEvent(new Event('change'));
@@ -2283,13 +2358,13 @@
                     console.log(`\n🎯 Testing ${role.name} role selection...`);
 
                     // Clear previous selection
-                    var allRadios = document.querySelectorAll('input[name="signup-role"]');
+                    var allRadios = document.querySelectorAll('input[name="role"]');
                     for (var i = 0; i < allRadios.length; i++) {
                         allRadios[i].checked = false;
                     }
 
                     // Select current role
-                    var radioBtn = document.querySelector(`input[name="signup-role"][value="${role.value}"]`);
+                    var radioBtn = document.querySelector(`input[name="role"][value="${role.value}"]`);
                     if (radioBtn) {
                         radioBtn.checked = true;
                         radioBtn.dispatchEvent(new Event('change'));

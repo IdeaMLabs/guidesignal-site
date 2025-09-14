@@ -38,7 +38,8 @@
       "Bash(xargs ls:*)",
       "Bash(sort:*)",
       "Bash(echo $HOSTNAME)",
-      "Bash(gh repo view:*)"
+      "Bash(gh repo view:*)",
+      "WebFetch(domain:api.github.com)"
     ],
     "deny": [],
     "ask": []

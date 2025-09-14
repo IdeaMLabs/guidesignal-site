@@ -1,0 +1,30 @@
+# INSTRUCTIONS for Agent — Button Validation Fix
+
+This package includes `buttonValidationFix.js`, which ensures the Continue and Create Account buttons behave correctly.
+
+## What the Agent Must Do
+
+1. **Continue Button**
+   - ID: `continue-btn`
+   - Should be disabled by default.
+   - Becomes active (blue, clickable) when any role radio button is selected (`name="role"`).
+
+2. **Create Account Button**
+   - ID: `create-account-btn`
+   - Should be disabled by default.
+   - Becomes active when ALL of the following are true:
+     - A role is selected
+     - Password and Confirm Password fields are filled (`id="signup-password"`, `id="signup-password-confirm"`) and match
+     - Terms checkbox (`id="terms"`) is checked
+
+3. **Visual States**
+   - Disabled button: gray background, gray text, not clickable.
+   - Active button: blue background, white text, clickable.
+
+4. **How It Works**
+   - `updateButtons()` checks the above conditions and updates button states accordingly.
+   - Event listeners are attached to all input fields and the terms checkbox so the buttons update in real-time.
+
+## End Result
+- Users cannot proceed until conditions are met.
+- Signup flow feels smooth and professional, preventing incomplete or invalid submissions.
