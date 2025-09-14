@@ -9,7 +9,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta name="cache-bust" content="v2-20250913-latest-<?php echo time(); ?>">
+  <meta name="cache-bust" content="v2-20250913-latest-1726195200">
   
   <!-- SEO Meta Tags -->
   <meta name="description" content="The fastest way to work where you belong. AI matches your skills with jobs that reply in 48 hours.">
@@ -55,11 +55,27 @@
     }
   </script>
   
-  <!-- MILITARY-GRADE SECURITY -->
-  <script src="security/military-grade-security.js" defer></script>
-  <script src="security/encrypted-config.js" defer></script>
-  <script src="security/advanced-auth-security.js" defer></script>
-  <script src="security/security-integration.js" defer></script>
+  <!-- Security Scripts (Only load if files exist) -->
+  <script>
+    // Load security scripts only if they exist
+    const securityScripts = [
+      'security/military-grade-security.js',
+      'security/encrypted-config.js',
+      'security/advanced-auth-security.js',
+      'security/security-integration.js'
+    ];
+
+    securityScripts.forEach(src => {
+      fetch(src, {method: 'HEAD'}).then(response => {
+        if (response.ok) {
+          const script = document.createElement('script');
+          script.src = src;
+          script.defer = true;
+          document.head.appendChild(script);
+        }
+      }).catch(() => {/* Script not found */});
+    });
+  </script>
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
@@ -105,7 +121,15 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw-optimized.js')
+        // Check if service worker file exists before registering
+        fetch('/sw-optimized.js', {method: 'HEAD'})
+          .then(response => {
+            if (response.ok) {
+              return navigator.serviceWorker.register('/sw-optimized.js');
+            }
+            // Fallback to standard service worker
+            return navigator.serviceWorker.register('/sw.js');
+          })
           .catch(() => {/* Silently fail if SW not available */});
       });
     }
@@ -535,18 +559,32 @@
     </div>
   </footer>
   
-  <!-- Minimal Analytics (if needed) -->
+  <!-- Fixed Analytics - Track Actual CTA Elements -->
   <script>
-    // Track CTA clicks
-    document.querySelector('.cta').addEventListener('click', function() {
-      console.log('CTA clicked: Get Started Free');
-      // Add analytics tracking here if needed
-    });
-    
-    // Track Learn More clicks
-    document.querySelector('.learn-more').addEventListener('click', function() {
-      console.log('Learn More clicked');
-      // Add analytics tracking here if needed
+    document.addEventListener('DOMContentLoaded', function() {
+      // Track primary CTA clicks
+      const primaryCta = document.querySelector('.cta-primary');
+      if (primaryCta) {
+        primaryCta.addEventListener('click', function() {
+          console.log('Primary CTA clicked: Get Started Free');
+          // Add analytics tracking here if needed
+        });
+      }
+
+      // Track secondary CTA clicks
+      const secondaryCta = document.querySelector('.cta-secondary');
+      if (secondaryCta) {
+        secondaryCta.addEventListener('click', function() {
+          console.log('Secondary CTA clicked: Join Free');
+        });
+      }
+
+      // Track footer CTA buttons
+      document.querySelectorAll('.cta-button').forEach(button => {
+        button.addEventListener('click', function() {
+          console.log('Footer CTA clicked:', this.textContent);
+        });
+      });
     });
   </script>
 
@@ -574,7 +612,18 @@
     }
   </script>
   
-  <!-- Advanced Analytics System -->
-  <script type="module" src="assets/advanced-analytics.js"></script>
+  <!-- Advanced Analytics System (Load if exists) -->
+  <script>
+    fetch('assets/advanced-analytics.js', {method: 'HEAD'})
+      .then(response => {
+        if (response.ok) {
+          const script = document.createElement('script');
+          script.type = 'module';
+          script.src = 'assets/advanced-analytics.js';
+          document.head.appendChild(script);
+        }
+      })
+      .catch(() => {/* Analytics not available */});
+  </script>
 </body>
 </html>
