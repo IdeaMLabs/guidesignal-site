@@ -1090,6 +1090,83 @@
             errors.push('Please agree to the Terms and Privacy Policy');
         }
 
+        // Role-specific field validation
+        if (selectedRole === 'student') {
+            var university = document.getElementById('university');
+            var major = document.getElementById('major');
+            var graduationYear = document.getElementById('graduation-year');
+            var skills = document.getElementById('skills');
+            var opportunityType = document.getElementById('opportunity-type');
+
+            if (!university || !university.value.trim()) {
+                errors.push('University/School is required for students');
+            }
+            if (!major || !major.value.trim()) {
+                errors.push('Major/Field of study is required for students');
+            }
+            if (!graduationYear || !graduationYear.value) {
+                errors.push('Graduation year is required for students');
+            }
+            if (!skills || !skills.value.trim()) {
+                errors.push('Skills and technologies are required for students');
+            }
+            if (!opportunityType || !opportunityType.value) {
+                errors.push('Opportunity type is required for students');
+            }
+        } else if (selectedRole === 'job_seeker') {
+            var currentTitle = document.getElementById('current-title');
+            var experienceYears = document.getElementById('experience-years');
+            var industry = document.getElementById('industry');
+            var skills = document.getElementById('skills');
+            var workEnvironment = document.getElementById('work-environment');
+
+            if (!currentTitle || !currentTitle.value.trim()) {
+                errors.push('Current job title is required for job seekers');
+            }
+            if (!experienceYears || !experienceYears.value) {
+                errors.push('Years of experience is required for job seekers');
+            }
+            if (!industry || !industry.value) {
+                errors.push('Industry selection is required for job seekers');
+            }
+            if (!skills || !skills.value.trim()) {
+                errors.push('Skills and expertise are required for job seekers');
+            }
+            if (!workEnvironment || !workEnvironment.value) {
+                errors.push('Preferred work environment is required for job seekers');
+            }
+        } else if (selectedRole === 'recruiter') {
+            var company = document.getElementById('company');
+            var companySize = document.getElementById('company-size');
+            var companyIndustry = document.getElementById('company-industry');
+            var hiringRoles = document.getElementById('hiring-roles');
+            var hiringVolume = document.getElementById('hiring-volume');
+            var responseTime = document.getElementById('response-time');
+            var companyLocation = document.getElementById('company-location');
+
+            if (!company || !company.value.trim()) {
+                errors.push('Company name is required for recruiters');
+            }
+            if (!companySize || !companySize.value) {
+                errors.push('Company size is required for recruiters');
+            }
+            if (!companyIndustry || !companyIndustry.value) {
+                errors.push('Company industry is required for recruiters');
+            }
+            if (!hiringRoles || !hiringRoles.value.trim()) {
+                errors.push('Typical hiring roles are required for recruiters');
+            }
+            if (!hiringVolume || !hiringVolume.value) {
+                errors.push('Hiring volume is required for recruiters');
+            }
+            if (!responseTime || !responseTime.value) {
+                errors.push('Response time commitment is required for recruiters');
+            }
+            if (!companyLocation || !companyLocation.value.trim()) {
+                errors.push('Company location is required for recruiters');
+            }
+        }
+
         return errors;
     }
 
@@ -1505,12 +1582,14 @@
 
                     <div class="form-group">
                         <label class="form-label">Preferred Work Environment</label>
-                        <select class="form-input" id="work-environment" name="work_environment">
+                        <select class="form-input" id="work-environment" name="work_environment" required>
+                            <option value="">Select preference...</option>
                             <option value="remote">Remote</option>
                             <option value="hybrid">Hybrid</option>
                             <option value="onsite">On-site</option>
                             <option value="flexible">Flexible</option>
                         </select>
+                        <div class="field-error" id="work-environment-error"></div>
                     </div>
 
                     <div class="form-group">
@@ -1745,6 +1824,73 @@
                 }
             }, 200);
         }, 100);
+    };
+
+    // Test job seeker specific signup flow
+    window.testJobSeekerSignup = function() {
+        console.log('🧪 Testing Job Seeker signup flow...');
+
+        // Switch to signup tab
+        switchTab('signup-choice', document.querySelector('.auth-tab:last-child'));
+
+        setTimeout(function() {
+            // Select job seeker role
+            var jobSeekerRadio = document.querySelector('input[name="signup-role"][value="job_seeker"]');
+            if (jobSeekerRadio) {
+                jobSeekerRadio.checked = true;
+                proceedToSignup();
+
+                setTimeout(function() {
+                    // Fill basic fields
+                    document.getElementById('signup-name').value = 'Sarah Johnson';
+                    document.getElementById('signup-email').value = 'sarah.johnson@email.com';
+                    document.getElementById('signup-password').value = 'SecurePass123!';
+                    document.getElementById('signup-password-confirm').value = 'SecurePass123!';
+
+                    // Fill job seeker specific fields
+                    setTimeout(function() {
+                        var currentTitle = document.getElementById('current-title');
+                        var experienceYears = document.getElementById('experience-years');
+                        var industry = document.getElementById('industry');
+                        var skills = document.getElementById('skills');
+                        var workEnvironment = document.getElementById('work-environment');
+
+                        if (currentTitle) currentTitle.value = 'Senior Marketing Manager';
+                        if (experienceYears) experienceYears.value = '5-10';
+                        if (industry) industry.value = 'marketing';
+                        if (skills) skills.value = 'Digital Marketing, SEO, Content Strategy, Team Leadership, Analytics';
+                        if (workEnvironment) workEnvironment.value = 'hybrid';
+
+                        // Accept terms
+                        var termsCheckbox = document.getElementById('terms-agreement');
+                        if (termsCheckbox) termsCheckbox.checked = true;
+
+                        setTimeout(function() {
+                            console.log('✅ All job seeker fields filled. Testing validation...');
+
+                            // Test validation
+                            var errors = validateSignupForm();
+                            if (errors.length === 0) {
+                                console.log('🎉 Job seeker validation PASSED! Signup ready.');
+
+                                // Try to submit
+                                var createAccountBtn = document.getElementById('signup-btn');
+                                if (createAccountBtn && !createAccountBtn.disabled) {
+                                    console.log('✅ Create Account button is enabled and ready');
+                                    createAccountBtn.click();
+                                } else {
+                                    console.error('❌ Create Account button is disabled');
+                                }
+                            } else {
+                                console.error('❌ Validation errors:', errors);
+                            }
+                        }, 100);
+                    }, 300);
+                }, 500);
+            } else {
+                console.error('❌ Job seeker radio button not found');
+            }
+        }, 200);
     };
 
     window.testContinueButton = window.testContinueButton || function() {
