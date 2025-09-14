@@ -1,0 +1,34 @@
+# INSTRUCTIONS for Agent — Password Toggle Fix
+
+This package includes `passwordToggleFix.js`, which corrects issues with the Password and Confirm Password toggle buttons.
+
+## What the Agent Must Do
+
+1. **Attach Toggles to Both Fields**
+   - Ensure both the Password and Confirm Password inputs have a button with the class `.password-toggle` inside the `.password-container` div.
+   - Example structure:
+     <div class="password-container">
+       <input type="password" id="signup-password" />
+       <button type="button" class="password-toggle">👁️</button>
+     </div>
+
+2. **togglePassword Function**
+   - Use `togglePassword(inputId)` to flip any input between "password" and "text".
+   - The button text changes between 👁️ and 🙈 automatically.
+
+3. **initializePasswordToggles Function**
+   - Loops through ALL `.password-container` elements on the page.
+   - Attaches event listeners to every `.password-toggle` button so they always work.
+   - This ensures both Password and Confirm Password toggles are functional.
+
+4. **When to Call initializePasswordToggles**
+   - Run this function on page load **and** after the signup form is revealed.
+   - Example:
+     function proceedToSignup() {
+       document.getElementById('signup-form').style.display = 'block';
+       initializePasswordToggles();
+     }
+
+## End Result
+- Both Password and Confirm Password fields have fully working 👁️/🙈 toggles.
+- Users can show/hide either field independently.

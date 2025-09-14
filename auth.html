@@ -961,17 +961,34 @@
     </main>
 
     <script>
-    // Simplified password toggle initialization
+    // Password Toggle Fix - Initialize toggles for ALL password containers
     window.initializePasswordToggles = function() {
         console.log('Initializing password toggles...');
 
         var containers = document.querySelectorAll('.password-container');
-        for (var i = 0; i < containers.length; i++) {
-            var container = containers[i];
-            var input = container.querySelector('input[type="password"]');
+
+        containers.forEach(function(container) {
+            var input = container.querySelector('input');
             var toggle = container.querySelector('.password-toggle');
 
             if (input && toggle) {
+                // Remove any existing event listeners to prevent duplicates
+                toggle.replaceWith(toggle.cloneNode(true));
+                toggle = container.querySelector('.password-toggle');
+
+                // Add event listener for toggle functionality
+                toggle.addEventListener('click', function() {
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        toggle.textContent = '🙈';
+                        toggle.setAttribute('aria-label', 'Hide password');
+                    } else {
+                        input.type = 'password';
+                        toggle.textContent = '👁️';
+                        toggle.setAttribute('aria-label', 'Show password');
+                    }
+                });
+
                 // Ensure proper styling
                 container.style.position = 'relative';
                 toggle.style.position = 'absolute';
@@ -982,24 +999,21 @@
                 toggle.style.display = 'flex';
                 toggle.style.alignItems = 'center';
                 toggle.style.justifyContent = 'center';
+
                 console.log('Password toggle initialized for:', input.id);
             }
-        }
+        });
     };
 
-    // Simple mobile-safe password toggle function
+    // Password Toggle Fix - Toggle function for any input ID
     window.togglePassword = function(inputId) {
-        console.log('Toggling password for:', inputId);
-
         var input = document.getElementById(inputId);
         if (!input) {
             console.error('Input not found:', inputId);
             return;
         }
 
-        var container = input.closest('.password-container');
-        var toggle = container ? container.querySelector('.password-toggle') : null;
-
+        var toggle = input.parentElement.querySelector('.password-toggle');
         if (!toggle) {
             console.error('Toggle button not found for:', inputId);
             return;
