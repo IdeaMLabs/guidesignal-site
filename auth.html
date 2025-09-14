@@ -1134,6 +1134,17 @@
 
         if (clickedElement) {
             clickedElement.classList.add('active');
+        } else {
+            // If no clickedElement provided, find the correct tab based on the tab name
+            var correctTab = null;
+            if (tab === 'signin') {
+                correctTab = document.querySelector('.auth-tab[onclick*="signin"]');
+            } else if (tab === 'signup-choice') {
+                correctTab = document.querySelector('.auth-tab[onclick*="signup-choice"]');
+            }
+            if (correctTab) {
+                correctTab.classList.add('active');
+            }
         }
 
         // Hide all forms
@@ -1360,10 +1371,18 @@
                 updateSignupButtonState(false);
             }
 
-            // Set default tab state
+            // Set default tab state - ensure signin tab is properly active
             document.getElementById('signin-form').style.display = 'block';
             document.getElementById('signup-choice').style.display = 'none';
             document.getElementById('signup-form').style.display = 'none';
+
+            // Ensure signin tab is visually active and signup tab is inactive
+            var signinTab = document.querySelector('.auth-tab[onclick*="signin"]');
+            var signupTab = document.querySelector('.auth-tab[onclick*="signup-choice"]');
+            if (signinTab && signupTab) {
+                signinTab.classList.add('active');
+                signupTab.classList.remove('active');
+            }
 
             // REMOVED: setupRoleSelectionHandlers() - now handled by continueButtonFix.js
             // This was causing conflicts with the external continue button handler
