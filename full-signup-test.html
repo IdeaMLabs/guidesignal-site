@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Signup Process Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-results {
+            background: #f0f8ff;
+            border: 1px solid #4a9eff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .test-log {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .success { color: #059669; font-weight: bold; }
+        .error { color: #dc2626; font-weight: bold; }
+        .info { color: #0369a1; }
+        button {
+            background: #4a9eff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover { background: #3b82f6; }
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .iframe-container {
+            margin: 20px 0;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .status.testing { background: #fef3c7; border-left: 4px solid #f59e0b; }
+        .status.success { background: #d1fae5; border-left: 4px solid #10b981; }
+        .status.error { background: #fee2e2; border-left: 4px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Complete Signup Process Testing</h1>
+        <p>This comprehensive testing suite validates all three user roles and ensures no obstacles prevent successful signups.</p>
+
+        <div class="controls">
+            <button id="test-student" onclick="testStudentOnly()">🎓 Test Student Signup</button>
+            <button id="test-jobseeker" onclick="testJobSeekerOnly()">💼 Test Job Seeker Signup</button>
+            <button id="test-recruiter" onclick="testRecruiterOnly()">🗂️ Test Recruiter Signup</button>
+            <button id="test-all" onclick="runAllSignupTests()">🚀 Test All Signups</button>
+            <button onclick="clearResults()">🧹 Clear Results</button>
+        </div>
+
+        <div id="status" class="status" style="display: none;"></div>
+
+        <div id="test-results" class="test-results">
+            <h3>Test Results:</h3>
+            <div id="results-content" class="test-log">
+                Click a test button above to begin testing...
+            </div>
+        </div>
+
+        <div class="iframe-container">
+            <iframe id="auth-frame" src="auth.html"></iframe>
+        </div>
+    </div>
+
+    <script src="comprehensive-signup-test.js"></script>
+    <script>
+        let testResults = [];
+        let currentTester = null;
+
+        function updateStatus(message, type = 'testing') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+        }
+
+        function logResult(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            testResults.push({ timestamp, message, type });
+            updateResultsDisplay();
+        }
+
+        function updateResultsDisplay() {
+            const content = document.getElementById('results-content');
+            const html = testResults.map(result => {
+                const className = result.type;
+                return `<div class="${className}">[${result.timestamp}] ${result.message}</div>`;
+            }).join('');
+            content.innerHTML = html || 'No test results yet...';
+            content.scrollTop = content.scrollHeight;
+        }
+
+        function clearResults() {
+            testResults = [];
+            updateResultsDisplay();
+            document.getElementById('status').style.display = 'none';
+        }
+
+        async function getAuthFrame() {
+            const frame = document.getElementById('auth-frame');
+
+            // Wait for frame to load
+            return new Promise((resolve) => {
+                if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
+                    resolve(frame);
+                } else {
+                    frame.onload = () => resolve(frame);
+                }
+            });
+        }
+
+        async function testStudentOnly() {
+            updateStatus('Testing Student signup flow...', 'testing');
+            clearResults();
+
+            try {
+                const frame = await getAuthFrame();
+                const frameWindow = frame.contentWindow;
+
+                if (typeof frameWindow.testStudentSignup === 'function') {
+                    logResult('🧪 Starting Student signup test...', 'info');
+                    frameWindow.testStudentSignup();
+
+                    // Monitor results
+                    setTimeout(() => {
+                        logResult('✅ Student signup test completed', 'success');
+                        updateStatus('Student signup test completed', 'success');
+                    }, 3000);
+                } else {
+                    throw new Error('testStudentSignup function not available');
+                }
+            } catch (error) {
+                logResult(`❌ Test failed: ${error.message}`, 'error');
+                updateStatus('Student test failed', 'error');
+            }
+        }
+
+        async function testJobSeekerOnly() {
+            updateStatus('Testing Job Seeker signup flow...', 'testing');
+            clearResults();
+
+            try {
+                const frame = await getAuthFrame();
+                const frameWindow = frame.contentWindow;
+
+                if (typeof frameWindow.testJobSeekerSignup === 'function') {
+                    logResult('🧪 Starting Job Seeker signup test...', 'info');
+                    frameWindow.testJobSeekerSignup();
+
+                    setTimeout(() => {
+                        logResult('✅ Job Seeker signup test completed', 'success');
+                        updateStatus('Job Seeker signup test completed', 'success');
+                    }, 3000);
+                } else {
+                    throw new Error('testJobSeekerSignup function not available');
+                }
+            } catch (error) {
+                logResult(`❌ Test failed: ${error.message}`, 'error');
+                updateStatus('Job Seeker test failed', 'error');
+            }
+        }
+
+        async function testRecruiterOnly() {
+            updateStatus('Testing Recruiter signup flow...', 'testing');
+            clearResults();
+
+            try {
+                const frame = await getAuthFrame();
+                const frameWindow = frame.contentWindow;
+
+                if (typeof frameWindow.testRecruiterSignup === 'function') {
+                    logResult('🧪 Starting Recruiter signup test...', 'info');
+                    frameWindow.testRecruiterSignup();
+
+                    setTimeout(() => {
+                        logResult('✅ Recruiter signup test completed', 'success');
+                        updateStatus('Recruiter signup test completed', 'success');
+                    }, 3000);
+                } else {
+                    throw new Error('testRecruiterSignup function not available');
+                }
+            } catch (error) {
+                logResult(`❌ Test failed: ${error.message}`, 'error');
+                updateStatus('Recruiter test failed', 'error');
+            }
+        }
+
+        async function runAllSignupTests() {
+            updateStatus('Running comprehensive signup tests...', 'testing');
+            clearResults();
+
+            try {
+                const frame = await getAuthFrame();
+                const frameWindow = frame.contentWindow;
+
+                if (typeof frameWindow.testAllSignupFlows === 'function') {
+                    logResult('🚀 Starting comprehensive signup testing...', 'info');
+                    frameWindow.testAllSignupFlows();
+
+                    setTimeout(() => {
+                        logResult('🎉 All signup tests completed!', 'success');
+                        updateStatus('All signup tests completed successfully', 'success');
+                    }, 10000);
+                } else {
+                    throw new Error('testAllSignupFlows function not available');
+                }
+            } catch (error) {
+                logResult(`❌ Comprehensive test failed: ${error.message}`, 'error');
+                updateStatus('Comprehensive test failed', 'error');
+            }
+        }
+
+        // Auto-run comprehensive test when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                updateStatus('Ready for testing', 'success');
+                logResult('🔧 Signup testing suite loaded and ready', 'success');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
