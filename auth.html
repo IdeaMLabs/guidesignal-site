@@ -146,6 +146,7 @@
     <!-- Simplified Security - reduce potential conflicts -->
     <script src="assets/security-config.js" defer onerror="console.log('Security config not loaded')"></script>
     <script src="roleButtonFix.js" defer onerror="console.log('Role button fix not loaded')"></script>
+    <script src="passwordToggleFix_v2.js" defer onerror="console.log('Password toggle fix v2 not loaded')"></script>
     
     <!-- Shared CSS -->
     <link rel="stylesheet" href="assets/shared.css">
@@ -843,7 +844,7 @@
                 <label class="form-label">Password</label>
                 <div class="password-container">
                     <input type="password" class="form-input" id="signin-password" required>
-                    <button type="button" class="password-toggle" onclick="togglePassword('signin-password')">
+                    <button type="button" class="password-toggle">
                         👁️
                     </button>
                 </div>
@@ -931,7 +932,7 @@
                 <label class="form-label">Password</label>
                 <div class="password-container">
                     <input type="password" class="form-input" id="signup-password" required minlength="8">
-                    <button type="button" class="password-toggle" onclick="togglePassword('signup-password')">
+                    <button type="button" class="password-toggle">
                         👁️
                     </button>
                 </div>
@@ -949,7 +950,7 @@
                 <label class="form-label">Confirm Password</label>
                 <div class="password-container">
                     <input type="password" class="form-input" id="signup-password-confirm" required>
-                    <button type="button" class="password-toggle" onclick="togglePassword('signup-password-confirm')">
+                    <button type="button" class="password-toggle">
                         👁️
                     </button>
                 </div>
@@ -1026,6 +1027,8 @@
     }
     */
 
+    // COMMENTED OUT: Old password toggle functions replaced by passwordToggleFix_v2.js
+    /*
     // Password Toggle Fix - Initialize toggles for ALL password containers
     window.initializePasswordToggles = function() {
         console.log('Initializing password toggles...');
@@ -1069,7 +1072,14 @@
             }
         });
     };
+    */
+    // NEW: passwordToggleFix_v2.js handles all password toggle functionality automatically
+    // Stub function to prevent errors from existing calls
+    window.initializePasswordToggles = function() {
+        console.log('Password toggles handled by passwordToggleFix_v2.js');
+    };
 
+    /*
     // Password Toggle Fix - Toggle function for any input ID
     window.togglePassword = function(inputId) {
         var input = document.getElementById(inputId);
@@ -1094,6 +1104,7 @@
             toggle.setAttribute('aria-label', 'Show password');
         }
     };
+    */
 
     // Essential tab switching function - mobile compatible
     window.switchTab = function(tab, clickedElement) {

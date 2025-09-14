@@ -1,33 +1,36 @@
-# INSTRUCTIONS for Agent — Role + Button Fix
+# INSTRUCTIONS for Agent — Password Toggle Fix v2
 
-This package includes `roleButtonFix.js`, which ensures both the Continue and Create Account buttons activate properly.
+This patch ensures the 👁️ buttons for both Password and Confirm Password fields work correctly.
 
-## What the Agent Must Do
+## Problem
+- In the old code, inline `onclick="togglePassword(...)"` was used in the HTML.
+- At the same time, `initializePasswordToggles()` re-cloned the toggle button, wiping out the inline onclick handler.
+- As a result, clicking the 👁️ button did nothing.
 
-1. **Hidden Role Sync**
-   - Radio buttons for roles (Student, Job Seeker, Recruiter) must update the hidden input `#selected-role` immediately on change.
-   - This ensures the role is carried forward into the signup form.
+## Fix
+1. **HTML Update**
+   - Remove inline `onclick="togglePassword(...)"` from all password toggle buttons.
+   - Example (corrected):
+     ```html
+     <div class="password-container">
+       <input type="password" id="signup-password" class="form-input" required>
+       <button type="button" class="password-toggle">👁️</button>
+     </div>
+     <div class="password-container">
+       <input type="password" id="signup-password-confirm" class="form-input" required>
+       <button type="button" class="password-toggle">👁️</button>
+     </div>
+     ```
 
-2. **Continue Button**
-   - ID: `continue-btn`
-   - Disabled by default.
-   - Becomes active as soon as a role is selected.
+2. **JavaScript Update**
+   - Use only `passwordToggleFix_v2.js` to handle toggle logic.
+   - This script attaches `click` listeners to all `.password-toggle` buttons automatically when the page loads.
 
-3. **Create Account Button**
-   - ID: `create-account-btn`
-   - Disabled by default.
-   - Becomes active only when:
-     - A role is selected
-     - Password + Confirm Password are filled and match (`#signup-password`, `#signup-password-confirm`)
-     - Terms checkbox (`#terms`) is checked
-
-4. **Form Reveal**
-   - At the end of `proceedToSignup()`, `updateButtons()` is re-run (with a slight delay) so button states refresh once the signup form is visible.
-
-5. **Remove Old Conflicting Functions**
-   - Remove or comment out any older functions like `enableSignupButton()` so `updateButtons()` is the only validation function controlling button state.
+3. **Behavior**
+   - Clicking 👁️ changes the field type from "password" → "text" and button text to 🙈.
+   - Clicking again switches back to "password" and button text 👁️.
+   - Works independently for Password and Confirm Password fields.
 
 ## End Result
-- **Continue** button turns blue immediately on role selection.
-- **Create Account** button turns blue only when all signup requirements are met.
-- Signup flow works reliably with hidden role syncing and unified validation.
+- Both password fields now have working 👁️/🙈 toggles.
+- No more broken onclick handlers.
