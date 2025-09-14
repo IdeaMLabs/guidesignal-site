@@ -145,8 +145,10 @@
     
     <!-- Simplified Security - reduce potential conflicts -->
     <script src="assets/security-config.js" defer onerror="console.log('Security config not loaded')"></script>
-    <script src="roleButtonFix.js" defer onerror="console.log('Role button fix not loaded')"></script>
+    <!-- <script src="roleButtonFix.js" defer onerror="console.log('Role button fix not loaded')"></script> -->
+    <!-- COMMENTED OUT: Replaced by signupSigninFix.js for complete signup/signin flow -->
     <script src="passwordToggleFix_v2.js" defer onerror="console.log('Password toggle fix v2 not loaded')"></script>
+    <script src="signupSigninFix.js" defer onerror="console.log('Signup signin fix not loaded')"></script>
     
     <!-- Shared CSS -->
     <link rel="stylesheet" href="assets/shared.css">
@@ -859,7 +861,10 @@
             <div class="forgot-password">
                 <a href="#" onclick="showForgotPassword()">Forgot password?</a>
             </div>
-            
+
+            <div id="signin-error" class="error-message" style="display: none;"></div>
+            <div id="signin-success" class="success-message" style="display: none;"></div>
+
             <button type="submit" class="btn" id="signin-btn">
                 <span class="btn-text">Sign In</span>
             </button>
@@ -1077,6 +1082,15 @@
     // Stub function to prevent errors from existing calls
     window.initializePasswordToggles = function() {
         console.log('Password toggles handled by passwordToggleFix_v2.js');
+    };
+
+    // NEW: signupSigninFix.js handles all button validation automatically
+    // Stub functions to prevent errors from existing calls
+    window.updateButtons = function() {
+        console.log('Button validation handled by signupSigninFix.js');
+    };
+    window.updateSignupButtonState = function() {
+        console.log('Signup button validation handled by signupSigninFix.js');
     };
 
     /*
