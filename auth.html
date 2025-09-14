@@ -1368,8 +1368,16 @@
             document.getElementById('signup-choice').style.display = 'none';
             document.getElementById('signup-form').style.display = 'none';
 
-            // Setup role selection handlers for continue button
-            setupRoleSelectionHandlers();
+            // REMOVED: setupRoleSelectionHandlers() - now handled by continueButtonFix.js
+            // This was causing conflicts with the external continue button handler
+
+            // Initialize continue button state (will be handled by continueButtonFix.js)
+            var continueBtn = document.getElementById('continue-btn');
+            if (continueBtn) {
+                continueBtn.disabled = true;
+                continueBtn.classList.add('btn-disabled');
+                continueBtn.classList.remove('active');
+            }
 
             // Set up complete form handlers
             var signinForm = document.getElementById('signin-form');
@@ -1386,24 +1394,12 @@
             // Setup real-time validation for all forms
             setupRealTimeValidation();
 
-            // Signin form handler
-            if (signinForm) {
-                signinForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    var email = document.getElementById('signin-email').value;
-                    var password = document.getElementById('signin-password').value;
+            // REMOVED: Signin form handler - now handled by signupSigninFix.js
+            // This was conflicting with the external signin handler that provides proper auth flow
 
-                    if (!email || !password) {
-                        showFormErrors(['Please enter both email and password']);
-                        return;
-                    }
-
-                    console.log('Signin attempt for:', email);
-                    showFormErrors(['Signup functionality is ready. Authentication backend needed.']);
-                });
-            }
-
-            // Complete signup form handler
+            // REMOVED: Complete signup form handler - now handled by signupSigninFix.js
+            // This was conflicting with the external signup handler that provides proper form validation and submission
+            /*
             if (signupForm) {
                 signupForm.addEventListener('submit', function(e) {
                     e.preventDefault();
@@ -1486,6 +1482,7 @@
                     }, 3000);
                 });
             }
+            */
 
             console.log('Complete auth page functionality initialized successfully');
         } catch (error) {
