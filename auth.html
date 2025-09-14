@@ -1826,6 +1826,144 @@
         }, 100);
     };
 
+    // Test student specific signup flow
+    window.testStudentSignup = function() {
+        console.log('🧪 Testing Student signup flow...');
+
+        // Switch to signup tab
+        switchTab('signup-choice', document.querySelector('.auth-tab:last-child'));
+
+        setTimeout(function() {
+            // Select student role
+            var studentRadio = document.querySelector('input[name="signup-role"][value="student"]');
+            if (studentRadio) {
+                studentRadio.checked = true;
+                proceedToSignup();
+
+                setTimeout(function() {
+                    // Fill basic fields
+                    document.getElementById('signup-name').value = 'Alex Chen';
+                    document.getElementById('signup-email').value = 'alex.chen@stanford.edu';
+                    document.getElementById('signup-password').value = 'StudentPass123!';
+                    document.getElementById('signup-password-confirm').value = 'StudentPass123!';
+
+                    // Fill student specific fields
+                    setTimeout(function() {
+                        var university = document.getElementById('university');
+                        var major = document.getElementById('major');
+                        var graduationYear = document.getElementById('graduation-year');
+                        var skills = document.getElementById('skills');
+                        var opportunityType = document.getElementById('opportunity-type');
+
+                        if (university) university.value = 'Stanford University';
+                        if (major) major.value = 'Computer Science';
+                        if (graduationYear) graduationYear.value = '2025';
+                        if (skills) skills.value = 'Python, JavaScript, React, Machine Learning, Data Analysis';
+                        if (opportunityType) opportunityType.value = 'internship';
+
+                        // Accept terms
+                        var termsCheckbox = document.getElementById('terms-agreement');
+                        if (termsCheckbox) termsCheckbox.checked = true;
+
+                        setTimeout(function() {
+                            console.log('✅ All student fields filled. Testing validation...');
+
+                            // Test validation
+                            var errors = validateSignupForm();
+                            if (errors.length === 0) {
+                                console.log('🎉 Student validation PASSED! Signup ready.');
+
+                                // Try to submit
+                                var createAccountBtn = document.getElementById('signup-btn');
+                                if (createAccountBtn && !createAccountBtn.disabled) {
+                                    console.log('✅ Create Account button is enabled and ready');
+                                    createAccountBtn.click();
+                                } else {
+                                    console.error('❌ Create Account button is disabled');
+                                }
+                            } else {
+                                console.error('❌ Validation errors:', errors);
+                            }
+                        }, 100);
+                    }, 300);
+                }, 500);
+            } else {
+                console.error('❌ Student radio button not found');
+            }
+        }, 200);
+    };
+
+    // Test recruiter specific signup flow
+    window.testRecruiterSignup = function() {
+        console.log('🧪 Testing Recruiter signup flow...');
+
+        // Switch to signup tab
+        switchTab('signup-choice', document.querySelector('.auth-tab:last-child'));
+
+        setTimeout(function() {
+            // Select recruiter role
+            var recruiterRadio = document.querySelector('input[name="signup-role"][value="recruiter"]');
+            if (recruiterRadio) {
+                recruiterRadio.checked = true;
+                proceedToSignup();
+
+                setTimeout(function() {
+                    // Fill basic fields
+                    document.getElementById('signup-name').value = 'Jessica Martinez';
+                    document.getElementById('signup-email').value = 'jessica.martinez@techcorp.com';
+                    document.getElementById('signup-password').value = 'RecruiterPass123!';
+                    document.getElementById('signup-password-confirm').value = 'RecruiterPass123!';
+
+                    // Fill recruiter specific fields
+                    setTimeout(function() {
+                        var company = document.getElementById('company');
+                        var companySize = document.getElementById('company-size');
+                        var companyIndustry = document.getElementById('company-industry');
+                        var hiringRoles = document.getElementById('hiring-roles');
+                        var hiringVolume = document.getElementById('hiring-volume');
+                        var responseTime = document.getElementById('response-time');
+                        var companyLocation = document.getElementById('company-location');
+
+                        if (company) company.value = 'TechCorp Inc.';
+                        if (companySize) companySize.value = '201-500';
+                        if (companyIndustry) companyIndustry.value = 'technology';
+                        if (hiringRoles) hiringRoles.value = 'Software Engineers, Data Scientists, Product Managers, UX Designers';
+                        if (hiringVolume) hiringVolume.value = '6-15';
+                        if (responseTime) responseTime.value = '48-hours';
+                        if (companyLocation) companyLocation.value = 'San Francisco, CA';
+
+                        // Accept terms
+                        var termsCheckbox = document.getElementById('terms-agreement');
+                        if (termsCheckbox) termsCheckbox.checked = true;
+
+                        setTimeout(function() {
+                            console.log('✅ All recruiter fields filled. Testing validation...');
+
+                            // Test validation
+                            var errors = validateSignupForm();
+                            if (errors.length === 0) {
+                                console.log('🎉 Recruiter validation PASSED! Signup ready.');
+
+                                // Try to submit
+                                var createAccountBtn = document.getElementById('signup-btn');
+                                if (createAccountBtn && !createAccountBtn.disabled) {
+                                    console.log('✅ Create Account button is enabled and ready');
+                                    createAccountBtn.click();
+                                } else {
+                                    console.error('❌ Create Account button is disabled');
+                                }
+                            } else {
+                                console.error('❌ Validation errors:', errors);
+                            }
+                        }, 100);
+                    }, 300);
+                }, 500);
+            } else {
+                console.error('❌ Recruiter radio button not found');
+            }
+        }, 200);
+    };
+
     // Test job seeker specific signup flow
     window.testJobSeekerSignup = function() {
         console.log('🧪 Testing Job Seeker signup flow...');
@@ -2075,6 +2213,91 @@
                         }, 100);
                     }
                 }, index * 1000);
+            });
+        }, 500);
+    };
+
+    // Test all three signup flows in sequence
+    window.testAllSignupFlows = function() {
+        console.log('🧪 Testing ALL signup flows (Student → Job Seeker → Recruiter)...');
+
+        // Test Student first
+        console.log('\n=== TESTING STUDENT SIGNUP ===');
+        testStudentSignup();
+
+        // Test Job Seeker after 8 seconds
+        setTimeout(function() {
+            console.log('\n=== TESTING JOB SEEKER SIGNUP ===');
+            testJobSeekerSignup();
+
+            // Test Recruiter after another 8 seconds
+            setTimeout(function() {
+                console.log('\n=== TESTING RECRUITER SIGNUP ===');
+                testRecruiterSignup();
+
+                setTimeout(function() {
+                    console.log('\n🎉 ALL SIGNUP TESTS COMPLETED!');
+                    console.log('Check console output above for results.');
+                }, 8000);
+            }, 8000);
+        }, 8000);
+    };
+
+    // Test continue button for all roles
+    window.testAllContinueButtons = function() {
+        console.log('🧪 Testing continue button for all roles...');
+
+        // Switch to signup choice
+        switchTab('signup-choice', document.querySelector('.auth-tab:last-child'));
+
+        setTimeout(function() {
+            var roles = [
+                { value: 'student', name: '🎓 Student' },
+                { value: 'job_seeker', name: '💼 Job Seeker' },
+                { value: 'recruiter', name: '🗂️ Recruiter' }
+            ];
+
+            var continueBtn = document.getElementById('continue-btn');
+            console.log('🔘 Initial continue button state:', {
+                disabled: continueBtn?.disabled,
+                className: continueBtn?.className,
+                backgroundColor: continueBtn?.style.backgroundColor
+            });
+
+            roles.forEach(function(role, index) {
+                setTimeout(function() {
+                    console.log(`\n🎯 Testing ${role.name} role selection...`);
+
+                    // Clear previous selection
+                    var allRadios = document.querySelectorAll('input[name="signup-role"]');
+                    for (var i = 0; i < allRadios.length; i++) {
+                        allRadios[i].checked = false;
+                    }
+
+                    // Select current role
+                    var radioBtn = document.querySelector(`input[name="signup-role"][value="${role.value}"]`);
+                    if (radioBtn) {
+                        radioBtn.checked = true;
+                        radioBtn.dispatchEvent(new Event('change'));
+
+                        setTimeout(function() {
+                            var continueBtn = document.getElementById('continue-btn');
+                            console.log(`✅ ${role.name} selected - Button state:`, {
+                                disabled: continueBtn?.disabled,
+                                className: continueBtn?.className,
+                                backgroundColor: continueBtn?.style.backgroundColor,
+                                enabled: !continueBtn?.disabled ? '✅ ENABLED' : '❌ DISABLED',
+                                color: continueBtn?.style.backgroundColor === 'rgb(74, 158, 255)' || continueBtn?.style.backgroundColor === '#4a9eff' ? '✅ BLUE' : '❌ NOT BLUE'
+                            });
+
+                            if (index === roles.length - 1) {
+                                console.log('\n🎉 Continue button test completed!');
+                            }
+                        }, 100);
+                    } else {
+                        console.error(`❌ ${role.name} radio button not found`);
+                    }
+                }, index * 2000);
             });
         }, 500);
     };
