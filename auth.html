@@ -145,8 +145,7 @@
     
     <!-- Simplified Security - reduce potential conflicts -->
     <script src="assets/security-config.js" defer onerror="console.log('Security config not loaded')"></script>
-    <!-- <script src="roleButtonFix.js" defer onerror="console.log('Role button fix not loaded')"></script> -->
-    <!-- COMMENTED OUT: Replaced by signupSigninFix.js for complete signup/signin flow -->
+    <!-- Replaced by signupSigninFix.js for complete signup/signin flow -->
     <script src="passwordToggleFix_v2.js" defer onerror="console.log('Password toggle fix v2 not loaded')"></script>
     <script src="signupSigninFix.js" defer onerror="console.log('Signup signin fix not loaded')"></script>
     <script src="continueButtonFix.js" defer onerror="console.log('Continue button fix not loaded')"></script>
@@ -991,94 +990,9 @@
 
     <script>
     // Button Validation Fix - according to instructions in buttonValidationFix.js
-    // COMMENTED OUT: Old updateButtons() replaced by roleButtonFix.js version with hidden role sync
-    /*
-    function updateButtons() {
-        const roleSelected = document.querySelector('input[name="role"]:checked');
-        const pwdInput = document.getElementById('signup-password');
-        const confirmPwdInput = document.getElementById('signup-password-confirm');
-        const termsCheckbox = document.getElementById('terms');
+    // Old updateButtons() function replaced by roleButtonFix.js version with hidden role sync
 
-        const pwd = pwdInput ? pwdInput.value : "";
-        const confirmPwd = confirmPwdInput ? confirmPwdInput.value : "";
-        const termsChecked = termsCheckbox ? termsCheckbox.checked : false;
-
-        // Continue Button
-        const continueBtn = document.getElementById('continue-btn');
-        if (continueBtn) {
-            if (roleSelected) {
-                continueBtn.disabled = false;
-                continueBtn.classList.add('active');
-                continueBtn.classList.remove('disabled');
-            } else {
-                continueBtn.disabled = true;
-                continueBtn.classList.add('disabled');
-                continueBtn.classList.remove('active');
-            }
-        }
-
-        // Create Account Button
-        const createBtn = document.getElementById('create-account-btn');
-        if (createBtn) {
-            if (roleSelected && pwd && confirmPwd && pwd === confirmPwd && termsChecked) {
-                createBtn.disabled = false;
-                createBtn.classList.add('active');
-                createBtn.classList.remove('disabled');
-            } else {
-                createBtn.disabled = true;
-                createBtn.classList.add('disabled');
-                createBtn.classList.remove('active');
-            }
-        }
-    }
-    */
-
-    // COMMENTED OUT: Old password toggle functions replaced by passwordToggleFix_v2.js
-    /*
-    // Password Toggle Fix - Initialize toggles for ALL password containers
-    window.initializePasswordToggles = function() {
-        console.log('Initializing password toggles...');
-
-        var containers = document.querySelectorAll('.password-container');
-
-        containers.forEach(function(container) {
-            var input = container.querySelector('input');
-            var toggle = container.querySelector('.password-toggle');
-
-            if (input && toggle) {
-                // Remove any existing event listeners to prevent duplicates
-                toggle.replaceWith(toggle.cloneNode(true));
-                toggle = container.querySelector('.password-toggle');
-
-                // Add event listener for toggle functionality
-                toggle.addEventListener('click', function() {
-                    if (input.type === 'password') {
-                        input.type = 'text';
-                        toggle.textContent = '🙈';
-                        toggle.setAttribute('aria-label', 'Hide password');
-                    } else {
-                        input.type = 'password';
-                        toggle.textContent = '👁️';
-                        toggle.setAttribute('aria-label', 'Show password');
-                    }
-                });
-
-                // Ensure proper styling
-                container.style.position = 'relative';
-                toggle.style.position = 'absolute';
-                toggle.style.right = '12px';
-                toggle.style.top = '50%';
-                toggle.style.transform = 'translateY(-50%)';
-                toggle.style.zIndex = '10';
-                toggle.style.display = 'flex';
-                toggle.style.alignItems = 'center';
-                toggle.style.justifyContent = 'center';
-
-                console.log('Password toggle initialized for:', input.id);
-            }
-        });
-    };
-    */
+    // Old password toggle functions replaced by passwordToggleFix_v2.js
     // NEW: passwordToggleFix_v2.js handles all password toggle functionality automatically
     // Stub function to prevent errors from existing calls
     window.initializePasswordToggles = function() {
@@ -1095,32 +1009,6 @@
 
     // NOTE: updateSignupButtonState is provided by signupSigninFix.js - don't override it here
 
-    /*
-    // Password Toggle Fix - Toggle function for any input ID
-    window.togglePassword = function(inputId) {
-        var input = document.getElementById(inputId);
-        if (!input) {
-            console.error('Input not found:', inputId);
-            return;
-        }
-
-        var toggle = input.parentElement.querySelector('.password-toggle');
-        if (!toggle) {
-            console.error('Toggle button not found for:', inputId);
-            return;
-        }
-
-        if (input.type === 'password') {
-            input.type = 'text';
-            toggle.textContent = '🙈';
-            toggle.setAttribute('aria-label', 'Hide password');
-        } else {
-            input.type = 'password';
-            toggle.textContent = '👁️';
-            toggle.setAttribute('aria-label', 'Show password');
-        }
-    };
-    */
 
     // Essential tab switching function - mobile compatible
     window.switchTab = function(tab, clickedElement) {
@@ -1429,90 +1317,6 @@
 
             // REMOVED: Complete signup form handler - now handled by signupSigninFix.js
             // This was conflicting with the external signup handler that provides proper form validation and submission
-            /*
-            if (signupForm) {
-                signupForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-
-                    var errors = validateSignupForm();
-                    if (errors.length > 0) {
-                        showFormErrors(errors);
-                        return;
-                    }
-
-                    // If validation passes, collect all form data
-                    var name = document.getElementById('signup-name').value;
-                    var email = document.getElementById('signup-email').value;
-                    var password = document.getElementById('signup-password').value;
-                    var role = document.getElementById('selected-role').value;
-
-                    // Collect role-specific data
-                    var roleSpecificData = {};
-                    if (role === 'student') {
-                        roleSpecificData = {
-                            university: document.getElementById('university')?.value || '',
-                            major: document.getElementById('major')?.value || '',
-                            graduationYear: document.getElementById('graduation-year')?.value || '',
-                            gpa: document.getElementById('gpa')?.value || '',
-                            skills: document.getElementById('skills')?.value || '',
-                            opportunityType: document.getElementById('opportunity-type')?.value || ''
-                        };
-                    } else if (role === 'job_seeker') {
-                        roleSpecificData = {
-                            currentTitle: document.getElementById('current-title')?.value || '',
-                            experienceYears: document.getElementById('experience-years')?.value || '',
-                            industry: document.getElementById('industry')?.value || '',
-                            skills: document.getElementById('skills')?.value || '',
-                            salaryRange: document.getElementById('salary-range')?.value || '',
-                            workEnvironment: document.getElementById('work-environment')?.value || '',
-                            location: document.getElementById('location')?.value || ''
-                        };
-                    } else if (role === 'recruiter') {
-                        roleSpecificData = {
-                            company: document.getElementById('company')?.value || '',
-                            companySize: document.getElementById('company-size')?.value || '',
-                            companyIndustry: document.getElementById('company-industry')?.value || '',
-                            hiringRoles: document.getElementById('hiring-roles')?.value || '',
-                            hiringVolume: document.getElementById('hiring-volume')?.value || '',
-                            responseTime: document.getElementById('response-time')?.value || '',
-                            companyLocation: document.getElementById('company-location')?.value || ''
-                        };
-                    }
-
-                    var completeFormData = {
-                        name: name,
-                        email: email,
-                        password: password, // In production, this should be hashed
-                        role: role,
-                        roleSpecificData: roleSpecificData,
-                        timestamp: new Date().toISOString()
-                    };
-
-                    console.log('Complete signup data collected:', completeFormData);
-
-                    // Show success message
-                    var successDiv = document.getElementById('success-message');
-                    successDiv.innerHTML = 'Account validation successful! All signup flows are working. Ready for backend integration.';
-                    successDiv.style.display = 'block';
-
-                    // Hide error message
-                    document.getElementById('error-message').style.display = 'none';
-
-                    // Reset form after successful validation
-                    setTimeout(function() {
-                        signupForm.reset();
-                        document.getElementById('selected-role').value = '';
-                        document.getElementById('role-display').textContent = '';
-                        switchTab('signin', document.querySelector('.auth-tab'));
-
-                        // Pre-fill signin email for better UX
-                        document.getElementById('signin-email').value = email;
-
-                        successDiv.style.display = 'none';
-                    }, 3000);
-                });
-            }
-            */
 
             console.log('Complete auth page functionality initialized successfully');
         } catch (error) {
