@@ -5,48 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GuideSignal - Where a Job Finds You</title>
 
-  <!-- Cache Busting - Force Latest Version -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <meta name="cache-bust" content="v2-20250913-latest-1726195200">
-  
   <!-- SEO Meta Tags -->
   <meta name="description" content="The fastest way to work where you belong. AI matches your skills with jobs that reply in 48 hours.">
   <meta name="keywords" content="job search, fast replies, career opportunities, recruitment, 48 hour response">
   <meta name="author" content="GuideSignal">
-  
-  <!-- Cache Busting and Version Check -->
+
+  <!-- Simple Version Logging -->
   <script>
-    // Force latest version load and clear cache
-    console.log('🚀 Loading GuideSignal v2 - Latest Version');
-
-    // Clear any cached data that might show old version
-    if ('caches' in window) {
-      caches.keys().then(names => {
-        names.forEach(name => {
-          caches.delete(name);
-        });
-      });
-    }
-
-    // Version tracking (without auto-refresh to prevent infinite loops)
-    const currentVersion = 'v2-20250913-complete-signup';
-    const lastVersion = localStorage.getItem('guidesignal-version');
-
-    if (lastVersion !== currentVersion) {
-      console.log('🔄 New version detected: ' + currentVersion);
-      localStorage.setItem('guidesignal-version', currentVersion);
-
-      // Clear cache-related storage but don't force reload
-      localStorage.removeItem('cache-timestamp');
-    }
-
-    // Skip SSL redirects for now (using GitHub Pages domain)
-    if (false && location.protocol !== 'https:' || !location.hostname.startsWith('www.')) {
-      const correctUrl = 'https://www.' + location.hostname.replace('www.', '') + location.pathname + location.search;
-      location.replace(correctUrl);
-    }
+    console.log('🚀 Loading GuideSignal - Jobs that reply');
   </script>
   
   <!-- Security Scripts (Only load if files exist) -->
@@ -111,22 +77,10 @@
   }
   </script>
   
-  <!-- Register Optimized Service Worker -->
+  <!-- Service Worker Registration Disabled (preventing reload issues) -->
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        // Check if service worker file exists before registering
-        fetch('/sw-optimized.js', {method: 'HEAD'})
-          .then(response => {
-            if (response.ok) {
-              return navigator.serviceWorker.register('/sw-optimized.js');
-            }
-            // Fallback to standard service worker
-            return navigator.serviceWorker.register('/sw.js');
-          })
-          .catch(() => {/* Silently fail if SW not available */});
-      });
-    }
+    // Service worker registration temporarily disabled to prevent reload loops
+    console.log('Service worker registration disabled for stability');
   </script>
   
   <!-- Jobs/Ive Minimalist Design System -->
