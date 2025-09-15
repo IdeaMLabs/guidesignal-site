@@ -56,3 +56,103 @@ h1, h2, h3 {
 .success-message-hidden {
   display: none;
 }
+
+/* Additional classes for auth form inline style replacement */
+.role-content-layout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.role-icon {
+  font-size: 2rem;
+}
+
+.role-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 4px;
+}
+
+.role-description {
+  font-size: 14px;
+  color: var(--gray-600);
+}
+
+.continue-button-full {
+  margin-top: 24px;
+  width: 100%;
+}
+
+.password-strength-hidden {
+  display: none;
+}
+
+.role-display-container {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: var(--gray-50);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.role-display-label {
+  color: var(--gray-600);
+  font-size: 14px;
+}
+
+.role-display-value {
+  color: var(--primary-600);
+}
+
+.role-display-change {
+  margin-left: 12px;
+  background: none;
+  border: none;
+  color: var(--primary-500);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.terms-group {
+  margin-top: 10px;
+}
+
+.terms-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+.terms-checkbox {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.terms-link {
+  color: #4a9eff;
+  text-decoration: none;
+}
+
+.form-section-highlight {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: var(--radius);
+  border-left: 4px solid #4a9eff;
+}
+
+.form-section-title {
+  color: var(--primary-600);
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.form-field-help {
+  color: var(--gray-600);
+}
