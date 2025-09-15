@@ -317,10 +317,26 @@ document.getElementById('signin-form').addEventListener('submit', async function
     hideMessages();
     clearFieldErrors();
     
-    const result = await handleNetworkError(
-        () => authFunctions.signInUser(email, password, rememberMe),
-        () => authFunctions.signInUser(email, password, rememberMe)
-    );
+    let result;
+    try {
+        const response = await fetch('/api/signin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({ email, password, rememberMe })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Signin failed');
+        }
+
+        result = { success: true };
+    } catch (error) {
+        result = { success: false, error: error.message };
+    }
     
     if (result.success) {
         loginAttempts = 0;
@@ -332,10 +348,9 @@ document.getElementById('signin-form').addEventListener('submit', async function
         }
         
         showSuccess('Sign in successful! Redirecting...');
-        
-        setTimeout(async () => {
-            const role = await utils.getUserRole(result.user.uid);
-            utils.redirectToDashboard(role);
+
+        setTimeout(() => {
+            window.location.href = '/dashboard';
         }, 1500);
     } else {
         loginAttempts++;
@@ -410,12 +425,36 @@ document.getElementById('signup-form').addEventListener('submit', async function
         additionalData.subscriptionTier = 'free';
     }
     
-    // Normalize role string for Firebase (convert underscores to hyphens).
-    const normalizedRole = selectedRole ? selectedRole.replace('_', '-') : selectedRole;
-    const result = await handleNetworkError(
-        () => authFunctions.registerUser(email, password, name, normalizedRole, additionalData),
-        () => authFunctions.registerUser(email, password, name, normalizedRole, additionalData)
-    );
+    // Collect complete form data for backend API
+    const completeFormData = {
+        name: name,
+        email: email,
+        password: password,
+        role: selectedRole,
+        additionalData: additionalData,
+        timestamp: new Date().toISOString()
+    };
+
+    let result;
+    try {
+        const response = await fetch('/api/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(completeFormData)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Signup failed');
+        }
+
+        result = { success: true };
+    } catch (error) {
+        result = { success: false, error: error.message };
+    }
     
     if (result.success) {
         if (result.emailVerificationSent) {
