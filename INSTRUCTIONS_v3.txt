@@ -1,0 +1,29 @@
+# Agent Instructions for Auth Fix v3
+
+This package contains the updated `unified-auth-v3.js` file to fix remaining issues in `auth.html`.
+
+## Fixes Included
+1. Duplicate validators removed (only one validation function with prefixed IDs).
+2. Role-specific validation enforced with student-*, jobseeker-*, recruiter-* IDs.
+3. Guaranteed signup and signin submission fallbacks if external scripts fail.
+4. Unified error/success display with showError/showSuccess.
+5. Password toggle fallback implemented so toggles always work.
+6. Cleaner event binding (no duplicate listeners).
+
+## How to Integrate
+1. Place `unified-auth-v3.js` in your assets directory.
+2. In `auth.html`, include it at the bottom:
+   <script src="assets/unified-auth-v3.js"></script>
+3. Remove or comment out the old `validateSignupForm()` and duplicate inline code.
+4. Test in these scenarios:
+   - Normal operation with external scripts loaded.
+   - Fallback mode with external scripts missing.
+   - Validation for all three roles (student, job seeker, recruiter).
+   - Password toggle on desktop and mobile.
+   - API available vs API unavailable (demo mode fallback).
+
+## Expected Result
+- Signup/signin always validate correctly.
+- Works in both normal and degraded conditions.
+- Clear and consistent user feedback.
+- No duplicate validators or error conflicts.

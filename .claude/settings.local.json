@@ -41,7 +41,8 @@
       "Bash(gh repo view:*)",
       "WebFetch(domain:api.github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "Read(//c/**)"
+      "Read(//c/**)",
+      "Bash(move unified-auth-v3.js assets/)"
     ],
     "deny": [],
     "ask": []

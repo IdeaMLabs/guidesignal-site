@@ -1059,6 +1059,7 @@
             console.log(`🔧 Button ${button.id} state: ${enabled ? 'ENABLED' : 'DISABLED'}`);
         },
 
+        /* COMMENTED OUT: Replaced by unified-auth-v3.js
         // Enhanced validation with detailed feedback
         validateSignupForm: function() {
             const name = document.getElementById('signup-name')?.value.trim() || '';
@@ -1084,6 +1085,7 @@
                 data: { name, email, password: pwd, role, terms }
             };
         },
+        */
 
         // Fallback updateSignupButtonState
         updateSignupButtonState: function() {
@@ -1315,6 +1317,7 @@
         }, 100);
     };
 
+    /* COMMENTED OUT: Replaced by unified-auth-v3.js
     // Complete signup validation and submission
     function validateSignupForm() {
         var name = document.getElementById('signup-name').value.trim();
@@ -1436,6 +1439,7 @@
 
         return errors;
     }
+    */
 
     // Calculate password strength for better UX
     function calculatePasswordStrength(password) {
@@ -2828,5 +2832,8 @@
 
     <!-- Unified auth handler - final fallback system for form validation and submission -->
     <script src="assets/unified-auth.js"></script>
+
+    <!-- Unified auth v3 - enhanced fallback system with improved validation -->
+    <script src="assets/unified-auth-v3.js"></script>
 </body>
 </html>
