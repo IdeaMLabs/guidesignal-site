@@ -113,7 +113,7 @@ function saveFormData(tab) {
         const emailEl = document.getElementById('signup-email');
         const passwordEl = document.getElementById('signup-password');
         const confirmEl = document.getElementById('signup-password-confirm');
-        const termsEl = document.getElementById('terms-agreement');
+        const termsEl = document.getElementById('terms');
         
         formData.signup = {
             name: nameEl?.value || '',
@@ -142,7 +142,7 @@ function restoreFormData(tab) {
         const emailEl = document.getElementById('signup-email');
         const passwordEl = document.getElementById('signup-password');
         const confirmEl = document.getElementById('signup-password-confirm');
-        const termsEl = document.getElementById('terms-agreement');
+        const termsEl = document.getElementById('terms');
         
         if (nameEl) nameEl.value = data.name || '';
         if (emailEl) emailEl.value = data.email || '';
@@ -167,9 +167,14 @@ function setupRoleSelection() {
                 
                 const option = this.closest('.role-option');
                 option.classList.add('selected');
-                selectedRole = option.dataset.role;
-                
-                const roleType = option.dataset.role;
+                // Use the radio's value rather than the data-role attribute.
+                // Update the selectedRole variable with the chosen radio value.
+                selectedRole = this.value;
+                // Also update the hidden input so the value persists when submitting the form.
+                const selectedRoleInput = document.getElementById('selected-role');
+                if (selectedRoleInput) selectedRoleInput.value = selectedRole;
+
+                const roleType = selectedRole;
                 let welcomeMessage = '';
                 
                 if (roleType === 'student') {
@@ -244,33 +249,36 @@ document.head.appendChild(style);
 
 // Enhanced signup button validation
 function validateSignUpButton() {
-    const signupBtn = document.getElementById('signup-btn');
-    const termsCheckbox = document.getElementById('terms-agreement');
+    const signupBtn = document.getElementById('create-account-btn');
+    const termsCheckbox = document.getElementById('terms');
     
     if (!signupBtn) return;
     
-    const hasRole = selectedRole !== null;
+    const hasRole = !!selectedRole;
     const hasTerms = termsCheckbox && termsCheckbox.checked;
     const isOnline = navigator.onLine;
     
     const shouldEnable = hasRole && hasTerms && isOnline;
     signupBtn.disabled = !shouldEnable;
-    
-    if (!shouldEnable) {
+
+    // Handle btn-disabled class for visual styling
+    if (shouldEnable) {
+        signupBtn.classList.remove('btn-disabled');
+        signupBtn.title = 'Create your account';
+    } else {
+        signupBtn.classList.add('btn-disabled');
         let missing = [];
         if (!hasRole) missing.push('select role');
         if (!hasTerms) missing.push('agree to terms');
         if (!isOnline) missing.push('internet connection');
-        
+
         signupBtn.title = `Please ${missing.join(', ')} to continue`;
-    } else {
-        signupBtn.title = 'Create your account';
     }
 }
 
 // Terms agreement handling
 function setupTermsAgreement() {
-    const termsCheckbox = document.getElementById('terms-agreement');
+    const termsCheckbox = document.getElementById('terms');
     if (termsCheckbox) {
         termsCheckbox.addEventListener('change', () => {
             validateSignUpButton();
@@ -351,7 +359,7 @@ document.getElementById('signup-form').addEventListener('submit', async function
     const email = document.getElementById('signup-email').value.trim().toLowerCase();
     const password = document.getElementById('signup-password').value;
     const passwordConfirm = document.getElementById('signup-password-confirm').value;
-    const termsCheckbox = document.getElementById('terms-agreement');
+    const termsCheckbox = document.getElementById('terms');
     
     hideMessages();
     clearFieldErrors();
@@ -376,7 +384,7 @@ document.getElementById('signup-form').addEventListener('submit', async function
         return;
     }
     
-    setLoading('signup-btn', true);
+    setLoading('create-account-btn', true);
     
     const additionalData = {
         profileComplete: false,
@@ -402,9 +410,11 @@ document.getElementById('signup-form').addEventListener('submit', async function
         additionalData.subscriptionTier = 'free';
     }
     
+    // Normalize role string for Firebase (convert underscores to hyphens).
+    const normalizedRole = selectedRole ? selectedRole.replace('_', '-') : selectedRole;
     const result = await handleNetworkError(
-        () => authFunctions.registerUser(email, password, name, selectedRole, additionalData),
-        () => authFunctions.registerUser(email, password, name, selectedRole, additionalData)
+        () => authFunctions.registerUser(email, password, name, normalizedRole, additionalData),
+        () => authFunctions.registerUser(email, password, name, normalizedRole, additionalData)
     );
     
     if (result.success) {
@@ -432,7 +442,7 @@ document.getElementById('signup-form').addEventListener('submit', async function
     } else {
         const friendlyError = getFriendlyErrorMessage(result.error);
         showError(friendlyError);
-        setLoading('signup-btn', false);
+        setLoading('create-account-btn', false);
     }
 });
 
@@ -883,7 +893,7 @@ function checkFormValidity() {
     const email = document.getElementById('signup-email')?.value.trim() || '';
     const password = document.getElementById('signup-password')?.value || '';
     const passwordConfirm = document.getElementById('signup-password-confirm')?.value || '';
-    const termsCheckbox = document.getElementById('terms-agreement');
+    const termsCheckbox = document.getElementById('terms');
     
     const nameValid = name.length >= 2 && validateName(name);
     const emailValid = validateEmail(email);
@@ -1097,12 +1107,31 @@ function handleNetworkError(error, retryFunction, maxRetries = 3) {
     return retry();
 }
 
+// Initialize password toggles functionality
+function initPasswordToggles() {
+    document.querySelectorAll(".password-toggle").forEach(toggle => {
+        toggle.setAttribute("aria-label", "Toggle password visibility");
+        toggle.addEventListener("click", () => {
+            const input = toggle.previousElementSibling;
+            if (!input) return;
+            if (input.type === "password") {
+                input.type = "text";
+                toggle.textContent = "🙈";
+            } else {
+                input.type = "password";
+                toggle.textContent = "👁️";
+            }
+        });
+    });
+}
+
 // Initialize when DOM is loaded
 function initializeApp() {
     initializePage();
     setupTermsAgreement();
     setupRoleSelection();
     setupAdvancedValidation();
+    initPasswordToggles();
 }
 
 // Advanced validation features
