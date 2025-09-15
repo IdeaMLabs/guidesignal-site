@@ -1078,16 +1078,27 @@
     };
     */
     // NEW: passwordToggleFix_v2.js handles all password toggle functionality automatically
-    // Stub function to prevent errors from existing calls
+    // Bridge function to call password toggle initialization from auth-optimized.js
     window.initializePasswordToggles = function() {
-        console.log('Password toggles handled by passwordToggleFix_v2.js');
+        // Delegate to the auth-optimized.js initPasswordToggles function
+        if (typeof initPasswordToggles === 'function') {
+            initPasswordToggles();
+        }
     };
 
-    // Stub function to bridge internal updateButtons calls to external updateSignupButtonState
+    // Bridge function to connect auth.html calls to auth-optimized.js functions
     window.updateButtons = function() {
-        // Delegate to the external signupSigninFix.js updateSignupButtonState function
-        if (typeof updateSignupButtonState === 'function') {
-            updateSignupButtonState(false);
+        // Delegate to the auth-optimized.js validateSignUpButton function
+        if (typeof validateSignUpButton === 'function') {
+            validateSignUpButton();
+        }
+    };
+
+    // Bridge function for updateSignupButtonState calls
+    window.updateSignupButtonState = function() {
+        // Delegate to the auth-optimized.js validateSignUpButton function
+        if (typeof validateSignUpButton === 'function') {
+            validateSignUpButton();
         }
     };
 
