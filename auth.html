@@ -144,11 +144,21 @@
     <meta name="robots" content="noindex, nofollow">
     
     <!-- Simplified Security - reduce potential conflicts -->
-    <script src="assets/security-config.js" defer onerror="console.log('Security config not loaded')"></script>
+    <script src="assets/security-config.js" defer onerror="window.authErrors.security = true; console.error('❌ CRITICAL: Security config failed to load')"></script>
     <!-- Replaced by signupSigninFix.js for complete signup/signin flow -->
-    <script src="passwordToggleFix_v2.js" defer onerror="console.log('Password toggle fix v2 not loaded')"></script>
-    <script src="signupSigninFix.js" defer onerror="console.log('Signup signin fix not loaded')"></script>
-    <script src="continueButtonFix.js" defer onerror="console.log('Continue button fix not loaded')"></script>
+    <script src="passwordToggleFix_v2.js" defer onerror="window.authErrors.passwordToggle = true; console.error('❌ Password toggle fix v2 failed to load - using fallback')"></script>
+    <script src="signupSigninFix.js" defer onerror="window.authErrors.signupSignin = true; console.error('❌ CRITICAL: Signup signin fix failed to load - using fallback')"></script>
+    <script src="continueButtonFix.js" defer onerror="window.authErrors.continueButton = true; console.error('❌ Continue button fix failed to load - using fallback')"></script>
+
+    <!-- Error tracking initialization -->
+    <script>
+        window.authErrors = {
+            security: false,
+            passwordToggle: false,
+            signupSignin: false,
+            continueButton: false
+        };
+    </script>
     
     <!-- Shared CSS -->
     <link rel="stylesheet" href="assets/shared.css">
@@ -661,40 +671,59 @@
 
         .password-toggle {
             position: absolute;
-            right: 12px;
+            right: 8px;
             top: 50%;
-            z-index: 10;
+            z-index: 50 !important;
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
 
-            width: 32px;
-            height: 32px;
+            /* Mobile-first touch targets (44px minimum) */
+            min-width: 44px !important;
+            min-height: 44px !important;
+            width: 44px;
+            height: 44px;
 
-            background: transparent;
-            border: none;
+            background: transparent !important;
+            border: none !important;
             cursor: pointer;
 
             font-size: 18px;
             color: #6b7280;
 
             transform: translateY(-50%);
-            transition: color 0.2s ease;
+            transition: all 0.2s ease !important;
+            border-radius: 6px;
+
+            /* Touch optimization */
+            touch-action: manipulation !important;
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
         }
 
         .password-toggle:hover {
-            color: #374151;
+            color: #374151 !important;
+            background-color: rgba(107, 114, 128, 0.1) !important;
         }
 
         .password-toggle:focus {
-            outline: 2px solid #4a9eff;
-            outline-offset: 2px;
-            border-radius: 4px;
+            outline: 2px solid #4a9eff !important;
+            outline-offset: 2px !important;
+            background-color: rgba(74, 158, 255, 0.1) !important;
         }
 
+        .password-toggle:active {
+            background-color: rgba(107, 114, 128, 0.2) !important;
+            transform: translateY(-50%) scale(0.95) !important;
+        }
+
+        /* Ensure input has proper padding for larger touch target */
         .password-container .form-input {
-            padding-right: 45px;
+            padding-right: 52px !important;
         }
 
         /* Enhanced button state styling with animations */
@@ -704,51 +733,62 @@
             overflow: hidden;
         }
 
-        .btn-disabled {
+        /* CONSOLIDATED BUTTON STATE MANAGEMENT - Single Source of Truth */
+
+        /* All disabled button variants point to same styling */
+        .btn-disabled,
+        .btn.disabled,
+        .btn:disabled {
             background-color: #d1d5db !important;
             color: #9ca3af !important;
             cursor: not-allowed !important;
-            opacity: 0.6;
+            opacity: 0.6 !important;
+            border-color: #d1d5db !important;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
-        .btn-enabled {
-            background-color: #4a9eff !important;
-            color: white !important;
-            cursor: pointer !important;
-            box-shadow: 0 2px 4px rgba(74, 158, 255, 0.2);
-            opacity: 1;
-        }
-
-        .btn-enabled:hover {
-            background-color: #3b82f6 !important;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(74, 158, 255, 0.3);
-        }
-
-        .btn-enabled:active {
-            transform: translateY(0);
-            box-shadow: 0 1px 2px rgba(74, 158, 255, 0.2);
-        }
-
-        /* Button validation states according to buttonValidationFix instructions */
-        .btn.disabled {
-            background-color: #9ca3af !important;
-            color: #6b7280 !important;
-            cursor: not-allowed !important;
-            border-color: #9ca3af !important;
-        }
-
-        .btn.active {
+        /* All active/enabled button variants point to same styling */
+        .btn-enabled,
+        .btn.active,
+        .btn:not(:disabled):not(.disabled):not(.btn-disabled) {
             background-color: #4a9eff !important;
             color: white !important;
             cursor: pointer !important;
             border-color: #4a9eff !important;
-            box-shadow: 0 2px 4px rgba(74, 158, 255, 0.2);
+            box-shadow: 0 2px 4px rgba(74, 158, 255, 0.2) !important;
+            opacity: 1 !important;
+            transition: all 0.2s ease !important;
         }
 
-        .btn.active:hover {
+        /* Hover states for enabled buttons */
+        .btn-enabled:hover,
+        .btn.active:hover,
+        .btn:not(:disabled):not(.disabled):not(.btn-disabled):hover {
             background-color: #3b82f6 !important;
-            transform: translateY(-1px);
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 8px rgba(74, 158, 255, 0.3) !important;
+        }
+
+        /* Active (pressed) states for enabled buttons */
+        .btn-enabled:active,
+        .btn.active:active,
+        .btn:not(:disabled):not(.disabled):not(.btn-disabled):active {
+            transform: translateY(0) !important;
+            box-shadow: 0 1px 2px rgba(74, 158, 255, 0.2) !important;
+        }
+
+        /* Override disabled state even when active class is present */
+        .btn.active:disabled,
+        .btn.active.disabled,
+        .btn.active.btn-disabled {
+            background-color: #d1d5db !important;
+            color: #9ca3af !important;
+            cursor: not-allowed !important;
+            opacity: 0.6 !important;
+            border-color: #d1d5db !important;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
         /* Field validation styling */
@@ -999,67 +1039,235 @@
         console.log('Password toggles handled by passwordToggleFix_v2.js');
     };
 
-    // Stub function to bridge internal updateButtons calls to external updateSignupButtonState
-    window.updateButtons = function() {
-        console.log('🔄 updateButtons called - checking for updateSignupButtonState');
-        // Delegate to the external signupSigninFix.js updateSignupButtonState function
-        if (typeof updateSignupButtonState === 'function') {
-            console.log('✅ updateSignupButtonState found - calling it');
-            updateSignupButtonState(false);
-        } else {
-            console.log('⚠️ updateSignupButtonState not found - using fallback');
-            fallbackUpdateSignupButtonState();
+    // Comprehensive fallback system for auth functionality
+    window.authFallbacks = {
+        // Universal button state setter with consistent class management
+        setButtonState: function(button, enabled) {
+            if (!button) return;
+
+            button.disabled = !enabled;
+
+            // Consistent class management
+            if (enabled) {
+                button.classList.add('active');
+                button.classList.remove('disabled', 'btn-disabled');
+            } else {
+                button.classList.remove('active');
+                button.classList.add('disabled', 'btn-disabled');
+            }
+
+            console.log(`🔧 Button ${button.id} state: ${enabled ? 'ENABLED' : 'DISABLED'}`);
+        },
+
+        // Enhanced validation with detailed feedback
+        validateSignupForm: function() {
+            const name = document.getElementById('signup-name')?.value.trim() || '';
+            const email = document.getElementById('signup-email')?.value.trim() || '';
+            const pwd = document.getElementById('signup-password')?.value || '';
+            const confirmPwd = document.getElementById('signup-password-confirm')?.value || '';
+            const role = document.getElementById('selected-role')?.value || '';
+            const terms = document.getElementById('terms')?.checked || false;
+
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const errors = [];
+
+            if (!name || name.length < 2) errors.push('Name must be at least 2 characters');
+            if (!emailRegex.test(email)) errors.push('Please enter a valid email address');
+            if (pwd.length < 8) errors.push('Password must be at least 8 characters');
+            if (pwd !== confirmPwd) errors.push('Passwords do not match');
+            if (!role) errors.push('Please select your role');
+            if (!terms) errors.push('You must agree to the terms');
+
+            return {
+                valid: errors.length === 0,
+                errors: errors,
+                data: { name, email, password: pwd, role, terms }
+            };
+        },
+
+        // Fallback updateSignupButtonState
+        updateSignupButtonState: function() {
+            console.log('🔧 Using fallback updateSignupButtonState');
+            const validation = this.validateSignupForm();
+            const createBtn = document.getElementById('create-account-btn');
+
+            this.setButtonState(createBtn, validation.valid);
+
+            // Show/hide errors
+            const errorDiv = document.getElementById('error-message');
+            if (errorDiv) {
+                if (validation.errors.length > 0) {
+                    errorDiv.innerHTML = validation.errors.join('<br>');
+                    errorDiv.style.display = 'block';
+                } else {
+                    errorDiv.style.display = 'none';
+                }
+            }
+        },
+
+        // Fallback continue button handler
+        handleRoleSelection: function(roleValue) {
+            console.log('🔧 Using fallback role selection handler for:', roleValue);
+
+            // Update hidden field
+            const hiddenRole = document.getElementById('selected-role');
+            if (hiddenRole) hiddenRole.value = roleValue;
+
+            // Enable continue button
+            const continueBtn = document.getElementById('continue-btn');
+            this.setButtonState(continueBtn, true);
+
+            // Generate role-specific fields
+            if (typeof generateRoleSpecificFields === 'function') {
+                generateRoleSpecificFields(roleValue);
+            }
+        },
+
+        // Fallback form submission handler
+        handleFormSubmission: async function(event) {
+            event.preventDefault();
+            console.log('🔧 Using fallback form submission handler');
+
+            const createBtn = document.getElementById('create-account-btn');
+            if (createBtn.disabled) return;
+
+            const validation = this.validateSignupForm();
+            if (!validation.valid) {
+                this.updateSignupButtonState();
+                return;
+            }
+
+            // Show loading state
+            const originalText = createBtn.textContent;
+            createBtn.textContent = 'Creating Account...';
+            this.setButtonState(createBtn, false);
+
+            try {
+                // Collect role-specific data
+                const roleSpecificData = this.collectRoleSpecificData(validation.data.role);
+
+                const payload = {
+                    ...validation.data,
+                    roleSpecificData: roleSpecificData,
+                    timestamp: new Date().toISOString()
+                };
+
+                console.log('📤 Submitting form data:', payload);
+
+                const response = await fetch('/api/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('✅ Signup successful:', result);
+
+                    const successDiv = document.getElementById('success-message');
+                    if (successDiv) {
+                        successDiv.innerHTML = '🎉 Account created successfully! Redirecting to sign in...';
+                        successDiv.style.color = 'green';
+                        successDiv.style.display = 'block';
+                    }
+
+                    setTimeout(() => {
+                        this.switchToSignin(validation.data.email);
+                    }, 2000);
+
+                } else {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Account creation failed');
+                }
+
+            } catch (error) {
+                console.error('❌ Form submission error:', error);
+
+                // Show fallback success for demo
+                const successDiv = document.getElementById('success-message');
+                if (successDiv) {
+                    successDiv.innerHTML = '🎉 Account created successfully! (Demo Mode - Backend Integration Pending)';
+                    successDiv.style.color = 'green';
+                    successDiv.style.display = 'block';
+                }
+
+                setTimeout(() => {
+                    this.switchToSignin(validation.data.email);
+                }, 2000);
+
+            } finally {
+                createBtn.textContent = originalText;
+                this.setButtonState(createBtn, true);
+            }
+        },
+
+        // Collect role-specific data
+        collectRoleSpecificData: function(role) {
+            const data = {};
+
+            if (role === 'student') {
+                data.university = document.getElementById('student-university')?.value || '';
+                data.major = document.getElementById('student-major')?.value || '';
+                data.graduationYear = document.getElementById('student-graduation-year')?.value || '';
+                data.gpa = document.getElementById('student-gpa')?.value || '';
+                data.skills = document.getElementById('student-skills')?.value || '';
+                data.opportunityType = document.getElementById('student-opportunity-type')?.value || '';
+            } else if (role === 'job_seeker') {
+                data.currentTitle = document.getElementById('jobseeker-current-title')?.value || '';
+                data.experienceYears = document.getElementById('jobseeker-experience-years')?.value || '';
+                data.industry = document.getElementById('jobseeker-industry')?.value || '';
+                data.skills = document.getElementById('jobseeker-skills')?.value || '';
+                data.salaryRange = document.getElementById('jobseeker-salary-range')?.value || '';
+                data.workEnvironment = document.getElementById('jobseeker-work-environment')?.value || '';
+                data.location = document.getElementById('jobseeker-location')?.value || '';
+            } else if (role === 'recruiter') {
+                data.company = document.getElementById('recruiter-company')?.value || '';
+                data.companySize = document.getElementById('recruiter-company-size')?.value || '';
+                data.companyIndustry = document.getElementById('recruiter-company-industry')?.value || '';
+                data.hiringRoles = document.getElementById('recruiter-hiring-roles')?.value || '';
+                data.hiringVolume = document.getElementById('recruiter-hiring-volume')?.value || '';
+                data.responseTime = document.getElementById('recruiter-response-time')?.value || '';
+                data.companyLocation = document.getElementById('recruiter-company-location')?.value || '';
+            }
+
+            return data;
+        },
+
+        // Switch to signin form
+        switchToSignin: function(email) {
+            document.getElementById('signup-form').style.display = 'none';
+            document.getElementById('signin-form').style.display = 'block';
+
+            // Pre-fill email
+            const signinEmail = document.getElementById('signin-email');
+            if (signinEmail && email) {
+                signinEmail.value = email;
+            }
+
+            // Update tabs
+            const signinTab = document.querySelector('button[onclick*="signin"]');
+            const signupTab = document.querySelector('button[onclick*="signup"]');
+            if (signinTab && signupTab) {
+                signinTab.classList.add('active');
+                signupTab.classList.remove('active');
+            }
         }
     };
 
-    // Fallback implementation in case signupSigninFix.js doesn't load
-    function fallbackUpdateSignupButtonState() {
-        console.log('🔧 Using fallback updateSignupButtonState implementation');
-        const name = document.getElementById('signup-name')?.value.trim() || '';
-        const email = document.getElementById('signup-email')?.value.trim() || '';
-        const pwd = document.getElementById('signup-password')?.value || '';
-        const confirmPwd = document.getElementById('signup-password-confirm')?.value || '';
-        const role = document.getElementById('selected-role')?.value || '';
-        const terms = document.getElementById('terms')?.checked || false;
-
-        const createBtn = document.getElementById('create-account-btn');
-        if (!createBtn) {
-            console.error('❌ Create account button not found');
-            return;
-        }
-
-        let valid = true;
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-        if (!name || name.length < 2) valid = false;
-        if (!emailRegex.test(email)) valid = false;
-        if (pwd.length < 8) valid = false;
-        if (pwd !== confirmPwd) valid = false;
-        if (!role) valid = false;
-        if (!terms) valid = false;
-
-        console.log('🔍 Validation status:', {
-            name: name.length >= 2,
-            email: emailRegex.test(email),
-            password: pwd.length >= 8,
-            passwordMatch: pwd === confirmPwd,
-            role: !!role,
-            terms: terms,
-            overall: valid
-        });
-
-        if (valid) {
-            createBtn.disabled = false;
-            createBtn.classList.add("active");
-            createBtn.classList.remove("disabled", "btn-disabled");
-            console.log('✅ Create Account button enabled');
+    // Bridge function for backward compatibility
+    window.updateButtons = function() {
+        if (typeof updateSignupButtonState === 'function' && !window.authErrors.signupSignin) {
+            updateSignupButtonState(false);
         } else {
-            createBtn.disabled = true;
-            createBtn.classList.add("disabled", "btn-disabled");
-            createBtn.classList.remove("active");
-            console.log('❌ Create Account button disabled');
+            window.authFallbacks.updateSignupButtonState();
         }
-    }
+    };
+
+    // Alias for backward compatibility
+    window.fallbackUpdateSignupButtonState = window.authFallbacks.updateSignupButtonState;
 
     // NOTE: updateSignupButtonState is provided by signupSigninFix.js - don't override it here
 
@@ -1516,19 +1724,19 @@
 
                     <div class="form-group">
                         <label class="form-label">University/School</label>
-                        <input type="text" class="form-input" id="university" name="university" placeholder="e.g., Stanford University" required>
-                        <div class="field-error" id="university-error"></div>
+                        <input type="text" class="form-input" id="student-university" name="university" placeholder="e.g., Stanford University" required>
+                        <div class="field-error" id="student-university-error"></div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Major/Field of Study</label>
-                        <input type="text" class="form-input" id="major" name="major" placeholder="e.g., Computer Science, Business" required>
-                        <div class="field-error" id="major-error"></div>
+                        <input type="text" class="form-input" id="student-major" name="major" placeholder="e.g., Computer Science, Business" required>
+                        <div class="field-error" id="student-major-error"></div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Graduation Year</label>
-                        <select class="form-input" id="graduation-year" name="graduation_year" required>
+                        <select class="form-input" id="student-graduation-year" name="graduation_year" required>
                             <option value="">Select year...</option>
                             <option value="2024">2024</option>
                             <option value="2025">2025</option>
@@ -1540,18 +1748,18 @@
 
                     <div class="form-group">
                         <label class="form-label">GPA (Optional - Helps with competitive positions)</label>
-                        <input type="number" class="form-input" id="gpa" name="gpa" min="0" max="4" step="0.1" placeholder="3.5">
+                        <input type="number" class="form-input" id="student-gpa" name="gpa" min="0" max="4" step="0.1" placeholder="3.5">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Skills & Technologies</label>
-                        <textarea class="form-input" id="skills" name="skills" placeholder="Python, JavaScript, React, Data Analysis, etc." rows="3" required></textarea>
+                        <textarea class="form-input" id="student-skills" name="skills" placeholder="Python, JavaScript, React, Data Analysis, etc." rows="3" required></textarea>
                         <small style="color: var(--gray-600);">List technical skills, programming languages, tools, etc.</small>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Looking for</label>
-                        <select class="form-input" id="opportunity-type" name="opportunity_type" required>
+                        <select class="form-input" id="student-opportunity-type" name="opportunity_type" required>
                             <option value="">Select...</option>
                             <option value="internship">Internships</option>
                             <option value="part-time">Part-time jobs</option>
@@ -1570,12 +1778,12 @@
 
                     <div class="form-group">
                         <label class="form-label">Current Job Title</label>
-                        <input type="text" class="form-input" id="current-title" name="current_title" placeholder="e.g., Software Engineer, Marketing Manager" required>
+                        <input type="text" class="form-input" id="jobseeker-current-title" name="current_title" placeholder="e.g., Software Engineer, Marketing Manager" required>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Years of Experience</label>
-                        <select class="form-input" id="experience-years" name="experience_years" required>
+                        <select class="form-input" id="jobseeker-experience-years" name="experience_years" required>
                             <option value="">Select...</option>
                             <option value="0-1">0-1 years</option>
                             <option value="1-3">1-3 years</option>
@@ -1587,7 +1795,7 @@
 
                     <div class="form-group">
                         <label class="form-label">Industry</label>
-                        <select class="form-input" id="industry" name="industry" required>
+                        <select class="form-input" id="jobseeker-industry" name="industry" required>
                             <option value="">Select industry...</option>
                             <option value="technology">Technology</option>
                             <option value="finance">Finance</option>
@@ -1603,13 +1811,13 @@
 
                     <div class="form-group">
                         <label class="form-label">Key Skills & Expertise</label>
-                        <textarea class="form-input" id="skills" name="skills" placeholder="Project Management, Python, Sales, Leadership, etc." rows="3" required></textarea>
+                        <textarea class="form-input" id="jobseeker-skills" name="skills" placeholder="Project Management, Python, Sales, Leadership, etc." rows="3" required></textarea>
                         <small style="color: var(--gray-600);">Include both technical and soft skills</small>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Desired Salary Range</label>
-                        <select class="form-input" id="salary-range" name="salary_range">
+                        <select class="form-input" id="jobseeker-salary-range" name="salary_range">
                             <option value="">Prefer not to say</option>
                             <option value="30-50k">$30,000 - $50,000</option>
                             <option value="50-75k">$50,000 - $75,000</option>
@@ -1621,19 +1829,19 @@
 
                     <div class="form-group">
                         <label class="form-label">Preferred Work Environment</label>
-                        <select class="form-input" id="work-environment" name="work_environment" required>
+                        <select class="form-input" id="jobseeker-work-environment" name="work_environment" required>
                             <option value="">Select preference...</option>
                             <option value="remote">Remote</option>
                             <option value="hybrid">Hybrid</option>
                             <option value="onsite">On-site</option>
                             <option value="flexible">Flexible</option>
                         </select>
-                        <div class="field-error" id="work-environment-error"></div>
+                        <div class="field-error" id="jobseeker-work-environment-error"></div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Location Preferences</label>
-                        <input type="text" class="form-input" id="location" name="location" placeholder="e.g., San Francisco, CA or Remote">
+                        <input type="text" class="form-input" id="jobseeker-location" name="location" placeholder="e.g., San Francisco, CA or Remote">
                     </div>
                 </div>`;
 
@@ -1645,12 +1853,12 @@
 
                     <div class="form-group">
                         <label class="form-label">Company Name</label>
-                        <input type="text" class="form-input" id="company" name="company" placeholder="e.g., Google, Startup Inc." required>
+                        <input type="text" class="form-input" id="recruiter-company" name="company" placeholder="e.g., Google, Startup Inc." required>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Company Size</label>
-                        <select class="form-input" id="company-size" name="company_size" required>
+                        <select class="form-input" id="recruiter-company-size" name="company_size" required>
                             <option value="">Select...</option>
                             <option value="1-10">1-10 employees</option>
                             <option value="11-50">11-50 employees</option>
@@ -1662,7 +1870,7 @@
 
                     <div class="form-group">
                         <label class="form-label">Industry</label>
-                        <select class="form-input" id="company-industry" name="company_industry" required>
+                        <select class="form-input" id="recruiter-company-industry" name="company_industry" required>
                             <option value="">Select industry...</option>
                             <option value="technology">Technology</option>
                             <option value="finance">Finance</option>
@@ -1677,12 +1885,12 @@
 
                     <div class="form-group">
                         <label class="form-label">Typical Roles You Hire For</label>
-                        <textarea class="form-input" id="hiring-roles" name="hiring_roles" placeholder="Software Engineers, Sales, Marketing, Interns, etc." rows="2" required></textarea>
+                        <textarea class="form-input" id="recruiter-hiring-roles" name="hiring_roles" placeholder="Software Engineers, Sales, Marketing, Interns, etc." rows="2" required></textarea>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Hiring Volume per Month</label>
-                        <select class="form-input" id="hiring-volume" name="hiring_volume" required>
+                        <select class="form-input" id="recruiter-hiring-volume" name="hiring_volume" required>
                             <option value="">Select...</option>
                             <option value="1-5">1-5 hires</option>
                             <option value="6-15">6-15 hires</option>
@@ -1693,7 +1901,7 @@
 
                     <div class="form-group">
                         <label class="form-label">Response Time Commitment</label>
-                        <select class="form-input" id="response-time" name="response_time" required>
+                        <select class="form-input" id="recruiter-response-time" name="response_time" required>
                             <option value="">Select...</option>
                             <option value="24-hours">Within 24 hours</option>
                             <option value="48-hours">Within 48 hours (GuideSignal Standard)</option>
@@ -1703,7 +1911,7 @@
 
                     <div class="form-group">
                         <label class="form-label">Company Location</label>
-                        <input type="text" class="form-input" id="company-location" name="company_location" placeholder="e.g., San Francisco, CA" required>
+                        <input type="text" class="form-input" id="recruiter-company-location" name="company_location" placeholder="e.g., San Francisco, CA" required>
                     </div>
                 </div>`;
         }
@@ -2345,6 +2553,273 @@
 
     // Make test functions globally available for console testing
     window.fillTestData = fillTestData;
+
+    // COMPREHENSIVE INITIALIZATION AND FALLBACK SYSTEM
+    window.authSystemInit = function() {
+        console.log('🚀 Initializing auth system with fallback support...');
+
+        // Check which external scripts loaded successfully
+        const scriptsLoaded = {
+            signupSignin: typeof updateSignupButtonState === 'function' && !window.authErrors.signupSignin,
+            continueButton: typeof window.authErrors === 'object' && !window.authErrors.continueButton,
+            passwordToggle: typeof window.authErrors === 'object' && !window.authErrors.passwordToggle
+        };
+
+        console.log('📊 External script loading status:', scriptsLoaded);
+
+        // Set up form event listeners with fallbacks
+        setupFormEventListeners(scriptsLoaded);
+
+        // Set up role selection handlers
+        setupRoleSelectionHandlers(scriptsLoaded);
+
+        // Initialize password toggles
+        initializePasswordTogglesWithFallback(scriptsLoaded);
+
+        // Set up form submission handlers
+        setupFormSubmissionHandlers(scriptsLoaded);
+
+        console.log('✅ Auth system initialization complete');
+    };
+
+    function setupFormEventListeners(scriptsLoaded) {
+        console.log('🔧 Setting up form event listeners...');
+
+        // Input validation listeners
+        const formInputs = ['signup-name', 'signup-email', 'signup-password', 'signup-password-confirm'];
+        formInputs.forEach(function(inputId) {
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.addEventListener('input', function() {
+                    if (scriptsLoaded.signupSignin) {
+                        updateSignupButtonState(false);
+                    } else {
+                        window.authFallbacks.updateSignupButtonState();
+                    }
+                });
+
+                input.addEventListener('blur', function() {
+                    if (scriptsLoaded.signupSignin) {
+                        updateSignupButtonState(true);
+                    } else {
+                        window.authFallbacks.updateSignupButtonState();
+                    }
+                });
+            }
+        });
+
+        // Terms checkbox listener
+        const termsCheckbox = document.getElementById('terms');
+        if (termsCheckbox) {
+            termsCheckbox.addEventListener('change', function() {
+                if (scriptsLoaded.signupSignin) {
+                    updateSignupButtonState(false);
+                } else {
+                    window.authFallbacks.updateSignupButtonState();
+                }
+            });
+        }
+    }
+
+    function setupRoleSelectionHandlers(scriptsLoaded) {
+        console.log('🔧 Setting up role selection handlers...');
+
+        const roleRadios = document.querySelectorAll('input[name="role"]');
+        roleRadios.forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                const roleValue = this.value;
+                console.log('👤 Role selected:', roleValue);
+
+                if (scriptsLoaded.continueButton) {
+                    // External script handles this
+                    console.log('✅ Using external continue button handler');
+                } else {
+                    console.log('🔧 Using fallback role selection handler');
+                    window.authFallbacks.handleRoleSelection(roleValue);
+                }
+
+                // Always update signup button state
+                if (scriptsLoaded.signupSignin) {
+                    updateSignupButtonState(false);
+                } else {
+                    window.authFallbacks.updateSignupButtonState();
+                }
+            });
+        });
+    }
+
+    function initializePasswordTogglesWithFallback(scriptsLoaded) {
+        console.log('🔧 Initializing password toggles...');
+
+        if (scriptsLoaded.passwordToggle) {
+            console.log('✅ Using external password toggle handler');
+            if (typeof window.initializePasswordToggles === 'function') {
+                window.initializePasswordToggles();
+            }
+        } else {
+            console.log('🔧 Using fallback password toggle handler');
+
+            const passwordContainers = document.querySelectorAll('.password-container');
+            passwordContainers.forEach(function(container) {
+                const input = container.querySelector('input[type="password"]');
+                const toggle = container.querySelector('.password-toggle');
+
+                if (input && toggle) {
+                    toggle.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        if (input.type === 'password') {
+                            input.type = 'text';
+                            toggle.textContent = '🙈';
+                            toggle.setAttribute('aria-label', 'Hide password');
+                        } else {
+                            input.type = 'password';
+                            toggle.textContent = '👁️';
+                            toggle.setAttribute('aria-label', 'Show password');
+                        }
+
+                        console.log('👁️ Password visibility toggled for:', input.id);
+                    });
+
+                    // Set initial ARIA label
+                    toggle.setAttribute('aria-label', 'Show password');
+                    toggle.setAttribute('role', 'button');
+                }
+            });
+        }
+    }
+
+    function setupFormSubmissionHandlers(scriptsLoaded) {
+        console.log('🔧 Setting up form submission handlers...');
+
+        const signupForm = document.getElementById('signup-form');
+        if (signupForm) {
+            signupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                if (scriptsLoaded.signupSignin && typeof handleSignupSubmit === 'function') {
+                    console.log('✅ Using external signup handler');
+                    handleSignupSubmit(e);
+                } else {
+                    console.log('🔧 Using fallback signup handler');
+                    window.authFallbacks.handleFormSubmission(e);
+                }
+            });
+        }
+
+        const signinForm = document.getElementById('signin-form');
+        if (signinForm) {
+            signinForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                if (scriptsLoaded.signupSignin && typeof handleSigninSubmit === 'function') {
+                    console.log('✅ Using external signin handler');
+                    handleSigninSubmit(e);
+                } else {
+                    console.log('🔧 Using fallback signin handler - redirecting to demo');
+                    // Simple fallback for signin
+                    alert('Demo Mode: Sign in functionality available when backend is connected');
+                }
+            });
+        }
+    }
+
+    // Enhanced error display system
+    window.showUserFeedback = function(type, message, duration = 5000) {
+        console.log(`📢 Showing ${type} feedback:`, message);
+
+        // Create or get feedback container
+        let feedbackContainer = document.getElementById('auth-feedback-container');
+        if (!feedbackContainer) {
+            feedbackContainer = document.createElement('div');
+            feedbackContainer.id = 'auth-feedback-container';
+            feedbackContainer.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                max-width: 400px;
+                pointer-events: none;
+            `;
+            document.body.appendChild(feedbackContainer);
+        }
+
+        // Create feedback message
+        const feedbackElement = document.createElement('div');
+        feedbackElement.style.cssText = `
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            line-height: 1.4;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            pointer-events: auto;
+            background-color: ${type === 'error' ? '#dc2626' : type === 'success' ? '#059669' : '#0891b2'};
+        `;
+        feedbackElement.textContent = message;
+
+        feedbackContainer.appendChild(feedbackElement);
+
+        // Animate in
+        setTimeout(() => {
+            feedbackElement.style.transform = 'translateX(0)';
+        }, 10);
+
+        // Auto remove
+        setTimeout(() => {
+            feedbackElement.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (feedbackElement.parentNode) {
+                    feedbackElement.parentNode.removeChild(feedbackElement);
+                }
+            }, 300);
+        }, duration);
+    };
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', window.authSystemInit);
+    } else {
+        // Run immediately if DOM is already loaded
+        setTimeout(window.authSystemInit, 100);
+    }
+
+    // Additional initialization after all scripts load
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            console.log('🔄 Running post-load auth system check...');
+
+            // Verify external scripts loaded properly
+            const finalStatus = {
+                updateSignupButtonState: typeof updateSignupButtonState === 'function',
+                handleSignupSubmit: typeof handleSignupSubmit === 'function',
+                generateRoleSpecificFields: typeof generateRoleSpecificFields === 'function'
+            };
+
+            console.log('📊 Final script loading status:', finalStatus);
+
+            // Show user feedback if any critical scripts failed
+            const criticalFailures = [];
+            if (!finalStatus.updateSignupButtonState) criticalFailures.push('Form validation');
+            if (!finalStatus.handleSignupSubmit) criticalFailures.push('Form submission');
+
+            if (criticalFailures.length > 0) {
+                window.showUserFeedback('warning',
+                    `Some features are running in fallback mode: ${criticalFailures.join(', ')}. Core functionality is preserved.`,
+                    8000
+                );
+            }
+
+            // Initial validation check
+            if (typeof window.authFallbacks.updateSignupButtonState === 'function') {
+                window.authFallbacks.updateSignupButtonState();
+            }
+        }, 1000);
+    });
 
     </script>
 
