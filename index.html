@@ -30,22 +30,16 @@
       });
     }
 
-    // Force refresh if old version detected
+    // Version tracking (without auto-refresh to prevent infinite loops)
     const currentVersion = 'v2-20250913-complete-signup';
     const lastVersion = localStorage.getItem('guidesignal-version');
 
     if (lastVersion !== currentVersion) {
-      console.log('🔄 New version detected, forcing refresh...');
+      console.log('🔄 New version detected: ' + currentVersion);
       localStorage.setItem('guidesignal-version', currentVersion);
 
-      // Clear all storage
+      // Clear cache-related storage but don't force reload
       localStorage.removeItem('cache-timestamp');
-      sessionStorage.clear();
-
-      // Reload with cache bypass
-      if (!window.location.search.includes('v=' + currentVersion)) {
-        window.location.href = window.location.href + (window.location.search ? '&' : '?') + 'v=' + currentVersion + '&t=' + Date.now();
-      }
     }
 
     // Skip SSL redirects for now (using GitHub Pages domain)
