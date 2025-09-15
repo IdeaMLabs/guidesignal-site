@@ -39,7 +39,9 @@
       "Bash(sort:*)",
       "Bash(echo $HOSTNAME)",
       "Bash(gh repo view:*)",
-      "WebFetch(domain:api.github.com)"
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Read(//c/**)"
     ],
     "deny": [],
     "ask": []

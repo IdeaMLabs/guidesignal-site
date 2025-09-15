@@ -1001,11 +1001,65 @@
 
     // Stub function to bridge internal updateButtons calls to external updateSignupButtonState
     window.updateButtons = function() {
+        console.log('🔄 updateButtons called - checking for updateSignupButtonState');
         // Delegate to the external signupSigninFix.js updateSignupButtonState function
         if (typeof updateSignupButtonState === 'function') {
+            console.log('✅ updateSignupButtonState found - calling it');
             updateSignupButtonState(false);
+        } else {
+            console.log('⚠️ updateSignupButtonState not found - using fallback');
+            fallbackUpdateSignupButtonState();
         }
     };
+
+    // Fallback implementation in case signupSigninFix.js doesn't load
+    function fallbackUpdateSignupButtonState() {
+        console.log('🔧 Using fallback updateSignupButtonState implementation');
+        const name = document.getElementById('signup-name')?.value.trim() || '';
+        const email = document.getElementById('signup-email')?.value.trim() || '';
+        const pwd = document.getElementById('signup-password')?.value || '';
+        const confirmPwd = document.getElementById('signup-password-confirm')?.value || '';
+        const role = document.getElementById('selected-role')?.value || '';
+        const terms = document.getElementById('terms')?.checked || false;
+
+        const createBtn = document.getElementById('create-account-btn');
+        if (!createBtn) {
+            console.error('❌ Create account button not found');
+            return;
+        }
+
+        let valid = true;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!name || name.length < 2) valid = false;
+        if (!emailRegex.test(email)) valid = false;
+        if (pwd.length < 8) valid = false;
+        if (pwd !== confirmPwd) valid = false;
+        if (!role) valid = false;
+        if (!terms) valid = false;
+
+        console.log('🔍 Validation status:', {
+            name: name.length >= 2,
+            email: emailRegex.test(email),
+            password: pwd.length >= 8,
+            passwordMatch: pwd === confirmPwd,
+            role: !!role,
+            terms: terms,
+            overall: valid
+        });
+
+        if (valid) {
+            createBtn.disabled = false;
+            createBtn.classList.add("active");
+            createBtn.classList.remove("disabled", "btn-disabled");
+            console.log('✅ Create Account button enabled');
+        } else {
+            createBtn.disabled = true;
+            createBtn.classList.add("disabled", "btn-disabled");
+            createBtn.classList.remove("active");
+            console.log('❌ Create Account button disabled');
+        }
+    }
 
     // NOTE: updateSignupButtonState is provided by signupSigninFix.js - don't override it here
 
@@ -1401,10 +1455,12 @@
         document.getElementById('role-display').textContent = roleNames[role];
 
         // Generate role-specific fields for AI/ML optimization
+        console.log('🔄 Generating role-specific fields for role:', role);
         if (typeof generateRoleSpecificFields === 'function') {
             generateRoleSpecificFields(role);
+            console.log('✅ Role-specific fields generated successfully for:', role);
         } else {
-            console.log('Role-specific fields generation skipped - function not available');
+            console.log('❌ Role-specific fields generation skipped - function not available');
         }
 
         // Initialize password toggles and refresh button states
@@ -1434,7 +1490,12 @@
 
     // Generate role-specific fields optimized for AI/ML matching
     function generateRoleSpecificFields(role) {
+        console.log('🎯 generateRoleSpecificFields called with role:', role);
         var container = document.getElementById('role-specific-fields');
+        if (!container) {
+            console.error('❌ Role-specific fields container not found');
+            return;
+        }
         var fieldsHTML = '';
 
         // Cross-browser innerHTML fallback
@@ -1649,6 +1710,8 @@
 
         // Use cross-browser innerHTML method
         setInnerHTML(container, fieldsHTML);
+        console.log('✅ Role-specific fields HTML injected for role:', role);
+        console.log('📝 Fields HTML length:', fieldsHTML.length, 'characters');
     }
 
 
