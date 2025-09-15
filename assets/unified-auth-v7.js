@@ -98,16 +98,32 @@
     for (let [k,v] of data.entries()) payload[k] = v;
 
     try {
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+      // Firebase sign-up using REST API
+      const res = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBJOVbMoHfdxHexsfqsbYsvFzFqaKBXC_s', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: payload.email || payload["signup-email"],
+          password: payload.password || payload["signup-password"],
+          returnSecureToken: true
+        })
       });
-      if (!res.ok) throw new Error("Signup failed");
-      authUtils.showSuccess("🎉 Account created successfully!");
+
+      if (res.ok) {
+        const result = await res.json();
+        if (result.idToken) {
+          localStorage.setItem('authToken', result.idToken);
+          localStorage.setItem('userEmail', result.email);
+        }
+        authUtils.showSuccess("🎉 Account created successfully with Firebase!");
+      } else {
+        const error = await res.json();
+        throw new Error(error.error?.message || "Firebase signup failed");
+      }
     } catch (err) {
-      authUtils.showError("⚠️ Signup API unavailable, demo mode activated.");
-      authUtils.showSuccess("Demo Mode: Account created locally (not saved to server).");
+      console.error("Firebase signup error:", err);
+      authUtils.showError(`⚠️ Signup failed: ${err.message}`);
+      authUtils.showSuccess("Demo Mode: Account created locally (Firebase unavailable).");
     } finally {
       authUtils.setLoading(btn, false);
     }
@@ -123,16 +139,37 @@
     for (let [k,v] of data.entries()) payload[k] = v;
 
     try {
-      const res = await fetch("/api/auth/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+      // Firebase sign-in using REST API
+      const res = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBJOVbMoHfdxHexsfqsbYsvFzFqaKBXC_s', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: payload.email || payload["signin-email"],
+          password: payload.password || payload["signin-password"],
+          returnSecureToken: true
+        })
       });
-      if (!res.ok) throw new Error("Signin failed");
-      authUtils.showSuccess("🎉 Signed in successfully!");
+
+      if (res.ok) {
+        const result = await res.json();
+        if (result.idToken) {
+          localStorage.setItem('authToken', result.idToken);
+          localStorage.setItem('userEmail', result.email);
+        }
+        authUtils.showSuccess("🎉 Signed in successfully with Firebase!");
+
+        // Redirect to dashboard or main app
+        setTimeout(() => {
+          window.location.href = '/dashboard.html';
+        }, 1500);
+      } else {
+        const error = await res.json();
+        throw new Error(error.error?.message || "Firebase signin failed");
+      }
     } catch (err) {
-      authUtils.showError("⚠️ Signin API unavailable, demo mode activated.");
-      authUtils.showSuccess("Demo Mode: Signed in locally (not connected to server).");
+      console.error("Firebase signin error:", err);
+      authUtils.showError(`⚠️ Signin failed: ${err.message}`);
+      authUtils.showSuccess("Demo Mode: Signed in locally (Firebase unavailable).");
     } finally {
       authUtils.setLoading(btn, false);
     }
