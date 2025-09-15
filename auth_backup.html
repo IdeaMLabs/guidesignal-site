@@ -871,8 +871,8 @@
                 <button class="auth-tab" onclick="switchTab('signup-choice', this)">Sign Up</button>
             </div>
 
-            <div id="error-message" class="error-message error-message-hidden"></div>
-            <div id="success-message" class="success-message success-message-hidden"></div>
+            <div id="error-message" class="error-message" style="display: none;"></div>
+            <div id="success-message" class="success-message" style="display: none;"></div>
 
         <!-- Sign In Form -->
         <form id="signin-form" class="auth-form">
@@ -886,7 +886,7 @@
                 <label class="form-label">Password</label>
                 <div class="password-container">
                     <input type="password" class="form-input" id="signin-password" required>
-                    <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                    <button type="button" class="password-toggle">
                         👁️
                     </button>
                 </div>
@@ -902,8 +902,8 @@
                 <a href="#" onclick="showForgotPassword()">Forgot password?</a>
             </div>
 
-            <div id="signin-error" class="error-message error-message-hidden"></div>
-            <div id="signin-success" class="success-message success-message-hidden"></div>
+            <div id="signin-error" class="error-message" style="display: none;"></div>
+            <div id="signin-success" class="success-message" style="display: none;"></div>
 
             <button type="submit" class="btn" id="signin-btn">
                 <span class="btn-text">Sign In</span>
@@ -911,13 +911,13 @@
         </form>
 
         <!-- Sign Up Role Selection -->
-        <div id="signup-choice" class="auth-form auth-form-hidden">
-            <div class="auth-form-header">
-                <h2 class="auth-form-title">I am a...</h2>
-                <p class="auth-form-subtitle">Choose your account type to get started</p>
+        <div id="signup-choice" class="auth-form" style="display: none;">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <h2 style="color: var(--gray-900); font-size: 1.25rem; font-weight: 600; margin-bottom: 8px;">I am a...</h2>
+                <p style="color: var(--gray-600); font-size: 0.9rem;">Choose your account type to get started</p>
             </div>
 
-            <div class="role-selector role-selector-container">
+            <div class="role-selector" style="gap: 16px;">
                 <label class="role-option" style="justify-content: flex-start; text-align: left; padding: 20px; cursor: pointer;">
                     <input type="radio" name="role" value="student" class="role-radio" style="margin-right: 12px;">
                     <div style="display: flex; align-items: center; gap: 12px;">
@@ -977,7 +977,7 @@
                 <label class="form-label">Password</label>
                 <div class="password-container">
                     <input type="password" class="form-input" id="signup-password" required minlength="8">
-                    <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                    <button type="button" class="password-toggle">
                         👁️
                     </button>
                 </div>
@@ -995,7 +995,7 @@
                 <label class="form-label">Confirm Password</label>
                 <div class="password-container">
                     <input type="password" class="form-input" id="signup-password-confirm" required>
-                    <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                    <button type="button" class="password-toggle">
                         👁️
                     </button>
                 </div>
@@ -1059,6 +1059,33 @@
             console.log(`🔧 Button ${button.id} state: ${enabled ? 'ENABLED' : 'DISABLED'}`);
         },
 
+        /* COMMENTED OUT: Replaced by unified-auth-v3.js
+        // Enhanced validation with detailed feedback
+        validateSignupForm: function() {
+            const name = document.getElementById('signup-name')?.value.trim() || '';
+            const email = document.getElementById('signup-email')?.value.trim() || '';
+            const pwd = document.getElementById('signup-password')?.value || '';
+            const confirmPwd = document.getElementById('signup-password-confirm')?.value || '';
+            const role = document.getElementById('selected-role')?.value || '';
+            const terms = document.getElementById('terms')?.checked || false;
+
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const errors = [];
+
+            if (!name || name.length < 2) errors.push('Name must be at least 2 characters');
+            if (!emailRegex.test(email)) errors.push('Please enter a valid email address');
+            if (pwd.length < 8) errors.push('Password must be at least 8 characters');
+            if (pwd !== confirmPwd) errors.push('Passwords do not match');
+            if (!role) errors.push('Please select your role');
+            if (!terms) errors.push('You must agree to the terms');
+
+            return {
+                valid: errors.length === 0,
+                errors: errors,
+                data: { name, email, password: pwd, role, terms }
+            };
+        },
+        */
 
         // Fallback updateSignupButtonState
         updateSignupButtonState: function() {
@@ -1290,6 +1317,129 @@
         }, 100);
     };
 
+    /* COMMENTED OUT: Replaced by unified-auth-v3.js
+    // Complete signup validation and submission
+    function validateSignupForm() {
+        var name = document.getElementById('signup-name').value.trim();
+        var email = document.getElementById('signup-email').value.trim();
+        var password = document.getElementById('signup-password').value;
+        var passwordConfirm = document.getElementById('signup-password-confirm').value;
+        var selectedRole = document.getElementById('selected-role').value;
+        var termsCheckbox = document.getElementById('terms');
+
+        var errors = [];
+
+        // Name validation
+        if (!name || name.length < 2) {
+            errors.push('Full name is required (minimum 2 characters)');
+        }
+
+        // Email validation
+        var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!email || !emailRegex.test(email)) {
+            errors.push('Please enter a valid email address');
+        }
+
+        // Password validation
+        if (!password || password.length < 8) {
+            errors.push('Password must be at least 8 characters long');
+        }
+
+        // Password confirmation
+        if (password !== passwordConfirm) {
+            errors.push('Passwords do not match');
+        }
+
+        // Role validation
+        if (!selectedRole) {
+            errors.push('Please select your account type');
+        }
+
+        // Terms validation
+        if (!termsCheckbox || !termsCheckbox.checked) {
+            errors.push('Please agree to the Terms and Privacy Policy');
+        }
+
+        // Role-specific field validation
+        if (selectedRole === 'student') {
+            var university = document.getElementById('university');
+            var major = document.getElementById('major');
+            var graduationYear = document.getElementById('graduation-year');
+            var skills = document.getElementById('skills');
+            var opportunityType = document.getElementById('opportunity-type');
+
+            if (!university || !university.value.trim()) {
+                errors.push('University/School is required for students');
+            }
+            if (!major || !major.value.trim()) {
+                errors.push('Major/Field of study is required for students');
+            }
+            if (!graduationYear || !graduationYear.value) {
+                errors.push('Graduation year is required for students');
+            }
+            if (!skills || !skills.value.trim()) {
+                errors.push('Skills and technologies are required for students');
+            }
+            if (!opportunityType || !opportunityType.value) {
+                errors.push('Opportunity type is required for students');
+            }
+        } else if (selectedRole === 'job_seeker') {
+            var currentTitle = document.getElementById('current-title');
+            var experienceYears = document.getElementById('experience-years');
+            var industry = document.getElementById('industry');
+            var skills = document.getElementById('skills');
+            var workEnvironment = document.getElementById('work-environment');
+
+            if (!currentTitle || !currentTitle.value.trim()) {
+                errors.push('Current job title is required for job seekers');
+            }
+            if (!experienceYears || !experienceYears.value) {
+                errors.push('Years of experience is required for job seekers');
+            }
+            if (!industry || !industry.value) {
+                errors.push('Industry selection is required for job seekers');
+            }
+            if (!skills || !skills.value.trim()) {
+                errors.push('Skills and expertise are required for job seekers');
+            }
+            if (!workEnvironment || !workEnvironment.value) {
+                errors.push('Preferred work environment is required for job seekers');
+            }
+        } else if (selectedRole === 'recruiter') {
+            var company = document.getElementById('company');
+            var companySize = document.getElementById('company-size');
+            var companyIndustry = document.getElementById('company-industry');
+            var hiringRoles = document.getElementById('hiring-roles');
+            var hiringVolume = document.getElementById('hiring-volume');
+            var responseTime = document.getElementById('response-time');
+            var companyLocation = document.getElementById('company-location');
+
+            if (!company || !company.value.trim()) {
+                errors.push('Company name is required for recruiters');
+            }
+            if (!companySize || !companySize.value) {
+                errors.push('Company size is required for recruiters');
+            }
+            if (!companyIndustry || !companyIndustry.value) {
+                errors.push('Company industry is required for recruiters');
+            }
+            if (!hiringRoles || !hiringRoles.value.trim()) {
+                errors.push('Typical hiring roles are required for recruiters');
+            }
+            if (!hiringVolume || !hiringVolume.value) {
+                errors.push('Hiring volume is required for recruiters');
+            }
+            if (!responseTime || !responseTime.value) {
+                errors.push('Response time commitment is required for recruiters');
+            }
+            if (!companyLocation || !companyLocation.value.trim()) {
+                errors.push('Company location is required for recruiters');
+            }
+        }
+
+        return errors;
+    }
+    */
 
     // Calculate password strength for better UX
     function calculatePasswordStrength(password) {
@@ -1334,6 +1484,20 @@
         }
     }
 
+    // COMMENTED OUT: Old enableSignupButton() replaced by roleButtonFix.js updateButtons()
+    /*
+    function enableSignupButton() {
+        var signupBtn = document.getElementById('create-account-btn');
+        var selectedRole = document.getElementById('selected-role').value;
+        var termsCheckbox = document.getElementById('terms');
+
+        if (selectedRole && termsCheckbox && termsCheckbox.checked) {
+            signupBtn.disabled = false;
+        } else {
+            signupBtn.disabled = true;
+        }
+    }
+    */
 
     // Initialize page when DOM is ready - complete functionality
     function initializePage() {
@@ -2671,8 +2835,5 @@
 
     <!-- Unified auth v3 - enhanced fallback system with improved validation -->
     <script src="assets/unified-auth-v3.js"></script>
-
-    <!-- Unified auth v4 - comprehensive fallback system with accessibility improvements -->
-    <script src="assets/unified-auth-v4.js"></script>
 </body>
 </html>

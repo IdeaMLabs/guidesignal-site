@@ -1,0 +1,25 @@
+# Agent Instructions for Auth Fix v4
+
+This package contains the updated `unified-auth-v4.js` file to further improve and optimize `auth.html`.
+
+## Fixes Included
+1. **Fallback Validation Restored**: A minimal `fallbackValidateSignupForm` now ensures signup validation always works even without external scripts.
+2. **Password Toggle Fallback**: Real implementation ensures users can toggle password visibility if external script fails.
+3. **Old Code Cleanup**: Legacy validators removed/commented code should be moved out of `auth.html` to reduce confusion.
+4. **Inline Style Optimization**: Role-specific inline styles should be replaced with CSS classes in `shared.css` for cleaner markup (agent should handle this refactor).
+5. **Improved Error Messaging**: Error vs demo mode feedback clearly differentiated so users aren’t misled.
+6. **Accessibility**: Password toggle buttons now include `aria-label` attributes for screen reader compatibility.
+
+## How to Integrate
+1. Place `unified-auth-v4.js` in your assets directory.
+2. In `auth.html`, include it at the bottom:
+   <script src="assets/unified-auth-v4.js"></script>
+3. Remove leftover commented validation code from `auth.html` and archive it separately if needed.
+4. Move inline styles from role-specific field templates into CSS classes in `shared.css`.
+5. Test all scenarios: normal mode, fallback mode, all three roles, password toggle, API available vs unavailable.
+
+## Expected Result
+- Signup/signin always validate with or without external scripts.
+- Password toggles function everywhere.
+- Cleaner codebase with no redundant/commented blocks.
+- Improved accessibility and maintainability.
