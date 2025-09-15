@@ -871,8 +871,8 @@
                 <button class="auth-tab" onclick="switchTab('signup-choice', this)">Sign Up</button>
             </div>
 
-            <div id="error-message" class="error-message error-message-hidden"></div>
-            <div id="success-message" class="success-message success-message-hidden"></div>
+            <div id="error-message" class="error-message error-message-hidden" aria-live="polite"></div>
+            <div id="success-message" class="success-message success-message-hidden" aria-live="polite"></div>
 
         <!-- Sign In Form -->
         <form id="signin-form" class="auth-form">
@@ -902,8 +902,8 @@
                 <a href="#" onclick="showForgotPassword()">Forgot password?</a>
             </div>
 
-            <div id="signin-error" class="error-message error-message-hidden"></div>
-            <div id="signin-success" class="success-message success-message-hidden"></div>
+            <div id="signin-error" class="error-message error-message-hidden" aria-live="polite"></div>
+            <div id="signin-success" class="success-message success-message-hidden" aria-live="polite"></div>
 
             <button type="submit" class="btn" id="signin-btn">
                 <span class="btn-text">Sign In</span>
@@ -2674,5 +2674,8 @@
 
     <!-- Unified auth v4 - comprehensive fallback system with accessibility improvements -->
     <script src="assets/unified-auth-v4.js"></script>
+
+    <!-- Unified auth v5 - optimized with delegated events, namespaced utils, and aria-live regions -->
+    <script src="assets/unified-auth-v5.js"></script>
 </body>
 </html>
