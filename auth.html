@@ -610,7 +610,7 @@
 
       // Form submission handlers
       document.getElementById('signin-form').addEventListener('submit', handleSignIn);
-      document.getElementById('signup-form').addEventListener('submit', handleSignUp);
+      // Note: signup form handler is added in regular script scope for proper Firebase access
 
       // Role selection functionality
       document.querySelectorAll('.role-option').forEach(option => {
@@ -647,13 +647,12 @@
       return window.authFunctions;
     }
 
-    // Override the handleSignUp function with regular script version
+    // Add the signup form handler with proper Firebase access
     window.addEventListener('load', async function() {
       const authFunctions = await waitForAuthFunctions();
 
-      // Replace the signup form handler
+      // Add the signup form handler
       const signupForm = document.getElementById('signup-form');
-      signupForm.removeEventListener('submit', handleSignUp);
 
       signupForm.addEventListener('submit', async function(event) {
         event.preventDefault();
