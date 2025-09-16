@@ -385,12 +385,6 @@
   <script type="module">
     import { authFunctions } from './firebase-config.js';
 
-    // Make functions globally available for inline event handlers
-    window.switchTab = switchTab;
-    window.togglePassword = togglePassword;
-    window.handleSignIn = handleSignIn;
-    window.handleSignUp = handleSignUp;
-
     function switchTab(tabName, tabElement) {
       // Update tab appearance
       document.querySelectorAll('.auth-tab').forEach(tab => {
@@ -616,6 +610,12 @@
       document.getElementById('signup-form').addEventListener('input', validateSignupForm);
       document.getElementById('terms-agreement').addEventListener('change', validateSignupForm);
     });
+
+    // Make functions globally available for inline event handlers (after declaration)
+    window.switchTab = switchTab;
+    window.togglePassword = togglePassword;
+    window.handleSignIn = handleSignIn;
+    window.handleSignUp = handleSignUp;
   </script>
 </body>
 </html>
