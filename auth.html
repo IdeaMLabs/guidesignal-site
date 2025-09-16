@@ -5,11 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign In - GuideSignal</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    /* === GLOBAL RESET === */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
@@ -21,837 +18,272 @@
     }
 
     .back-link {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      color: white;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: 500;
-      z-index: 100;
+      position: absolute; top: 20px; left: 20px;
+      color: white; text-decoration: none; font-size: 16px; font-weight: 500; z-index: 100;
     }
-
-    .back-link:hover {
-      color: #f0f0f0;
-    }
+    .back-link:hover { color: #f0f0f0; }
 
     #main-content {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px;
     }
 
-    .auth-container {
-      width: 100%;
-      max-width: 420px;
-    }
-
+    .auth-container { width: 100%; max-width: 420px; }
     .auth-card {
-      background: white;
-      border-radius: 12px;
+      background: white; border-radius: 12px;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-      padding: 40px;
-      text-align: center;
+      padding: 40px; text-align: center;
     }
 
     .auth-logo {
-      width: 60px;
-      height: 60px;
-      background: #1a365d;
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: bold;
-      margin: 0 auto 20px;
+      width: 60px; height: 60px; background: #1a365d; color: white; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; font-weight: bold; margin: 0 auto 20px;
     }
 
-    .auth-title {
-      font-size: 28px;
-      font-weight: 700;
-      color: #1a365d;
-      margin-bottom: 30px;
-    }
+    .auth-title { font-size: 28px; font-weight: 700; color: #1a365d; margin-bottom: 30px; }
 
     .auth-tabs {
-      display: flex;
-      background: #f8f9fa;
-      border-radius: 8px;
-      padding: 4px;
-      margin-bottom: 30px;
+      display: flex; background: #f8f9fa; border-radius: 8px; padding: 4px; margin-bottom: 30px;
     }
-
     .auth-tab {
-      flex: 1;
-      padding: 12px 20px;
-      border: none;
-      background: transparent;
-      color: #666;
-      font-size: 16px;
-      font-weight: 500;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      flex: 1; padding: 12px 20px; border: none; background: transparent;
+      color: #666; font-size: 16px; font-weight: 500; border-radius: 6px; cursor: pointer;
+    }
+    .auth-tab.active { background: white; color: #1a365d; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+    .auth-form { text-align: left; }
+    .auth-form.hidden { display: none; }
+    .auth-form label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 14px; color: #374151; }
+    .auth-form input { width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; margin-bottom: 20px; }
+    .auth-form input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
+
+    .password-container { position: relative; margin-bottom: 20px; }
+    .password-container input { margin-bottom: 0; padding-right: 50px; }
+    .password-container button {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; font-size: 18px; padding: 4px;
     }
 
-    .auth-tab.active {
-      background: #667eea;
-      color: white;
-    }
-
-    .auth-form {
-      display: none;
-      text-align: left;
-    }
-
-    .auth-form.active {
-      display: block;
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 14px;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 6px;
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid #e5e7eb;
-      border-radius: 8px;
-      font-size: 16px;
-      transition: border-color 0.2s ease;
-    }
-
-    .form-input:focus {
-      outline: none;
-      border-color: #667eea;
-    }
-
-    .form-input.error {
-      border-color: #dc2626;
-    }
-
-    .password-group {
-      position: relative;
-    }
-
-    .password-toggle {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 18px;
-      color: #666;
-    }
-
-    .role-selector {
-      margin-bottom: 20px;
-    }
-
-    .role-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 10px;
-    }
-
+    .role-selector { margin: 20px 0; }
     .role-option {
-      border: 2px solid #e5e7eb;
-      border-radius: 8px;
-      padding: 16px 12px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
+      display: block; border: 2px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 12px;
+      cursor: pointer; position: relative;
     }
+    .role-option:hover, .role-option.selected { border-color: #667eea; background: #f8faff; }
+    .role-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+    .role-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; color: #1a365d; }
+    .role-desc { font-size: 14px; color: #6b7280; }
 
-    .role-option:hover {
-      border-color: #667eea;
+    .auth-form button[type="submit"] {
+      width: 100%; background: #667eea; color: white; border: none; padding: 14px 20px;
+      border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 10px;
     }
+    .auth-form button[type="submit"]:hover:not(:disabled) { background: #5a67d8; }
+    .auth-form button[type="submit"]:disabled { background: #d1d5db; cursor: not-allowed; }
 
-    .role-option.selected {
-      border-color: #667eea;
-      background: #f0f4ff;
+    .error-message, .success-message {
+      padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; display: none;
     }
+    .error-message { background: #fef2f2; color: #dc2626; border-left: 4px solid #dc2626; }
+    .success-message { background: #f0fdf4; color: #16a34a; border-left: 4px solid #16a34a; }
 
-    .role-radio {
-      position: absolute;
-      opacity: 0;
+    .loading { position: relative; color: transparent; }
+    .loading::after {
+      content: ''; position: absolute; top: 50%; left: 50%; width: 20px; height: 20px;
+      margin: -10px 0 0 -10px; border: 2px solid transparent; border-top: 2px solid white;
+      border-radius: 50%; animation: spin 1s linear infinite;
     }
-
-    .role-title {
-      font-weight: 600;
-      color: #1a365d;
-      font-size: 14px;
-    }
-
-    .role-desc {
-      font-size: 12px;
-      color: #666;
-      margin-top: 4px;
-    }
-
-    .checkbox-group {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-
-    .checkbox-group input[type="checkbox"] {
-      margin-top: 2px;
-    }
-
-    .checkbox-group label {
-      font-size: 14px;
-      color: #374151;
-      line-height: 1.4;
-    }
-
-    .checkbox-group a {
-      color: #667eea;
-      text-decoration: none;
-    }
-
-    .checkbox-group a:hover {
-      text-decoration: underline;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-primary {
-      background: #667eea;
-      color: white;
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      background: #5a67d8;
-      transform: translateY(-1px);
-    }
-
-    .btn:disabled {
-      background: #d1d5db;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn.loading {
-      position: relative;
-    }
-
-    .loading-spinner {
-      width: 16px;
-      height: 16px;
-      border: 2px solid transparent;
-      border-top: 2px solid currentColor;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .message {
-      padding: 12px 16px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      font-size: 14px;
-      display: none;
-    }
-
-    .message.error {
-      background: #fef2f2;
-      color: #dc2626;
-      border: 1px solid #fecaca;
-    }
-
-    .message.success {
-      background: #f0fdf4;
-      color: #16a34a;
-      border: 1px solid #bbf7d0;
-    }
-
-    .message.show {
-      display: block;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .forgot-password {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .forgot-password a {
-      color: #667eea;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    .forgot-password a:hover {
-      text-decoration: underline;
-    }
-
-    .field-error {
-      color: #dc2626;
-      font-size: 12px;
-      margin-top: 4px;
-      display: none;
-    }
-
-    .field-error.show {
-      display: block;
-    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     @media (max-width: 480px) {
-      .auth-card {
-        padding: 30px 20px;
-        margin: 10px;
-      }
-
-      .role-options {
-        grid-template-columns: 1fr;
-      }
+      .auth-card { padding: 30px 20px; margin: 10px; }
+      .auth-title { font-size: 24px; }
     }
   </style>
 </head>
 <body>
   <a href="/" class="back-link">← Back to Home</a>
-
   <main id="main-content">
     <div class="auth-container">
       <div class="auth-card">
         <div class="auth-logo">GS</div>
         <h1 class="auth-title">Welcome to GuideSignal</h1>
 
-        <!-- Tab Navigation -->
         <div class="auth-tabs">
-          <button class="auth-tab active" onclick="switchTab('signin')">Sign In</button>
-          <button class="auth-tab" onclick="switchTab('signup')">Sign Up</button>
+          <button class="auth-tab active" data-tab="signin">Sign In</button>
+          <button class="auth-tab" data-tab="signup">Sign Up</button>
         </div>
 
-        <!-- Messages -->
-        <div id="message" class="message"></div>
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
 
         <!-- Sign In Form -->
-        <div id="signin" class="auth-form active">
-          <form id="signin-form">
-            <div class="form-group">
-              <label for="signin-email" class="form-label">Email Address</label>
-              <input type="email" id="signin-email" class="form-input" required autocomplete="email">
-              <div class="field-error" id="signin-email-error"></div>
-            </div>
+        <form id="signin-form" class="auth-form">
+          <label for="signin-email">Email Address</label>
+          <input type="email" id="signin-email" required>
 
-            <div class="form-group">
-              <label for="signin-password" class="form-label">Password</label>
-              <div class="password-group">
-                <input type="password" id="signin-password" class="form-input" required autocomplete="current-password">
-                <button type="button" class="password-toggle" onclick="togglePassword('signin-password')">👁️</button>
-              </div>
-              <div class="field-error" id="signin-password-error"></div>
-            </div>
-
-            <div class="checkbox-group">
-              <input type="checkbox" id="remember-me">
-              <label for="remember-me">Remember me</label>
-            </div>
-
-            <button type="submit" id="signin-btn" class="btn btn-primary">
-              <span class="btn-text">Sign In</span>
-            </button>
-          </form>
-
-          <div class="forgot-password">
-            <a href="#" onclick="showForgotPassword()">Forgot your password?</a>
+          <label for="signin-password">Password</label>
+          <div class="password-container">
+            <input type="password" id="signin-password" required>
+            <button type="button" class="password-toggle" data-target="signin-password">👁️</button>
           </div>
-        </div>
+
+          <label><input type="checkbox" id="remember-me"> Remember me</label>
+          <button type="submit" id="signin-btn"><span class="btn-text">Sign In</span></button>
+        </form>
 
         <!-- Sign Up Form -->
-        <div id="signup" class="auth-form">
-          <form id="signup-form">
-            <div class="form-group">
-              <label for="signup-name" class="form-label">Full Name</label>
-              <input type="text" id="signup-name" class="form-input" required autocomplete="name">
-              <div class="field-error" id="signup-name-error"></div>
-            </div>
+        <form id="signup-form" class="auth-form hidden">
+          <label for="signup-name">Full Name</label>
+          <input type="text" id="signup-name" required>
 
-            <div class="form-group">
-              <label for="signup-email" class="form-label">Email Address</label>
-              <input type="email" id="signup-email" class="form-input" required autocomplete="email">
-              <div class="field-error" id="signup-email-error"></div>
-            </div>
+          <label for="signup-email">Email Address</label>
+          <input type="email" id="signup-email" required>
 
-            <div class="form-group">
-              <label for="signup-password" class="form-label">Password</label>
-              <div class="password-group">
-                <input type="password" id="signup-password" class="form-input" required autocomplete="new-password">
-                <button type="button" class="password-toggle" onclick="togglePassword('signup-password')">👁️</button>
-              </div>
-              <div class="field-error" id="signup-password-error"></div>
-            </div>
+          <label for="signup-password">Password</label>
+          <div class="password-container">
+            <input type="password" id="signup-password" required>
+            <button type="button" class="password-toggle" data-target="signup-password">👁️</button>
+          </div>
 
-            <div class="form-group">
-              <label for="signup-password-confirm" class="form-label">Confirm Password</label>
-              <div class="password-group">
-                <input type="password" id="signup-password-confirm" class="form-input" required autocomplete="new-password">
-                <button type="button" class="password-toggle" onclick="togglePassword('signup-password-confirm')">👁️</button>
-              </div>
-              <div class="field-error" id="signup-password-confirm-error"></div>
-            </div>
+          <label for="signup-password-confirm">Confirm Password</label>
+          <div class="password-container">
+            <input type="password" id="signup-password-confirm" required>
+            <button type="button" class="password-toggle" data-target="signup-password-confirm">👁️</button>
+          </div>
 
-            <div class="form-group">
-              <label class="form-label">I am a...</label>
-              <div class="role-selector">
-                <div class="role-options">
-                  <div class="role-option" onclick="selectRole('student')">
-                    <input type="radio" name="role" value="student" class="role-radio" id="role-student">
-                    <div class="role-title">Student</div>
-                    <div class="role-desc">Looking for internships</div>
-                  </div>
-                  <div class="role-option" onclick="selectRole('recruiter')">
-                    <input type="radio" name="role" value="recruiter" class="role-radio" id="role-recruiter">
-                    <div class="role-title">Recruiter</div>
-                    <div class="role-desc">Hiring talent</div>
-                  </div>
-                </div>
-              </div>
-              <div class="field-error" id="role-error"></div>
-            </div>
+          <label>Choose your role:</label>
+          <div class="role-selector">
+            <label class="role-option" data-role="student">
+              <input type="radio" name="role" value="student" required>
+              <div class="role-title">🎓 Student</div>
+              <div class="role-desc">Looking for internships and entry-level opportunities</div>
+            </label>
+            <label class="role-option" data-role="job_seeker">
+              <input type="radio" name="role" value="job_seeker" required>
+              <div class="role-title">💼 Job Seeker</div>
+              <div class="role-desc">Seeking new career opportunities</div>
+            </label>
+            <label class="role-option" data-role="recruiter">
+              <input type="radio" name="role" value="recruiter" required>
+              <div class="role-title">🗂 Recruiter</div>
+              <div class="role-desc">Posting jobs and hiring talent</div>
+            </label>
+          </div>
 
-            <div class="checkbox-group">
-              <input type="checkbox" id="terms" required>
-              <label for="terms">
-                I agree to the <a href="terms.html" target="_blank">Terms of Service</a> and <a href="privacy.html" target="_blank">Privacy Policy</a>
-              </label>
-            </div>
-            <div class="field-error" id="terms-error"></div>
+          <label>
+            <input type="checkbox" id="terms" required>
+            I agree to the <a href="terms.html" target="_blank">Terms</a> and <a href="privacy.html" target="_blank">Privacy Policy</a>
+          </label>
 
-            <button type="submit" id="signup-btn" class="btn btn-primary" disabled>
-              <span class="btn-text">Create Account</span>
-            </button>
-          </form>
-        </div>
+          <button type="submit" id="create-account-btn" disabled><span class="btn-text">Create Account</span></button>
+        </form>
       </div>
     </div>
   </main>
 
+  <!-- Firebase integration -->
   <script type="module">
-    // Import Firebase functions
     import { authFunctions } from './firebase-config.js';
+    window.authFunctions = authFunctions;
+  </script>
 
-    // Global state
-    let currentTab = 'signin';
-    let selectedRole = null;
-    let isLoading = false;
-
-    // Make functions globally available
-    window.switchTab = switchTab;
-    window.togglePassword = togglePassword;
-    window.selectRole = selectRole;
-    window.showForgotPassword = showForgotPassword;
-
-    // Tab switching
-    function switchTab(tab) {
-      if (isLoading) return;
-
-      currentTab = tab;
-
-      // Update tab buttons
-      document.querySelectorAll('.auth-tab').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
-
-      // Show selected tab
-      document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
-      document.getElementById(tab).classList.add('active');
-
-      // Clear messages
-      hideMessage();
-      clearErrors();
-
-      // Focus first input
-      setTimeout(() => {
-        const firstInput = document.querySelector(`#${tab} input[type="email"], #${tab} input[type="text"]`);
-        if (firstInput) firstInput.focus();
-      }, 100);
+  <script>
+    // Switch tabs
+    function switchTab(tabName, tabElement) {
+      document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+      tabElement.classList.add('active');
+      document.getElementById('signin-form').classList.toggle('hidden', tabName !== 'signin');
+      document.getElementById('signup-form').classList.toggle('hidden', tabName !== 'signup');
+      document.getElementById('error-message').style.display = 'none';
+      document.getElementById('success-message').style.display = 'none';
     }
 
     // Password toggle
     function togglePassword(inputId) {
       const input = document.getElementById(inputId);
-      const button = input.nextElementSibling;
+      const btn = input.parentElement.querySelector('button');
+      input.type = input.type === 'password' ? 'text' : 'password';
+      btn.textContent = input.type === 'password' ? '👁️' : '🙈';
+    }
 
-      if (input.type === 'password') {
-        input.type = 'text';
-        button.textContent = '🙈';
+    // Messages
+    function showMessage(msg, type) {
+      const error = document.getElementById('error-message');
+      const success = document.getElementById('success-message');
+      if (type === 'error') {
+        error.textContent = msg;
+        error.style.display = 'block';
+        success.style.display = 'none';
       } else {
-        input.type = 'password';
-        button.textContent = '👁️';
+        success.textContent = msg;
+        success.style.display = 'block';
+        error.style.display = 'none';
       }
     }
 
-    // Role selection
-    function selectRole(role) {
-      selectedRole = role;
-
-      // Update UI
-      document.querySelectorAll('.role-option').forEach(option => {
-        option.classList.remove('selected');
-      });
-      document.querySelector(`[onclick="selectRole('${role}')"]`).classList.add('selected');
-
-      // Update radio button
-      document.getElementById(`role-${role}`).checked = true;
-
-      // Validate signup button
-      validateSignupButton();
-      hideFieldError('role-error');
-    }
-
-    // Message handling
-    function showMessage(message, type = 'error') {
-      const messageEl = document.getElementById('message');
-      messageEl.textContent = message;
-      messageEl.className = `message ${type} show`;
-
-      if (type === 'success') {
-        setTimeout(hideMessage, 5000);
-      }
-    }
-
-    function hideMessage() {
-      const messageEl = document.getElementById('message');
-      messageEl.classList.remove('show');
-    }
-
-    // Field error handling
-    function showFieldError(fieldId, message) {
-      const errorEl = document.getElementById(fieldId);
-      const input = document.getElementById(fieldId.replace('-error', ''));
-
-      if (errorEl) {
-        errorEl.textContent = message;
-        errorEl.classList.add('show');
-      }
-
-      if (input) {
-        input.classList.add('error');
-      }
-    }
-
-    function hideFieldError(fieldId) {
-      const errorEl = document.getElementById(fieldId);
-      const input = document.getElementById(fieldId.replace('-error', ''));
-
-      if (errorEl) {
-        errorEl.classList.remove('show');
-      }
-
-      if (input) {
-        input.classList.remove('error');
-      }
-    }
-
-    function clearErrors() {
-      document.querySelectorAll('.field-error').forEach(el => el.classList.remove('show'));
-      document.querySelectorAll('.form-input').forEach(el => el.classList.remove('error'));
-    }
-
-    // Loading state
-    function setLoading(buttonId, loading) {
-      const btn = document.getElementById(buttonId);
-      const btnText = btn.querySelector('.btn-text');
-
-      isLoading = loading;
-      btn.disabled = loading;
-
-      if (loading) {
-        btn.classList.add('loading');
-        btnText.innerHTML = '<span class="loading-spinner"></span>Processing...';
-      } else {
-        btn.classList.remove('loading');
-        btnText.textContent = buttonId === 'signin-btn' ? 'Sign In' : 'Create Account';
-      }
-    }
-
-    // Validation
-    function validateEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
-    function validatePassword(password) {
-      return password.length >= 8 &&
-             /[A-Z]/.test(password) &&
-             /[a-z]/.test(password) &&
-             /\d/.test(password);
-    }
-
-    function validateSignupButton() {
-      const btn = document.getElementById('signup-btn');
-      const name = document.getElementById('signup-name').value.trim();
-      const email = document.getElementById('signup-email').value.trim();
-      const password = document.getElementById('signup-password').value;
-      const confirmPassword = document.getElementById('signup-password-confirm').value;
-      const terms = document.getElementById('terms').checked;
-
-      const isValid = name.length >= 2 &&
-                     validateEmail(email) &&
-                     validatePassword(password) &&
-                     password === confirmPassword &&
-                     selectedRole &&
-                     terms;
-
-      btn.disabled = !isValid || isLoading;
-    }
-
-    // Forgot password
-    async function showForgotPassword() {
-      const email = document.getElementById('signin-email').value.trim();
-
-      if (!email) {
-        showFieldError('signin-email-error', 'Please enter your email address first');
-        document.getElementById('signin-email').focus();
-        return;
-      }
-
-      if (!validateEmail(email)) {
-        showFieldError('signin-email-error', 'Please enter a valid email address');
-        return;
-      }
-
-      try {
-        await authFunctions.sendPasswordReset(email);
-        showMessage('Password reset email sent! Please check your inbox.', 'success');
-      } catch (error) {
-        showMessage('Failed to send password reset email. Please try again.');
-      }
-    }
-
-    // Form submissions
-    document.getElementById('signin-form').addEventListener('submit', async (e) => {
+    // Signin
+    async function handleSignIn(e) {
       e.preventDefault();
-
-      const email = document.getElementById('signin-email').value.trim();
-      const password = document.getElementById('signin-password').value;
-      const rememberMe = document.getElementById('remember-me').checked;
-
-      clearErrors();
-
-      // Validation
-      if (!validateEmail(email)) {
-        showFieldError('signin-email-error', 'Please enter a valid email address');
-        return;
-      }
-
-      if (password.length < 6) {
-        showFieldError('signin-password-error', 'Password must be at least 6 characters');
-        return;
-      }
-
-      setLoading('signin-btn', true);
-      hideMessage();
-
+      const btn = document.getElementById('signin-btn');
+      btn.disabled = true; btn.classList.add('loading'); btn.querySelector('.btn-text').textContent = 'Processing...';
       try {
-        const result = await authFunctions.signInUser(email, password, rememberMe);
-
+        const email = document.getElementById('signin-email').value;
+        const password = document.getElementById('signin-password').value;
+        const result = await window.authFunctions.signInUser(email, password);
         if (result.success) {
-          showMessage('Sign in successful! Redirecting...', 'success');
-
-          // Store email if remember me is checked
-          if (rememberMe) {
-            localStorage.setItem('rememberEmail', email);
-          }
-
-          // Redirect based on user role
-          setTimeout(() => {
-            window.location.href = result.redirectUrl || '/dashboard.html';
-          }, 1500);
+          showMessage('✅ Signed in! Redirecting...', 'success');
+          setTimeout(() => window.location.href = 'dashboard.html', 1000);
         } else {
-          throw new Error(result.error || 'Sign in failed');
+          showMessage(result.error || 'Sign in failed', 'error');
+          btn.disabled = false; btn.classList.remove('loading'); btn.querySelector('.btn-text').textContent = 'Sign In';
         }
-      } catch (error) {
-        console.error('Sign in error:', error);
-        showMessage(getFriendlyErrorMessage(error.message));
-        setLoading('signin-btn', false);
+      } catch {
+        showMessage('Network error', 'error');
+        btn.disabled = false; btn.classList.remove('loading'); btn.querySelector('.btn-text').textContent = 'Sign In';
       }
-    });
+    }
 
-    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+    // Signup
+    async function handleSignUp(e) {
       e.preventDefault();
-
-      const name = document.getElementById('signup-name').value.trim();
-      const email = document.getElementById('signup-email').value.trim();
-      const password = document.getElementById('signup-password').value;
-      const confirmPassword = document.getElementById('signup-password-confirm').value;
-      const terms = document.getElementById('terms').checked;
-
-      clearErrors();
-
-      // Validation
-      let hasErrors = false;
-
-      if (name.length < 2) {
-        showFieldError('signup-name-error', 'Name must be at least 2 characters');
-        hasErrors = true;
-      }
-
-      if (!validateEmail(email)) {
-        showFieldError('signup-email-error', 'Please enter a valid email address');
-        hasErrors = true;
-      }
-
-      if (!validatePassword(password)) {
-        showFieldError('signup-password-error', 'Password must be at least 8 characters with uppercase, lowercase, and number');
-        hasErrors = true;
-      }
-
-      if (password !== confirmPassword) {
-        showFieldError('signup-password-confirm-error', 'Passwords do not match');
-        hasErrors = true;
-      }
-
-      if (!selectedRole) {
-        showFieldError('role-error', 'Please select your role');
-        hasErrors = true;
-      }
-
-      if (!terms) {
-        showFieldError('terms-error', 'Please agree to the terms and privacy policy');
-        hasErrors = true;
-      }
-
-      if (hasErrors) return;
-
-      setLoading('signup-btn', true);
-      hideMessage();
-
+      const btn = document.getElementById('create-account-btn');
+      btn.disabled = true; btn.classList.add('loading'); btn.querySelector('.btn-text').textContent = 'Processing...';
       try {
-        const result = await authFunctions.registerUser(email, password, name, selectedRole, {
-          profileComplete: false,
-          emailVerified: false,
-          accountCreatedAt: new Date().toISOString()
-        });
+        const name = document.getElementById('signup-name').value.trim();
+        const email = document.getElementById('signup-email').value.trim();
+        const password = document.getElementById('signup-password').value;
+        const confirm = document.getElementById('signup-password-confirm').value;
+        const role = document.querySelector('input[name="role"]:checked')?.value;
+        const terms = document.getElementById('terms').checked;
 
+        if (!name || !email || !password || !confirm || !role || !terms) throw new Error('All fields required');
+        if (password !== confirm) throw new Error('Passwords do not match');
+
+        const result = await window.authFunctions.registerUser(email, password, name, role, {});
         if (result.success) {
-          // Store user email for confirmation page
-          localStorage.setItem('userEmail', email);
-
-          showMessage('Account created successfully! Please check your email to verify your account.', 'success');
-
-          // Redirect to confirmation page
-          setTimeout(() => {
-            window.location.href = `confirmation.html?email=${encodeURIComponent(email)}`;
-          }, 2000);
+          showMessage('✅ Account created! Redirecting...', 'success');
+          setTimeout(() => window.location.href = 'confirmation.html', 1000);
         } else {
-          throw new Error(result.error || 'Registration failed');
+          throw new Error(result.error || 'Signup failed');
         }
-      } catch (error) {
-        console.error('Registration error:', error);
-        showMessage(getFriendlyErrorMessage(error.message));
-        setLoading('signup-btn', false);
-      }
-    });
-
-    // Input event listeners for real-time validation
-    document.getElementById('signup-name').addEventListener('input', () => {
-      hideFieldError('signup-name-error');
-      validateSignupButton();
-    });
-
-    document.getElementById('signup-email').addEventListener('input', () => {
-      hideFieldError('signup-email-error');
-      validateSignupButton();
-    });
-
-    document.getElementById('signup-password').addEventListener('input', () => {
-      hideFieldError('signup-password-error');
-      validateSignupButton();
-    });
-
-    document.getElementById('signup-password-confirm').addEventListener('input', () => {
-      hideFieldError('signup-password-confirm-error');
-      validateSignupButton();
-    });
-
-    document.getElementById('terms').addEventListener('change', () => {
-      hideFieldError('terms-error');
-      validateSignupButton();
-    });
-
-    // Helper function for friendly error messages
-    function getFriendlyErrorMessage(error) {
-      const errorMappings = {
-        'auth/user-not-found': 'No account found with this email address.',
-        'auth/wrong-password': 'Incorrect password. Please try again.',
-        'auth/invalid-email': 'Please enter a valid email address.',
-        'auth/user-disabled': 'This account has been disabled.',
-        'auth/too-many-requests': 'Too many failed attempts. Please try again later.',
-        'auth/email-already-in-use': 'An account with this email already exists.',
-        'auth/weak-password': 'Please choose a stronger password.',
-        'auth/invalid-credential': 'Invalid email or password.',
-        'auth/network-request-failed': 'Network error. Please check your connection.'
-      };
-
-      for (const [code, message] of Object.entries(errorMappings)) {
-        if (error.includes(code)) return message;
-      }
-
-      return 'Something went wrong. Please try again.';
-    }
-
-    // Initialize page
-    function init() {
-      // Load remembered email
-      const rememberedEmail = localStorage.getItem('rememberEmail');
-      if (rememberedEmail) {
-        document.getElementById('signin-email').value = rememberedEmail;
-        document.getElementById('remember-me').checked = true;
-      }
-
-      // Focus first input
-      document.getElementById('signin-email').focus();
-
-      // Check URL parameters
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('verified') === 'true') {
-        showMessage('Email verified successfully! You can now sign in.', 'success');
+      } catch (err) {
+        showMessage(err.message, 'error');
+        btn.disabled = false; btn.classList.remove('loading'); btn.querySelector('.btn-text').textContent = 'Create Account';
       }
     }
 
-    // Start the app
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.auth-tab').forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab, tab)));
+      document.querySelectorAll('.password-toggle').forEach(btn => btn.addEventListener('click', () => togglePassword(btn.dataset.target)));
+      document.querySelectorAll('.role-option').forEach(opt => opt.addEventListener('click', () => {
+        document.querySelectorAll('.role-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        opt.querySelector('input').checked = true;
+      }));
+      document.getElementById('signin-form').addEventListener('submit', handleSignIn);
+      document.getElementById('signup-form').addEventListener('submit', handleSignUp);
+    });
   </script>
 </body>
 </html>
