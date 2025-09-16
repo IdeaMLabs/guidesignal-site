@@ -747,20 +747,36 @@
             localStorage.setItem('userName', name);
             localStorage.setItem('userRole', role.value);
 
-            showMessage('🎉 Account created successfully! Welcome to GuideSignal!', 'success');
+            // Show different message based on email verification status
+            let successMessage = '🎉 Account created successfully! Welcome to GuideSignal!';
+            if (result.emailVerificationSent) {
+              successMessage = '🎉 Account created successfully! Please check your email for verification link before signing in.';
+            }
+
+            showMessage(successMessage, 'success');
             setButtonLoading(submitBtn, false);
 
-            setTimeout(() => {
-              window.location.href = 'dashboard.html';
-            }, 2000);
+            // If email verification was sent, switch to sign in tab after delay
+            if (result.emailVerificationSent) {
+              setTimeout(() => {
+                switchTab('signin', document.querySelector('[data-tab="signin"]'));
+                showMessage('📧 Please check your email and verify your account, then sign in.', 'success');
+              }, 3000);
+            } else {
+              // If no email verification, go to dashboard
+              setTimeout(() => {
+                window.location.href = 'dashboard.html';
+              }, 2000);
+            }
           } else {
             const errorMsg = result.error || 'Account creation failed. Please try again.';
+            console.error('Registration failed:', errorMsg);
             showMessage(errorMsg, 'error');
             setButtonLoading(submitBtn, false);
           }
         } catch (error) {
           console.error('Sign up error:', error);
-          showMessage('Network error. Please try again.', 'error');
+          showMessage('Network error. Please check your connection and try again.', 'error');
           setButtonLoading(submitBtn, false);
         }
       });
