@@ -540,53 +540,6 @@
       }
     }
 
-    async function handleSignUp(event) {
-      event.preventDefault();
-      console.log('Sign up form submitted');
-
-      if (!validateSignupForm()) {
-        console.log('Form validation failed');
-        return;
-      }
-
-      console.log('Form validation passed');
-
-      const submitBtn = document.getElementById('signup-btn');
-      const name = document.getElementById('signup-name').value.trim();
-      const email = document.getElementById('signup-email').value.trim();
-      const password = document.getElementById('signup-password').value;
-      const role = document.querySelector('input[name="role"]:checked').value;
-
-      setButtonLoading(submitBtn, true);
-
-      try {
-        // Use Firebase SDK for sign-up with proper user data
-        const result = await authFunctions.registerUser(email, password, name, role, {});
-
-        if (result.success) {
-          localStorage.setItem('userEmail', email);
-          localStorage.setItem('userName', name);
-          localStorage.setItem('userRole', role);
-
-          showMessage('🎉 Account created successfully! Welcome to GuideSignal!', 'success');
-
-          // Reset button before redirect so it never stays frozen
-          setButtonLoading(submitBtn, false);
-
-          setTimeout(() => {
-            window.location.href = 'dashboard.html';
-          }, 2000);
-        } else {
-          const errorMsg = result.error || 'Account creation failed. Please try again.';
-          showMessage(errorMsg, 'error');
-          setButtonLoading(submitBtn, false);
-        }
-      } catch (error) {
-        console.error('Sign up error:', error);
-        showMessage('Network error. Please try again.', 'error');
-        setButtonLoading(submitBtn, false);
-      }
-    }
 
     // Initialize when DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {
