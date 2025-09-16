@@ -703,21 +703,35 @@
     // Add the signup form handler with proper Firebase access
     window.addEventListener('load', async function() {
       console.log('Window load event fired');
+      let authFunctions;
       try {
-        const authFunctions = await waitForAuthFunctions();
+        authFunctions = await waitForAuthFunctions();
         console.log('authFunctions loaded:', typeof authFunctions);
         console.log('authFunctions.registerUser:', typeof authFunctions?.registerUser);
       } catch (error) {
         console.error('Error loading authFunctions:', error);
+        return; // Exit if authFunctions can't be loaded
       }
 
       // Add the signup form handler
       const signupForm = document.getElementById('signup-form');
       console.log('Signup form element found:', !!signupForm);
 
+      if (!signupForm) {
+        console.error('Signup form not found!');
+        return;
+      }
+
       signupForm.addEventListener('submit', async function(event) {
         event.preventDefault();
         console.log('Sign up form submitted (regular script)');
+
+        // Ensure authFunctions is still available
+        if (!authFunctions || !authFunctions.registerUser) {
+          console.error('authFunctions not available during form submission');
+          showMessage('Authentication system not ready. Please refresh and try again.', 'error');
+          return;
+        }
 
         // Validation
         const name = document.getElementById('signup-name').value.trim();
@@ -727,21 +741,27 @@
         const role = document.querySelector('input[name="role"]:checked');
         const terms = document.getElementById('terms-agreement').checked;
 
+        console.log('Form values:', { name, email, password: '***', confirmPassword: '***', role: role?.value, terms });
+
         if (!name || !email || !password || !confirmPassword || !role || !terms) {
+          console.log('Validation failed: missing fields');
           showMessage('Please fill in all required fields', 'error');
           return;
         }
 
         if (password !== confirmPassword) {
+          console.log('Validation failed: passwords do not match');
           showMessage('Passwords do not match', 'error');
           return;
         }
 
         if (password.length < 6) {
+          console.log('Validation failed: password too short');
           showMessage('Password must be at least 6 characters long', 'error');
           return;
         }
 
+        console.log('Form validation passed, proceeding with registration');
         const submitBtn = document.getElementById('signup-btn');
         setButtonLoading(submitBtn, true);
 
