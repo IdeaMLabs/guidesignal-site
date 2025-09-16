@@ -447,9 +447,7 @@
         button.classList.remove('loading');
         const isSignin = button.id === 'signin-btn';
         button.querySelector('.btn-text').textContent = isSignin ? 'Sign In' : 'Create Account';
-        if (!isSignin) {
-          validateSignupForm();
-        }
+        // Don't auto-validate here - let the form validation handle button state
       }
     }
 
@@ -491,7 +489,10 @@
         document.getElementById('error-message').style.display = 'none';
       }
 
-      submitBtn.disabled = !isValid;
+      // Don't change button state if it's currently processing (has loading class)
+      if (!submitBtn.classList.contains('loading')) {
+        submitBtn.disabled = !isValid;
+      }
       return isValid;
     }
 
@@ -545,10 +546,14 @@
 
     async function handleSignUp(event) {
       event.preventDefault();
+      console.log('Sign up form submitted');
 
       if (!validateSignupForm()) {
+        console.log('Form validation failed');
         return;
       }
+
+      console.log('Form validation passed');
 
       const submitBtn = document.getElementById('signup-btn');
       const name = document.getElementById('signup-name').value.trim();
