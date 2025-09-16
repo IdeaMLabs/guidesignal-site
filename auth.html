@@ -385,6 +385,9 @@
   <script type="module">
     import { authFunctions } from './firebase-config.js';
 
+    // Make authFunctions globally available
+    window.authFunctions = authFunctions;
+
     function switchTab(tabName, tabElement) {
       // Update tab appearance
       document.querySelectorAll('.auth-tab').forEach(tab => {
@@ -632,6 +635,112 @@
       document.getElementById('signup-form').addEventListener('input', validateSignupForm);
       document.getElementById('terms-agreement').addEventListener('change', validateSignupForm);
     });
+  </script>
+
+  <!-- Regular script for handling auth functions after module loads -->
+  <script>
+    // Wait for authFunctions to be available from the module
+    async function waitForAuthFunctions() {
+      while (!window.authFunctions) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      return window.authFunctions;
+    }
+
+    // Override the handleSignUp function with regular script version
+    window.addEventListener('load', async function() {
+      const authFunctions = await waitForAuthFunctions();
+
+      // Replace the signup form handler
+      const signupForm = document.getElementById('signup-form');
+      signupForm.removeEventListener('submit', handleSignUp);
+
+      signupForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        console.log('Sign up form submitted (regular script)');
+
+        // Validation
+        const name = document.getElementById('signup-name').value.trim();
+        const email = document.getElementById('signup-email').value.trim();
+        const password = document.getElementById('signup-password').value;
+        const confirmPassword = document.getElementById('signup-password-confirm').value;
+        const role = document.querySelector('input[name="role"]:checked');
+        const terms = document.getElementById('terms-agreement').checked;
+
+        if (!name || !email || !password || !confirmPassword || !role || !terms) {
+          showMessage('Please fill in all required fields', 'error');
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          showMessage('Passwords do not match', 'error');
+          return;
+        }
+
+        if (password.length < 6) {
+          showMessage('Password must be at least 6 characters long', 'error');
+          return;
+        }
+
+        const submitBtn = document.getElementById('signup-btn');
+        setButtonLoading(submitBtn, true);
+
+        try {
+          console.log('Calling registerUser...');
+          const result = await authFunctions.registerUser(email, password, name, role.value, {});
+          console.log('Register result:', result);
+
+          if (result.success) {
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('userName', name);
+            localStorage.setItem('userRole', role.value);
+
+            showMessage('🎉 Account created successfully! Welcome to GuideSignal!', 'success');
+            setButtonLoading(submitBtn, false);
+
+            setTimeout(() => {
+              window.location.href = 'dashboard.html';
+            }, 2000);
+          } else {
+            const errorMsg = result.error || 'Account creation failed. Please try again.';
+            showMessage(errorMsg, 'error');
+            setButtonLoading(submitBtn, false);
+          }
+        } catch (error) {
+          console.error('Sign up error:', error);
+          showMessage('Network error. Please try again.', 'error');
+          setButtonLoading(submitBtn, false);
+        }
+      });
+    });
+
+    function showMessage(message, type) {
+      const errorDiv = document.getElementById('error-message');
+      const successDiv = document.getElementById('success-message');
+
+      if (type === 'error') {
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        successDiv.style.display = 'none';
+      } else {
+        successDiv.textContent = message;
+        successDiv.style.display = 'block';
+        errorDiv.style.display = 'none';
+      }
+    }
+
+    function setButtonLoading(button, isLoading) {
+      if (isLoading) {
+        button.disabled = true;
+        button.classList.add('loading');
+        button.querySelector('.btn-text').textContent = 'Processing...';
+      } else {
+        button.disabled = false;
+        button.classList.remove('loading');
+        const isSignin = button.id === 'signin-btn';
+        button.querySelector('.btn-text').textContent = isSignin ? 'Sign In' : 'Create Account';
+      }
+    }
   </script>
 </body>
 </html>
