@@ -58,7 +58,7 @@ export const authFunctions = {
         let emailVerificationSent = false;
         try {
           await sendEmailVerification(user, {
-            url: window.location.origin + '/auth.html?verified=true',
+            url: window.location.origin + '/confirmation.html?verified=true',
             handleCodeInApp: false
           });
           emailVerificationSent = true;
@@ -303,7 +303,7 @@ export const authFunctions = {
       }
       
       await sendEmailVerification(user, {
-        url: window.location.origin + '/auth.html?verified=true',
+        url: window.location.origin + '/confirmation.html?verified=true',
         handleCodeInApp: false
       });
       

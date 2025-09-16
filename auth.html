@@ -756,12 +756,11 @@
             showMessage(successMessage, 'success');
             setButtonLoading(submitBtn, false);
 
-            // If email verification was sent, switch to sign in tab after delay
+            // If email verification was sent, redirect to confirmation page
             if (result.emailVerificationSent) {
               setTimeout(() => {
-                switchTab('signin', document.querySelector('[data-tab="signin"]'));
-                showMessage('📧 Please check your email and verify your account, then sign in.', 'success');
-              }, 3000);
+                window.location.href = `confirmation.html?email=${encodeURIComponent(email)}`;
+              }, 2000);
             } else {
               // If no email verification, go to dashboard
               setTimeout(() => {
