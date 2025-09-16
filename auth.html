@@ -382,7 +382,15 @@
     </div>
   </main>
 
-  <script>
+  <script type="module">
+    import { authFunctions } from './firebase-config.js';
+
+    // Make functions globally available for inline event handlers
+    window.switchTab = switchTab;
+    window.togglePassword = togglePassword;
+    window.handleSignIn = handleSignIn;
+    window.handleSignUp = handleSignUp;
+
     function switchTab(tabName, tabElement) {
       // Update tab appearance
       document.querySelectorAll('.auth-tab').forEach(tab => {
@@ -510,21 +518,10 @@
       setButtonLoading(submitBtn, true);
 
       try {
-        // Firebase sign-in using REST API
-        const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBJOVbMoHfdxHexsfqsbYsvFzFqaKBXC_s', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-            returnSecureToken: true
-          })
-        });
+        // Use Firebase SDK for sign-in
+        const result = await authFunctions.signInUser(email, password);
 
-        const result = await response.json();
-
-        if (response.ok && result.idToken) {
-          localStorage.setItem('authToken', result.idToken);
+        if (result.success) {
           localStorage.setItem('userEmail', email);
           showMessage('✅ Sign in successful! Redirecting...', 'success');
 
@@ -534,8 +531,8 @@
             window.location.href = 'dashboard.html';
           }, 1500);
         } else {
-          const errorMsg = result.error?.message || 'Sign in failed. Please check your credentials.';
-          showMessage(errorMsg.replace('_', ' ').toLowerCase(), 'error');
+          const errorMsg = result.error || 'Sign in failed. Please check your credentials.';
+          showMessage(errorMsg, 'error');
           setButtonLoading(submitBtn, false);
         }
       } catch (error) {
@@ -565,21 +562,10 @@
       setButtonLoading(submitBtn, true);
 
       try {
-        // Firebase sign-up using REST API
-        const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBJOVbMoHfdxHexsfqsbYsvFzFqaKBXC_s', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-            returnSecureToken: true
-          })
-        });
+        // Use Firebase SDK for sign-up with proper user data
+        const result = await authFunctions.registerUser(email, password, name, role, {});
 
-        const result = await response.json();
-
-        if (response.ok && result.idToken) {
-          localStorage.setItem('authToken', result.idToken);
+        if (result.success) {
           localStorage.setItem('userEmail', email);
           localStorage.setItem('userName', name);
           localStorage.setItem('userRole', role);
@@ -592,8 +578,8 @@
             window.location.href = 'dashboard.html';
           }, 2000);
         } else {
-          const errorMsg = result.error?.message || 'Account creation failed. Please try again.';
-          showMessage(errorMsg.replace('_', ' ').toLowerCase(), 'error');
+          const errorMsg = result.error || 'Account creation failed. Please try again.';
+          showMessage(errorMsg, 'error');
           setButtonLoading(submitBtn, false);
         }
       } catch (error) {
