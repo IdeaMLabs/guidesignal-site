@@ -528,6 +528,7 @@
           localStorage.setItem('userEmail', email);
           showMessage('✅ Sign in successful! Redirecting...', 'success');
 
+          // Keep button in loading state until redirect
           // Redirect to dashboard after successful login
           setTimeout(() => {
             window.location.href = 'dashboard.html';
@@ -535,11 +536,11 @@
         } else {
           const errorMsg = result.error?.message || 'Sign in failed. Please check your credentials.';
           showMessage(errorMsg.replace('_', ' ').toLowerCase(), 'error');
+          setButtonLoading(submitBtn, false);
         }
       } catch (error) {
         console.error('Sign in error:', error);
         showMessage('Network error. Please try again.', 'error');
-      } finally {
         setButtonLoading(submitBtn, false);
       }
     }
@@ -585,6 +586,7 @@
 
           showMessage('🎉 Account created successfully! Welcome to GuideSignal!', 'success');
 
+          // Keep button in loading state until redirect
           // Redirect to dashboard after successful signup
           setTimeout(() => {
             window.location.href = 'dashboard.html';
@@ -592,11 +594,11 @@
         } else {
           const errorMsg = result.error?.message || 'Account creation failed. Please try again.';
           showMessage(errorMsg.replace('_', ' ').toLowerCase(), 'error');
+          setButtonLoading(submitBtn, false);
         }
       } catch (error) {
         console.error('Sign up error:', error);
         showMessage('Network error. Please try again.', 'error');
-      } finally {
         setButtonLoading(submitBtn, false);
       }
     }
