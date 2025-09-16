@@ -47,7 +47,8 @@
       "Bash(move unified-auth-v7.js assets)",
       "Bash(git apply:*)",
       "Bash(cp:*)",
-      "Bash(del auth_test_simple.html)"
+      "Bash(del auth_test_simple.html)",
+      "Bash(git merge:*)"
     ],
     "deny": [],
     "ask": []
