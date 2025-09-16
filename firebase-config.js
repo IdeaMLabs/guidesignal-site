@@ -892,4 +892,7 @@ export const aiMlFunctions = {
 // Export constants
 export { USER_ROLES, auth, db };
 
+// Make authFunctions globally available for use in regular script scope
+window.authFunctions = authFunctions;
+
 console.log('Firebase initialized successfully for GuideSignal with AI/ML capabilities');
