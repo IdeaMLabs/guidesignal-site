@@ -773,8 +773,13 @@
           console.log('Result emailVerificationSent:', result?.emailVerificationSent);
           console.log('Result error:', result?.error);
 
+          // Test if we're even reaching the success condition
+          console.log('Checking registration result...');
+          console.log('result exists:', !!result);
+          console.log('result.success:', result?.success);
+
           if (result && result.success) {
-            console.log('Registration successful, storing user data');
+            console.log('✅ REGISTRATION SUCCESSFUL - storing user data');
             localStorage.setItem('userEmail', email);
             localStorage.setItem('userName', name);
             localStorage.setItem('userRole', role.value);
@@ -791,13 +796,28 @@
             showMessage(successMessage, 'success');
             setButtonLoading(submitBtn, false);
 
-            // Always redirect to confirmation page for now (for testing)
+            // Immediate redirect test to bypass any timing issues
             console.log('About to redirect to confirmation page');
-            setTimeout(() => {
-              const redirectUrl = `confirmation.html?email=${encodeURIComponent(email)}`;
-              console.log('Redirecting to:', redirectUrl);
+            console.log('Current window.location:', window.location.href);
+
+            const redirectUrl = `confirmation.html?email=${encodeURIComponent(email)}`;
+            console.log('Target redirect URL:', redirectUrl);
+
+            // Try multiple redirect methods
+            try {
+              console.log('Attempting window.location.href redirect...');
               window.location.href = redirectUrl;
-            }, 2000);
+            } catch (error) {
+              console.error('window.location.href failed:', error);
+              try {
+                console.log('Attempting window.location.replace...');
+                window.location.replace(redirectUrl);
+              } catch (error2) {
+                console.error('window.location.replace failed:', error2);
+                console.log('Manual navigation - please click this link:');
+                showMessage(`Registration successful! <a href="${redirectUrl}">Click here to continue</a>`, 'success');
+              }
+            }
 
           } else {
             console.error('Registration failed or result is invalid');
