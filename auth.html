@@ -494,7 +494,7 @@
       }
 
       if (errorMessage) {
-        showMessage(errorMessage, 'error');
+        window.showMessage(errorMessage, 'error');
       } else {
         document.getElementById('error-message').style.display = 'none';
       }
@@ -513,11 +513,11 @@
       const password = document.getElementById('signin-password').value;
 
       if (!email || !password) {
-        showMessage('Please fill in all fields', 'error');
+        window.showMessage('Please fill in all fields', 'error');
         return;
       }
 
-      setButtonLoading(submitBtn, true);
+      window.setButtonLoading(submitBtn, true);
 
       try {
         // Use Firebase SDK for sign-in
@@ -525,23 +525,23 @@
 
         if (result.success) {
           localStorage.setItem('userEmail', email);
-          showMessage('✅ Sign in successful! Redirecting...', 'success');
+          window.showMessage('✅ Sign in successful! Redirecting...', 'success');
 
           // Reset button before redirect so it never stays frozen
-          setButtonLoading(submitBtn, false);
+          window.setButtonLoading(submitBtn, false);
 
           setTimeout(() => {
             window.location.href = 'dashboard.html';
           }, 1500);
         } else {
           const errorMsg = result.error || 'Sign in failed. Please check your credentials.';
-          showMessage(errorMsg, 'error');
-          setButtonLoading(submitBtn, false);
+          window.showMessage(errorMsg, 'error');
+          window.setButtonLoading(submitBtn, false);
         }
       } catch (error) {
         console.error('Sign in error:', error);
-        showMessage('Network error. Please try again.', 'error');
-        setButtonLoading(submitBtn, false);
+        window.showMessage('Network error. Please try again.', 'error');
+        window.setButtonLoading(submitBtn, false);
       }
     }
 
@@ -554,7 +554,7 @@
       document.querySelectorAll('.auth-tab').forEach(tab => {
         tab.addEventListener('click', function() {
           const tabName = this.dataset.tab;
-          switchTab(tabName, this);
+          window.switchTab(tabName, this);
         });
       });
 
@@ -562,7 +562,7 @@
       document.querySelectorAll('.password-toggle').forEach(button => {
         button.addEventListener('click', function() {
           const targetId = this.dataset.target;
-          togglePassword(targetId);
+          window.togglePassword(targetId);
         });
       });
 
@@ -585,13 +585,13 @@
           radioInput.checked = true;
 
           // Validate form
-          validateSignupForm();
+          window.validateSignupForm();
         });
       });
 
       // Form validation for signup
-      document.getElementById('signup-form').addEventListener('input', validateSignupForm);
-      document.getElementById('terms-agreement').addEventListener('change', validateSignupForm);
+      document.getElementById('signup-form').addEventListener('input', window.validateSignupForm);
+      document.getElementById('terms-agreement').addEventListener('change', window.validateSignupForm);
     });
   </script>
 
