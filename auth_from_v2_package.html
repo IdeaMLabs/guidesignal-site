@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - GuideSignal</title>
+  <link rel="stylesheet" href="assets/shared.css">
+  <link rel="stylesheet" href="assets/layout-fixes.css">
+  <link rel="stylesheet" href="assets/gui-layout-fixes.css">
+</head>
+<body>
+  <a href="/" class="back-link">← Back to Home</a>
+  <main id="main-content">
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-logo">GS</div>
+        <h1 class="auth-title">Welcome to GuideSignal</h1>
+
+        <div class="auth-tabs">
+          <button class="auth-tab active" onclick="switchTab('signin', this)">Sign In</button>
+          <button class="auth-tab" onclick="switchTab('signup', this)">Sign Up</button>
+        </div>
+
+        <!-- Error and success messages -->
+        <div id="error-message" class="error-message" style="display:none;"></div>
+        <div id="success-message" class="success-message" style="display:none;"></div>
+
+        <!-- Sign In Form -->
+        <form id="signin-form" class="auth-form">
+          <label>Email Address</label>
+          <input type="email" id="signin-email" required>
+          <label>Password</label>
+          <div class="password-container">
+            <input type="password" id="signin-password" required>
+            <button type="button" onclick="togglePassword('signin-password')">👁️</button>
+          </div>
+          <input type="checkbox" id="remember-me"> Remember me
+          <button type="submit" id="signin-btn"><span class="btn-text">Sign In</span></button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signup-form" class="auth-form" style="display:none;">
+          <label>Full Name</label>
+          <input type="text" id="signup-name" required>
+          <label>Email Address</label>
+          <input type="email" id="signup-email" required>
+          <label>Password</label>
+          <input type="password" id="signup-password" required>
+          <label>Confirm Password</label>
+          <input type="password" id="signup-password-confirm" required>
+
+          <!-- Fixed Role Selector -->
+          <div class="role-selector">
+            <label class="role-option" data-role="student">
+              <input type="radio" class="role-radio" name="role" value="student" required>
+              <div class="role-content">
+                <div class="role-title">🎓 Student</div>
+                <div class="role-desc">Looking for internships and entry-level opportunities</div>
+              </div>
+            </label>
+            <label class="role-option" data-role="job_seeker">
+              <input type="radio" class="role-radio" name="role" value="job_seeker" required>
+              <div class="role-content">
+                <div class="role-title">💼 Job Seeker</div>
+                <div class="role-desc">Seeking new career opportunities</div>
+              </div>
+            </label>
+            <label class="role-option" data-role="recruiter">
+              <input type="radio" class="role-radio" name="role" value="recruiter" required>
+              <div class="role-content">
+                <div class="role-title">🗂 Recruiter</div>
+                <div class="role-desc">Posting jobs and hiring talent</div>
+              </div>
+            </label>
+          </div>
+
+          <label><input type="checkbox" id="terms-agreement" required> I agree to the Terms of Service and Privacy Policy</label>
+          <button type="submit" id="signup-btn" disabled><span class="btn-text">Create Account</span></button>
+        </form>
+
+        <!-- Progress bar -->
+        <div id="signup-progress" style="display:none; gap:8px; margin:12px 0;">
+          <div class="progress-step">Info</div>
+          <div class="progress-step">Role</div>
+          <div class="progress-step">Terms</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Offline indicator -->
+  <div id="offline-indicator" style="display:none; background:#fef2f2; color:#b91c1c; padding:8px; text-align:center;">
+    You are offline. Some features may not work.
+  </div>
+
+  <!-- Scripts -->
+  <script src="unified-auth-v7.js"></script>
+</body>
+</html>

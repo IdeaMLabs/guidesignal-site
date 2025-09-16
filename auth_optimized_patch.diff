@@ -1,0 +1,52 @@
+*** Begin Patch
+*** Update File: assets/auth-optimized.js
+@@ function setupRoleSelection() {
+-                     selectedRole = option.dataset.role;
+-
+-                     const roleType = option.dataset.role;
++                     // Use the radio's value rather than the data-role attribute.
++                     // Update the selectedRole variable with the chosen radio value.
++                     selectedRole = this.value;
++                     // Also update the hidden input so the value persists when submitting the form.
++                     const selectedRoleInput = document.getElementById('selected-role');
++                     if (selectedRoleInput) selectedRoleInput.value = selectedRole;
++
++                     const roleType = selectedRole;
+@@ function validateSignUpButton() {
+-         const signupBtn = document.getElementById('signup-btn');
+-         const termsCheckbox = document.getElementById('terms-agreement');
++         // Use the actual ID of the sign-up button and terms checkbox from auth.html.
++         const signupBtn = document.getElementById('create-account-btn');
++         const termsCheckbox = document.getElementById('terms');
+@@ function validateSignUpButton() {
+-         const hasRole = selectedRole !== null;
+-         const hasTerms = termsCheckbox && termsCheckbox.checked;
++         const hasRole = !!selectedRole;
++         const hasTerms = termsCheckbox && termsCheckbox.checked;
+@@ function setupTermsAgreement() {
+-         const termsCheckbox = document.getElementById('terms-agreement');
++         // Connect to the correct Terms checkbox.
++         const termsCheckbox = document.getElementById('terms');
+@@ document.getElementById('signup-form').addEventListener('submit', async function(e) {
+-         const termsCheckbox = document.getElementById('terms-agreement');
++         // Get the correct Terms checkbox
++         const termsCheckbox = document.getElementById('terms');
+@@ document.getElementById('signup-form').addEventListener('submit', async function(e) {
+-         setLoading('signup-btn', true);
++         // Use the correct button ID when showing loading state
++         setLoading('create-account-btn', true);
+@@ document.getElementById('signup-form').addEventListener('submit', async function(e) {
+-         const result = await handleNetworkError(
+-             () => authFunctions.registerUser(email, password, name, selectedRole, additionalData),
+-             () => authFunctions.registerUser(email, password, name, selectedRole, additionalData)
+-         );
++         // Normalize role string for Firebase (convert underscores to hyphens).
++         const normalizedRole = selectedRole ? selectedRole.replace('_', '-') : selectedRole;
++         const result = await handleNetworkError(
++             () => authFunctions.registerUser(email, password, name, normalizedRole, additionalData),
++             () => authFunctions.registerUser(email, password, name, normalizedRole, additionalData)
++         );
+@@ document.getElementById('signup-form').addEventListener('submit', async function(e) {
+-             setLoading('signup-btn', false);
++             setLoading('create-account-btn', false);
+*** End Patch

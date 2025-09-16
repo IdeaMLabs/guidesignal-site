@@ -42,7 +42,11 @@
       "WebFetch(domain:api.github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Read(//c/**)",
-      "Bash(move unified-auth-v3.js assets/)"
+      "Bash(move unified-auth-v3.js assets/)",
+      "Bash(move unified-auth-v7.js assets/)",
+      "Bash(move unified-auth-v7.js assets)",
+      "Bash(git apply:*)",
+      "Bash(cp:*)"
     ],
     "deny": [],
     "ask": []
