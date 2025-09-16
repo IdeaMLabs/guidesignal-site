@@ -48,7 +48,8 @@
       "Bash(git apply:*)",
       "Bash(cp:*)",
       "Bash(del auth_test_simple.html)",
-      "Bash(git merge:*)"
+      "Bash(git merge:*)",
+      "Bash(del firebase-test.html)"
     ],
     "deny": [],
     "ask": []

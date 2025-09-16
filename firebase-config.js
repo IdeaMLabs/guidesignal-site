@@ -910,11 +910,4 @@ export const aiMlFunctions = {
 // Export constants
 export { USER_ROLES, auth, db, authFunctions };
 
-// Debug logging for Firebase config verification
-console.log("🔥 Firebase config loaded:", firebaseConfig);
-console.log("🔥 Current domain:", window.location.hostname);
-console.log("🔥 Firebase app initialized:", app);
-console.log("🔥 Auth instance:", auth);
-console.log("🔥 Firestore instance:", db);
-
 console.log('Firebase initialized successfully for GuideSignal with AI/ML capabilities');

@@ -238,7 +238,7 @@
           showMessage(result.error || 'Sign in failed', 'error');
           btn.disabled = false; btn.classList.remove('loading'); btn.querySelector('.btn-text').textContent = 'Sign In';
         }
-      } catch {
+      } catch (error) {
         showMessage('Network error', 'error');
         btn.disabled = false; btn.classList.remove('loading'); btn.querySelector('.btn-text').textContent = 'Sign In';
       }
