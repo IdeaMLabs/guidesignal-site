@@ -519,8 +519,9 @@
           localStorage.setItem('userEmail', email);
           showMessage('✅ Sign in successful! Redirecting...', 'success');
 
-          // Keep button in loading state until redirect
-          // Redirect to dashboard after successful login
+          // Reset button before redirect so it never stays frozen
+          setButtonLoading(submitBtn, false);
+
           setTimeout(() => {
             window.location.href = 'dashboard.html';
           }, 1500);
@@ -566,8 +567,9 @@
 
           showMessage('🎉 Account created successfully! Welcome to GuideSignal!', 'success');
 
-          // Keep button in loading state until redirect
-          // Redirect to dashboard after successful signup
+          // Reset button before redirect so it never stays frozen
+          setButtonLoading(submitBtn, false);
+
           setTimeout(() => {
             window.location.href = 'dashboard.html';
           }, 2000);
