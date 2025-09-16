@@ -388,7 +388,8 @@
     // Make authFunctions globally available
     window.authFunctions = authFunctions;
 
-    function switchTab(tabName, tabElement) {
+    // Make switchTab globally available
+    window.switchTab = function(tabName, tabElement) {
       // Update tab appearance
       document.querySelectorAll('.auth-tab').forEach(tab => {
         tab.classList.remove('active');
@@ -412,9 +413,10 @@
       document.getElementById('success-message').style.display = 'none';
 
       console.log('Switched to', tabName, 'tab');
-    }
+    };
 
-    function togglePassword(inputId) {
+    // Make togglePassword globally available
+    window.togglePassword = function(inputId) {
       const input = document.getElementById(inputId);
       const button = input.parentElement.querySelector('button');
 
@@ -425,9 +427,10 @@
         input.type = 'password';
         button.textContent = '👁️';
       }
-    }
+    };
 
-    function showMessage(message, type) {
+    // Make showMessage globally available
+    window.showMessage = function(message, type) {
       const errorDiv = document.getElementById('error-message');
       const successDiv = document.getElementById('success-message');
 
@@ -440,9 +443,10 @@
         successDiv.style.display = 'block';
         errorDiv.style.display = 'none';
       }
-    }
+    };
 
-    function setButtonLoading(button, isLoading) {
+    // Make setButtonLoading globally available
+    window.setButtonLoading = function(button, isLoading) {
       if (isLoading) {
         button.disabled = true;
         button.classList.add('loading');
@@ -454,9 +458,10 @@
         button.querySelector('.btn-text').textContent = isSignin ? 'Sign In' : 'Create Account';
         // Don't auto-validate here - let the form validation handle button state
       }
-    }
+    };
 
-    function validateSignupForm() {
+    // Make validateSignupForm globally available
+    window.validateSignupForm = function() {
       const name = document.getElementById('signup-name').value.trim();
       const email = document.getElementById('signup-email').value.trim();
       const password = document.getElementById('signup-password').value;
@@ -499,7 +504,7 @@
         submitBtn.disabled = !isValid;
       }
       return isValid;
-    }
+    };
 
     async function handleSignIn(event) {
       event.preventDefault();
