@@ -702,10 +702,18 @@
 
     // Add the signup form handler with proper Firebase access
     window.addEventListener('load', async function() {
-      const authFunctions = await waitForAuthFunctions();
+      console.log('Window load event fired');
+      try {
+        const authFunctions = await waitForAuthFunctions();
+        console.log('authFunctions loaded:', typeof authFunctions);
+        console.log('authFunctions.registerUser:', typeof authFunctions?.registerUser);
+      } catch (error) {
+        console.error('Error loading authFunctions:', error);
+      }
 
       // Add the signup form handler
       const signupForm = document.getElementById('signup-form');
+      console.log('Signup form element found:', !!signupForm);
 
       signupForm.addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -738,11 +746,15 @@
         setButtonLoading(submitBtn, true);
 
         try {
-          console.log('Calling registerUser...');
+          console.log('Calling registerUser with params:', { email, name, role: role.value });
           const result = await authFunctions.registerUser(email, password, name, role.value, {});
-          console.log('Register result:', result);
+          console.log('Register result received:', result);
+          console.log('Result success:', result?.success);
+          console.log('Result emailVerificationSent:', result?.emailVerificationSent);
+          console.log('Result error:', result?.error);
 
-          if (result.success) {
+          if (result && result.success) {
+            console.log('Registration successful, storing user data');
             localStorage.setItem('userEmail', email);
             localStorage.setItem('userName', name);
             localStorage.setItem('userRole', role.value);
@@ -750,31 +762,33 @@
             // Show different message based on email verification status
             let successMessage = '🎉 Account created successfully! Welcome to GuideSignal!';
             if (result.emailVerificationSent) {
-              successMessage = '🎉 Account created successfully! Please check your email for verification link before signing in.';
+              successMessage = '🎉 Account created successfully! Redirecting to confirmation page...';
+              console.log('Email verification was sent, will redirect to confirmation page');
+            } else {
+              console.log('No email verification sent, will redirect to dashboard');
             }
 
             showMessage(successMessage, 'success');
             setButtonLoading(submitBtn, false);
 
-            // If email verification was sent, redirect to confirmation page
-            if (result.emailVerificationSent) {
-              setTimeout(() => {
-                window.location.href = `confirmation.html?email=${encodeURIComponent(email)}`;
-              }, 2000);
-            } else {
-              // If no email verification, go to dashboard
-              setTimeout(() => {
-                window.location.href = 'dashboard.html';
-              }, 2000);
-            }
+            // Always redirect to confirmation page for now (for testing)
+            console.log('About to redirect to confirmation page');
+            setTimeout(() => {
+              const redirectUrl = `confirmation.html?email=${encodeURIComponent(email)}`;
+              console.log('Redirecting to:', redirectUrl);
+              window.location.href = redirectUrl;
+            }, 2000);
+
           } else {
-            const errorMsg = result.error || 'Account creation failed. Please try again.';
-            console.error('Registration failed:', errorMsg);
+            console.error('Registration failed or result is invalid');
+            console.error('Full result object:', result);
+            const errorMsg = (result && result.error) || 'Account creation failed. Please try again.';
             showMessage(errorMsg, 'error');
             setButtonLoading(submitBtn, false);
           }
         } catch (error) {
-          console.error('Sign up error:', error);
+          console.error('Sign up error caught:', error);
+          console.error('Error stack:', error.stack);
           showMessage('Network error. Please check your connection and try again.', 'error');
           setButtonLoading(submitBtn, false);
         }
