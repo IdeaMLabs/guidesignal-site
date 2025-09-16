@@ -1,7 +1,8 @@
 // Firebase Configuration and Utilities for GuideSignal
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendEmailVerification, sendPasswordResetEmail, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs, updateDoc, orderBy, limit, serverTimestamp, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+// Using Firebase v9 for better compatibility
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendEmailVerification, sendPasswordResetEmail, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs, updateDoc, orderBy, limit, serverTimestamp, deleteDoc } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -28,11 +29,28 @@ const USER_ROLES = {
 export const authFunctions = {
   // Enhanced user registration with email verification
   async registerUser(email, password, displayName, role, additionalData = {}) {
+    console.log('🔥 registerUser called with:', { email, displayName, role, additionalData: Object.keys(additionalData) });
+
     try {
-      // Validate input parameters
-      if (!email || !password || !displayName || !role) {
-        return { success: false, error: 'Missing required registration information' };
+      // Validate input parameters with detailed logging
+      if (!email) {
+        console.error('❌ Registration failed: Missing email');
+        return { success: false, error: 'Email is required' };
       }
+      if (!password) {
+        console.error('❌ Registration failed: Missing password');
+        return { success: false, error: 'Password is required' };
+      }
+      if (!displayName) {
+        console.error('❌ Registration failed: Missing display name');
+        return { success: false, error: 'Display name is required' };
+      }
+      if (!role) {
+        console.error('❌ Registration failed: Missing role');
+        return { success: false, error: 'Role is required' };
+      }
+
+      console.log('✅ Input validation passed');
       
       // Normalize inputs
       const normalizedEmail = email.toLowerCase().trim();

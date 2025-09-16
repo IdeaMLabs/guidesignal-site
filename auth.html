@@ -370,11 +370,11 @@
           </div>
 
           <label>
-            <input type="checkbox" id="terms-agreement" name="terms" required>
+            <input type="checkbox" id="terms" name="terms" required>
             I agree to the <a href="terms.html" target="_blank">Terms of Service</a> and <a href="privacy.html" target="_blank">Privacy Policy</a>
           </label>
 
-          <button type="submit" id="signup-btn" disabled>
+          <button type="submit" id="create-account-btn" disabled>
             <span class="btn-text">Create Account</span>
           </button>
         </form>
@@ -467,8 +467,8 @@
       const password = document.getElementById('signup-password').value;
       const confirmPassword = document.getElementById('signup-password-confirm').value;
       const role = document.querySelector('input[name="role"]:checked');
-      const terms = document.getElementById('terms-agreement').checked;
-      const submitBtn = document.getElementById('signup-btn');
+      const terms = document.getElementById('terms').checked;
+      const submitBtn = document.getElementById('create-account-btn');
 
       let isValid = true;
       let errorMessage = '';
@@ -608,8 +608,8 @@
       const password = document.getElementById('signup-password').value;
       const confirmPassword = document.getElementById('signup-password-confirm').value;
       const role = document.querySelector('input[name="role"]:checked');
-      const terms = document.getElementById('terms-agreement').checked;
-      const submitBtn = document.getElementById('signup-btn');
+      const terms = document.getElementById('terms').checked;
+      const submitBtn = document.getElementById('create-account-btn');
 
       let isValid = true;
       let errorMessage = '';
@@ -689,7 +689,7 @@
 
       // Form validation for signup
       document.getElementById('signup-form').addEventListener('input', validateSignupForm);
-      document.getElementById('terms-agreement').addEventListener('change', validateSignupForm);
+      document.getElementById('terms').addEventListener('change', validateSignupForm);
     });
 
     // Wait for authFunctions to be available from the module
@@ -700,139 +700,216 @@
       return window.authFunctions;
     }
 
-    // Add the signup form handler with proper Firebase access
+    // COMPLETELY REWRITTEN SIGNUP HANDLER - Bulletproof Version
     window.addEventListener('load', async function() {
-      console.log('Window load event fired');
+      console.log('🚀 BULLETPROOF SIGNUP HANDLER - Window load event fired');
+
       let authFunctions;
-      try {
-        authFunctions = await waitForAuthFunctions();
-        console.log('authFunctions loaded:', typeof authFunctions);
-        console.log('authFunctions.registerUser:', typeof authFunctions?.registerUser);
-      } catch (error) {
-        console.error('Error loading authFunctions:', error);
-        return; // Exit if authFunctions can't be loaded
+      let signupForm;
+      let signupAttempted = false; // Prevent double submissions
+
+      // Step 1: Load Firebase functions with retry
+      async function loadFirebaseWithRetry(maxRetries = 3) {
+        for (let i = 0; i < maxRetries; i++) {
+          try {
+            console.log(`Attempt ${i + 1}: Loading authFunctions...`);
+            authFunctions = await waitForAuthFunctions();
+
+            if (authFunctions && typeof authFunctions.registerUser === 'function') {
+              console.log('✅ authFunctions loaded successfully');
+              console.log('✅ registerUser function available');
+              return true;
+            } else {
+              console.error('❌ authFunctions loaded but registerUser not available');
+              throw new Error('registerUser function not available');
+            }
+          } catch (error) {
+            console.error(`❌ Attempt ${i + 1} failed:`, error);
+            if (i < maxRetries - 1) {
+              await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1))); // Exponential backoff
+            }
+          }
+        }
+        return false;
       }
 
-      // Add the signup form handler
-      const signupForm = document.getElementById('signup-form');
-      console.log('Signup form element found:', !!signupForm);
-
-      if (!signupForm) {
-        console.error('Signup form not found!');
-        return;
+      // Step 2: Get form element with validation
+      function getSignupForm() {
+        signupForm = document.getElementById('signup-form');
+        if (!signupForm) {
+          console.error('❌ CRITICAL: Signup form not found in DOM');
+          return false;
+        }
+        console.log('✅ Signup form found');
+        return true;
       }
 
-      signupForm.addEventListener('submit', async function(event) {
-        event.preventDefault();
-        console.log('Sign up form submitted (regular script)');
+      // Step 3: Validate form data comprehensively
+      function validateFormData() {
+        console.log('🔍 Validating form data...');
 
-        // Ensure authFunctions is still available
-        if (!authFunctions || !authFunctions.registerUser) {
-          console.error('authFunctions not available during form submission');
-          showMessage('Authentication system not ready. Please refresh and try again.', 'error');
-          return;
+        const formData = {
+          name: document.getElementById('signup-name')?.value?.trim() || '',
+          email: document.getElementById('signup-email')?.value?.trim() || '',
+          password: document.getElementById('signup-password')?.value || '',
+          confirmPassword: document.getElementById('signup-password-confirm')?.value || '',
+          role: document.querySelector('input[name="role"]:checked')?.value || '',
+          terms: document.getElementById('terms')?.checked || false
+        };
+
+        console.log('Form data collected:', {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password ? '***' : 'MISSING',
+          confirmPassword: formData.confirmPassword ? '***' : 'MISSING',
+          role: formData.role,
+          terms: formData.terms
+        });
+
+        // Detailed validation with specific error messages
+        if (!formData.name) {
+          showMessage('Please enter your full name', 'error');
+          return null;
         }
-
-        // Validation
-        const name = document.getElementById('signup-name').value.trim();
-        const email = document.getElementById('signup-email').value.trim();
-        const password = document.getElementById('signup-password').value;
-        const confirmPassword = document.getElementById('signup-password-confirm').value;
-        const role = document.querySelector('input[name="role"]:checked');
-        const terms = document.getElementById('terms-agreement').checked;
-
-        console.log('Form values:', { name, email, password: '***', confirmPassword: '***', role: role?.value, terms });
-
-        if (!name || !email || !password || !confirmPassword || !role || !terms) {
-          console.log('Validation failed: missing fields');
-          showMessage('Please fill in all required fields', 'error');
-          return;
+        if (!formData.email) {
+          showMessage('Please enter your email address', 'error');
+          return null;
         }
-
-        if (password !== confirmPassword) {
-          console.log('Validation failed: passwords do not match');
+        if (!formData.password) {
+          showMessage('Please enter a password', 'error');
+          return null;
+        }
+        if (!formData.confirmPassword) {
+          showMessage('Please confirm your password', 'error');
+          return null;
+        }
+        if (!formData.role) {
+          showMessage('Please select your role', 'error');
+          return null;
+        }
+        if (!formData.terms) {
+          showMessage('Please agree to the terms of service', 'error');
+          return null;
+        }
+        if (formData.password !== formData.confirmPassword) {
           showMessage('Passwords do not match', 'error');
-          return;
+          return null;
         }
-
-        if (password.length < 6) {
-          console.log('Validation failed: password too short');
+        if (formData.password.length < 6) {
           showMessage('Password must be at least 6 characters long', 'error');
-          return;
+          return null;
         }
 
-        console.log('Form validation passed, proceeding with registration');
-        const submitBtn = document.getElementById('signup-btn');
-        setButtonLoading(submitBtn, true);
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+          showMessage('Please enter a valid email address', 'error');
+          return null;
+        }
+
+        console.log('✅ Form validation passed');
+        return formData;
+      }
+
+      // Step 4: Main signup handler
+      async function handleSignupSubmit(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        console.log('🔥 SIGNUP FORM SUBMITTED');
+
+        // Prevent double submissions
+        if (signupAttempted) {
+          console.log('⚠️ Signup already in progress, ignoring duplicate submission');
+          return;
+        }
+        signupAttempted = true;
+
+        const submitBtn = document.getElementById('create-account-btn');
 
         try {
-          console.log('Calling registerUser with params:', { email, name, role: role.value });
-          const result = await authFunctions.registerUser(email, password, name, role.value, {});
-          console.log('Register result received:', result);
-          console.log('Result success:', result?.success);
-          console.log('Result emailVerificationSent:', result?.emailVerificationSent);
-          console.log('Result error:', result?.error);
+          // Re-validate authFunctions availability
+          if (!authFunctions || typeof authFunctions.registerUser !== 'function') {
+            throw new Error('Authentication system not available');
+          }
 
-          // Test if we're even reaching the success condition
-          console.log('Checking registration result...');
-          console.log('result exists:', !!result);
-          console.log('result.success:', result?.success);
+          // Validate form
+          const formData = validateFormData();
+          if (!formData) {
+            signupAttempted = false;
+            return;
+          }
+
+          // Set loading state
+          setButtonLoading(submitBtn, true);
+          showMessage('Creating your account...', 'success');
+
+          console.log('🚀 Calling Firebase registerUser...');
+
+          // Call Firebase with timeout
+          const registrationPromise = authFunctions.registerUser(
+            formData.email,
+            formData.password,
+            formData.name,
+            formData.role,
+            {}
+          );
+
+          // 30-second timeout
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Registration timeout')), 30000)
+          );
+
+          const result = await Promise.race([registrationPromise, timeoutPromise]);
+
+          console.log('📦 Firebase result:', result);
 
           if (result && result.success) {
-            console.log('✅ REGISTRATION SUCCESSFUL - storing user data');
-            localStorage.setItem('userEmail', email);
-            localStorage.setItem('userName', name);
-            localStorage.setItem('userRole', role.value);
+            console.log('✅ REGISTRATION SUCCESSFUL!');
 
-            // Show different message based on email verification status
-            let successMessage = '🎉 Account created successfully! Welcome to GuideSignal!';
-            if (result.emailVerificationSent) {
-              successMessage = '🎉 Account created successfully! Redirecting to confirmation page...';
-              console.log('Email verification was sent, will redirect to confirmation page');
-            } else {
-              console.log('No email verification sent, will redirect to dashboard');
-            }
+            // Store user data
+            localStorage.setItem('userEmail', formData.email);
+            localStorage.setItem('userName', formData.name);
+            localStorage.setItem('userRole', formData.role);
 
-            showMessage(successMessage, 'success');
-            setButtonLoading(submitBtn, false);
+            showMessage('✅ Account created successfully! Redirecting...', 'success');
 
-            // Immediate redirect test to bypass any timing issues
-            console.log('About to redirect to confirmation page');
-            console.log('Current window.location:', window.location.href);
-
-            const redirectUrl = `confirmation.html?email=${encodeURIComponent(email)}`;
-            console.log('Target redirect URL:', redirectUrl);
-
-            // Try multiple redirect methods
-            try {
-              console.log('Attempting window.location.href redirect...');
+            // Immediate redirect
+            setTimeout(() => {
+              const redirectUrl = `confirmation.html?email=${encodeURIComponent(formData.email)}`;
+              console.log('🔄 Redirecting to:', redirectUrl);
               window.location.href = redirectUrl;
-            } catch (error) {
-              console.error('window.location.href failed:', error);
-              try {
-                console.log('Attempting window.location.replace...');
-                window.location.replace(redirectUrl);
-              } catch (error2) {
-                console.error('window.location.replace failed:', error2);
-                console.log('Manual navigation - please click this link:');
-                showMessage(`Registration successful! <a href="${redirectUrl}">Click here to continue</a>`, 'success');
-              }
-            }
+            }, 1000);
 
           } else {
-            console.error('Registration failed or result is invalid');
-            console.error('Full result object:', result);
-            const errorMsg = (result && result.error) || 'Account creation failed. Please try again.';
+            console.error('❌ Registration failed:', result);
+            const errorMsg = result?.error || 'Account creation failed. Please try again.';
             showMessage(errorMsg, 'error');
             setButtonLoading(submitBtn, false);
+            signupAttempted = false;
           }
+
         } catch (error) {
-          console.error('Sign up error caught:', error);
-          console.error('Error stack:', error.stack);
-          showMessage('Network error. Please check your connection and try again.', 'error');
+          console.error('❌ SIGNUP ERROR:', error);
+          showMessage('Registration failed. Please try again.', 'error');
           setButtonLoading(submitBtn, false);
+          signupAttempted = false;
         }
-      });
+      }
+
+      // Step 5: Initialize everything
+      console.log('🔧 Initializing signup system...');
+
+      const firebaseLoaded = await loadFirebaseWithRetry();
+      const formFound = getSignupForm();
+
+      if (firebaseLoaded && formFound) {
+        console.log('✅ All systems ready - Attaching event handler');
+        signupForm.addEventListener('submit', handleSignupSubmit);
+        console.log('✅ BULLETPROOF SIGNUP HANDLER READY');
+      } else {
+        console.error('❌ CRITICAL: Failed to initialize signup system');
+        showMessage('System initialization failed. Please refresh the page.', 'error');
+      }
     });
 
     function showMessage(message, type) {
