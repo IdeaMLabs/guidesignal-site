@@ -295,22 +295,22 @@
         <h1 class="auth-title">Welcome to GuideSignal</h1>
 
         <div class="auth-tabs">
-          <button class="auth-tab active" onclick="switchTab('signin', this)">Sign In</button>
-          <button class="auth-tab" onclick="switchTab('signup', this)">Sign Up</button>
+          <button class="auth-tab active" data-tab="signin">Sign In</button>
+          <button class="auth-tab" data-tab="signup">Sign Up</button>
         </div>
 
         <div id="error-message" class="error-message"></div>
         <div id="success-message" class="success-message"></div>
 
         <!-- Sign In Form -->
-        <form id="signin-form" class="auth-form" onsubmit="handleSignIn(event)">
+        <form id="signin-form" class="auth-form">
           <label for="signin-email">Email Address</label>
           <input type="email" id="signin-email" name="email" required>
 
           <label for="signin-password">Password</label>
           <div class="password-container">
             <input type="password" id="signin-password" name="password" required>
-            <button type="button" onclick="togglePassword('signin-password')">👁️</button>
+            <button type="button" class="password-toggle" data-target="signin-password">👁️</button>
           </div>
 
           <label>
@@ -323,7 +323,7 @@
         </form>
 
         <!-- Sign Up Form -->
-        <form id="signup-form" class="auth-form hidden" onsubmit="handleSignUp(event)">
+        <form id="signup-form" class="auth-form hidden">
           <label for="signup-name">Full Name</label>
           <input type="text" id="signup-name" name="name" required>
 
@@ -333,13 +333,13 @@
           <label for="signup-password">Password</label>
           <div class="password-container">
             <input type="password" id="signup-password" name="password" required>
-            <button type="button" onclick="togglePassword('signup-password')">👁️</button>
+            <button type="button" class="password-toggle" data-target="signup-password">👁️</button>
           </div>
 
           <label for="signup-password-confirm">Confirm Password</label>
           <div class="password-container">
             <input type="password" id="signup-password-confirm" name="password-confirm" required>
-            <button type="button" onclick="togglePassword('signup-password-confirm')">👁️</button>
+            <button type="button" class="password-toggle" data-target="signup-password-confirm">👁️</button>
           </div>
 
           <label>Choose your role:</label>
@@ -587,6 +587,26 @@
     document.addEventListener('DOMContentLoaded', function() {
       console.log('✅ GuideSignal Auth loaded successfully');
 
+      // Tab switching functionality
+      document.querySelectorAll('.auth-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabName = this.dataset.tab;
+          switchTab(tabName, this);
+        });
+      });
+
+      // Password toggle functionality
+      document.querySelectorAll('.password-toggle').forEach(button => {
+        button.addEventListener('click', function() {
+          const targetId = this.dataset.target;
+          togglePassword(targetId);
+        });
+      });
+
+      // Form submission handlers
+      document.getElementById('signin-form').addEventListener('submit', handleSignIn);
+      document.getElementById('signup-form').addEventListener('submit', handleSignUp);
+
       // Role selection functionality
       document.querySelectorAll('.role-option').forEach(option => {
         option.addEventListener('click', function() {
@@ -610,12 +630,6 @@
       document.getElementById('signup-form').addEventListener('input', validateSignupForm);
       document.getElementById('terms-agreement').addEventListener('change', validateSignupForm);
     });
-
-    // Make functions globally available for inline event handlers (after declaration)
-    window.switchTab = switchTab;
-    window.togglePassword = togglePassword;
-    window.handleSignIn = handleSignIn;
-    window.handleSignUp = handleSignUp;
   </script>
 </body>
 </html>
