@@ -890,6 +890,6 @@ export const aiMlFunctions = {
 };
 
 // Export constants
-export { USER_ROLES, auth, db };
+export { USER_ROLES, auth, db, authFunctions };
 
 console.log('Firebase initialized successfully for GuideSignal with AI/ML capabilities');
