@@ -4,10 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign In - GuideSignal</title>
-
-  <!-- Complete embedded CSS for auth page -->
   <style>
-    /* Global Reset and Base Styles */
     * {
       margin: 0;
       padding: 0;
@@ -15,7 +12,7 @@
     }
 
     body {
-      font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
       display: flex;
@@ -23,7 +20,6 @@
       color: #333;
     }
 
-    /* Back Link */
     .back-link {
       position: absolute;
       top: 20px;
@@ -32,16 +28,13 @@
       text-decoration: none;
       font-size: 16px;
       font-weight: 500;
-      transition: all 0.2s ease;
       z-index: 100;
     }
 
     .back-link:hover {
       color: #f0f0f0;
-      transform: translateX(-3px);
     }
 
-    /* Main Container */
     #main-content {
       flex: 1;
       display: flex;
@@ -63,7 +56,6 @@
       text-align: center;
     }
 
-    /* Logo and Title */
     .auth-logo {
       width: 60px;
       height: 60px;
@@ -85,7 +77,6 @@
       margin-bottom: 30px;
     }
 
-    /* Tab Navigation */
     .auth-tabs {
       display: flex;
       background: #f8f9fa;
@@ -104,7 +95,6 @@
       font-weight: 500;
       border-radius: 6px;
       cursor: pointer;
-      transition: all 0.2s ease;
     }
 
     .auth-tab.active {
@@ -113,14 +103,12 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .auth-tab:hover:not(.active) {
-      color: #1a365d;
-      background: #e9ecef;
-    }
-
-    /* Form Styles */
     .auth-form {
       text-align: left;
+    }
+
+    .auth-form.hidden {
+      display: none;
     }
 
     .auth-form label {
@@ -140,7 +128,6 @@
       border-radius: 8px;
       font-size: 16px;
       margin-bottom: 20px;
-      transition: border-color 0.2s ease;
     }
 
     .auth-form input[type="text"]:focus,
@@ -151,7 +138,6 @@
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
 
-    /* Password Container */
     .password-container {
       position: relative;
       margin-bottom: 20px;
@@ -172,21 +158,13 @@
       cursor: pointer;
       font-size: 18px;
       padding: 4px;
-      border-radius: 4px;
-      transition: background 0.2s ease;
     }
 
-    .password-container button:hover {
-      background: #f3f4f6;
-    }
-
-    /* Checkbox Styles */
     .auth-form input[type="checkbox"] {
       margin-right: 8px;
       margin-bottom: 20px;
     }
 
-    /* Role Selector */
     .role-selector {
       margin: 20px 0;
     }
@@ -198,11 +176,11 @@
       padding: 16px;
       margin-bottom: 12px;
       cursor: pointer;
-      transition: all 0.2s ease;
       position: relative;
     }
 
-    .role-option:hover {
+    .role-option:hover,
+    .role-option.selected {
       border-color: #667eea;
       background: #f8faff;
     }
@@ -212,15 +190,6 @@
       opacity: 0;
       width: 0;
       height: 0;
-    }
-
-    .role-option input[type="radio"]:checked + .role-content {
-      color: #1a365d;
-    }
-
-    .role-option.selected {
-      border-color: #667eea;
-      background: #f8faff;
     }
 
     .role-content {
@@ -239,7 +208,6 @@
       color: #6b7280;
     }
 
-    /* Button Styles */
     .auth-form button[type="submit"] {
       width: 100%;
       background: #667eea;
@@ -250,105 +218,38 @@
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
       margin-top: 10px;
     }
 
     .auth-form button[type="submit"]:hover:not(:disabled) {
       background: #5a67d8;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
 
     .auth-form button[type="submit"]:disabled {
       background: #d1d5db;
       cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
     }
 
-    /* Message Styles */
-    .error-message {
-      background: #fef2f2;
-      color: #dc2626;
+    .error-message,
+    .success-message {
       padding: 12px 16px;
       border-radius: 8px;
       margin-bottom: 20px;
+      display: none;
+    }
+
+    .error-message {
+      background: #fef2f2;
+      color: #dc2626;
       border-left: 4px solid #dc2626;
     }
 
     .success-message {
       background: #f0fdf4;
       color: #16a34a;
-      padding: 12px 16px;
-      border-radius: 8px;
-      margin-bottom: 20px;
       border-left: 4px solid #16a34a;
     }
 
-    /* Progress Bar */
-    #signup-progress {
-      display: flex;
-      justify-content: space-between;
-      margin: 20px 0;
-      gap: 8px;
-    }
-
-    .progress-step {
-      flex: 1;
-      text-align: center;
-      padding: 8px;
-      background: #f3f4f6;
-      color: #6b7280;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    .progress-step.active {
-      background: #667eea;
-      color: white;
-    }
-
-    /* Offline Indicator */
-    #offline-indicator {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: #fef2f2;
-      color: #dc2626;
-      padding: 8px;
-      text-align: center;
-      font-weight: 500;
-      z-index: 1000;
-      transform: translateY(-100%);
-      transition: transform 0.3s ease;
-    }
-
-    #offline-indicator.show {
-      transform: translateY(0);
-    }
-
-    /* Mobile Responsiveness */
-    @media (max-width: 480px) {
-      .auth-card {
-        padding: 30px 20px;
-        margin: 10px;
-      }
-
-      .auth-title {
-        font-size: 24px;
-      }
-
-      .back-link {
-        top: 15px;
-        left: 15px;
-        font-size: 14px;
-      }
-    }
-
-    /* Loading States */
     .loading {
       position: relative;
       color: transparent;
@@ -373,13 +274,14 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Focus styles for accessibility */
-    .auth-tab:focus,
-    .role-option:focus,
-    input:focus,
-    button:focus {
-      outline: 2px solid #667eea;
-      outline-offset: 2px;
+    @media (max-width: 480px) {
+      .auth-card {
+        padding: 30px 20px;
+        margin: 10px;
+      }
+      .auth-title {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
@@ -397,19 +299,18 @@
           <button class="auth-tab" onclick="switchTab('signup', this)">Sign Up</button>
         </div>
 
-        <!-- Error and success messages -->
-        <div id="error-message" class="error-message" style="display:none;"></div>
-        <div id="success-message" class="success-message" style="display:none;"></div>
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
 
         <!-- Sign In Form -->
-        <form id="signin-form" class="auth-form">
+        <form id="signin-form" class="auth-form" onsubmit="handleSignIn(event)">
           <label for="signin-email">Email Address</label>
           <input type="email" id="signin-email" name="email" required>
 
           <label for="signin-password">Password</label>
           <div class="password-container">
             <input type="password" id="signin-password" name="password" required>
-            <button type="button" onclick="togglePassword('signin-password')" aria-label="Toggle password visibility">👁️</button>
+            <button type="button" onclick="togglePassword('signin-password')">👁️</button>
           </div>
 
           <label>
@@ -422,7 +323,7 @@
         </form>
 
         <!-- Sign Up Form -->
-        <form id="signup-form" class="auth-form" style="display:none;">
+        <form id="signup-form" class="auth-form hidden" onsubmit="handleSignUp(event)">
           <label for="signup-name">Full Name</label>
           <input type="text" id="signup-name" name="name" required>
 
@@ -432,20 +333,19 @@
           <label for="signup-password">Password</label>
           <div class="password-container">
             <input type="password" id="signup-password" name="password" required>
-            <button type="button" onclick="togglePassword('signup-password')" aria-label="Toggle password visibility">👁️</button>
+            <button type="button" onclick="togglePassword('signup-password')">👁️</button>
           </div>
 
           <label for="signup-password-confirm">Confirm Password</label>
           <div class="password-container">
             <input type="password" id="signup-password-confirm" name="password-confirm" required>
-            <button type="button" onclick="togglePassword('signup-password-confirm')" aria-label="Toggle password visibility">👁️</button>
+            <button type="button" onclick="togglePassword('signup-password-confirm')">👁️</button>
           </div>
 
-          <!-- Role Selector -->
           <label>Choose your role:</label>
           <div class="role-selector">
             <label class="role-option" data-role="student">
-              <input type="radio" class="role-radio" name="role" value="student" required>
+              <input type="radio" name="role" value="student" required>
               <div class="role-content">
                 <div class="role-title">🎓 Student</div>
                 <div class="role-desc">Looking for internships and entry-level opportunities</div>
@@ -453,7 +353,7 @@
             </label>
 
             <label class="role-option" data-role="job_seeker">
-              <input type="radio" class="role-radio" name="role" value="job_seeker" required>
+              <input type="radio" name="role" value="job_seeker" required>
               <div class="role-content">
                 <div class="role-title">💼 Job Seeker</div>
                 <div class="role-desc">Seeking new career opportunities</div>
@@ -461,7 +361,7 @@
             </label>
 
             <label class="role-option" data-role="recruiter">
-              <input type="radio" class="role-radio" name="role" value="recruiter" required>
+              <input type="radio" name="role" value="recruiter" required>
               <div class="role-content">
                 <div class="role-title">🗂 Recruiter</div>
                 <div class="role-desc">Posting jobs and hiring talent</div>
@@ -478,25 +378,11 @@
             <span class="btn-text">Create Account</span>
           </button>
         </form>
-
-        <!-- Progress bar -->
-        <div id="signup-progress" style="display:none;">
-          <div class="progress-step active">Info</div>
-          <div class="progress-step">Role</div>
-          <div class="progress-step">Terms</div>
-        </div>
       </div>
     </div>
   </main>
 
-  <!-- Offline indicator -->
-  <div id="offline-indicator" style="display:none;">
-    You are offline. Some features may not work.
-  </div>
-
-  <!-- Complete JavaScript functionality -->
   <script>
-    // Tab switching function
     function switchTab(tabName, tabElement) {
       // Update tab appearance
       document.querySelectorAll('.auth-tab').forEach(tab => {
@@ -505,17 +391,24 @@
       tabElement.classList.add('active');
 
       // Show/hide forms
-      document.getElementById('signin-form').style.display = tabName === 'signin' ? 'block' : 'none';
-      document.getElementById('signup-form').style.display = tabName === 'signup' ? 'block' : 'none';
+      const signinForm = document.getElementById('signin-form');
+      const signupForm = document.getElementById('signup-form');
+
+      if (tabName === 'signin') {
+        signinForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+      } else {
+        signinForm.classList.add('hidden');
+        signupForm.classList.remove('hidden');
+      }
 
       // Clear messages
       document.getElementById('error-message').style.display = 'none';
       document.getElementById('success-message').style.display = 'none';
 
-      console.log(`Switched to ${tabName} tab`);
+      console.log('Switched to', tabName, 'tab');
     }
 
-    // Password toggle function
     function togglePassword(inputId) {
       const input = document.getElementById(inputId);
       const button = input.parentElement.querySelector('button');
@@ -523,31 +416,43 @@
       if (input.type === 'password') {
         input.type = 'text';
         button.textContent = '🙈';
-        button.setAttribute('aria-label', 'Hide password');
       } else {
         input.type = 'password';
         button.textContent = '👁️';
-        button.setAttribute('aria-label', 'Show password');
       }
     }
 
-    // Show error message
-    function showError(message) {
+    function showMessage(message, type) {
       const errorDiv = document.getElementById('error-message');
-      errorDiv.textContent = message;
-      errorDiv.style.display = 'block';
-      document.getElementById('success-message').style.display = 'none';
-    }
-
-    // Show success message
-    function showSuccess(message) {
       const successDiv = document.getElementById('success-message');
-      successDiv.textContent = message;
-      successDiv.style.display = 'block';
-      document.getElementById('error-message').style.display = 'none';
+
+      if (type === 'error') {
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        successDiv.style.display = 'none';
+      } else {
+        successDiv.textContent = message;
+        successDiv.style.display = 'block';
+        errorDiv.style.display = 'none';
+      }
     }
 
-    // Validate signup form
+    function setButtonLoading(button, isLoading) {
+      if (isLoading) {
+        button.disabled = true;
+        button.classList.add('loading');
+        button.querySelector('.btn-text').textContent = 'Processing...';
+      } else {
+        button.disabled = false;
+        button.classList.remove('loading');
+        const isSignin = button.id === 'signin-btn';
+        button.querySelector('.btn-text').textContent = isSignin ? 'Sign In' : 'Create Account';
+        if (!isSignin) {
+          validateSignupForm();
+        }
+      }
+    }
+
     function validateSignupForm() {
       const name = document.getElementById('signup-name').value.trim();
       const email = document.getElementById('signup-email').value.trim();
@@ -560,57 +465,62 @@
       let isValid = true;
       let errorMessage = '';
 
-      // Check required fields
       if (!name || !email || !password || !confirmPassword || !role || !terms) {
         isValid = false;
       }
 
-      // Validate email
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (email && !emailRegex.test(email)) {
         errorMessage = 'Please enter a valid email address.';
         isValid = false;
       }
 
-      // Validate password match
       if (password && confirmPassword && password !== confirmPassword) {
         errorMessage = 'Passwords do not match.';
         isValid = false;
       }
 
-      // Validate password length
       if (password && password.length < 6) {
         errorMessage = 'Password must be at least 6 characters long.';
         isValid = false;
       }
 
-      // Show error if any
       if (errorMessage) {
-        showError(errorMessage);
+        showMessage(errorMessage, 'error');
       } else {
         document.getElementById('error-message').style.display = 'none';
       }
 
-      // Enable/disable submit button
       submitBtn.disabled = !isValid;
-
       return isValid;
     }
 
-    // Set button loading state
-    function setButtonLoading(button, isLoading) {
-      if (isLoading) {
-        button.disabled = true;
-        button.classList.add('loading');
-        button.querySelector('.btn-text').textContent = 'Processing...';
-      } else {
-        button.disabled = false;
-        button.classList.remove('loading');
-        const isSignin = button.id === 'signin-btn';
-        button.querySelector('.btn-text').textContent = isSignin ? 'Sign In' : 'Create Account';
-        if (!isSignin) {
-          validateSignupForm(); // Re-validate for signup
-        }
+    function handleSignIn(event) {
+      event.preventDefault();
+      const submitBtn = document.getElementById('signin-btn');
+
+      setButtonLoading(submitBtn, true);
+
+      setTimeout(() => {
+        showMessage('✅ Demo mode: Sign in successful!', 'success');
+        console.log('Sign in attempted');
+        setButtonLoading(submitBtn, false);
+      }, 1500);
+    }
+
+    function handleSignUp(event) {
+      event.preventDefault();
+
+      if (validateSignupForm()) {
+        const submitBtn = document.getElementById('signup-btn');
+
+        setButtonLoading(submitBtn, true);
+
+        setTimeout(() => {
+          showMessage('🎉 Demo mode: Account created successfully!', 'success');
+          console.log('Sign up attempted');
+          setButtonLoading(submitBtn, false);
+        }, 1500);
       }
     }
 
@@ -640,61 +550,6 @@
       // Form validation for signup
       document.getElementById('signup-form').addEventListener('input', validateSignupForm);
       document.getElementById('terms-agreement').addEventListener('change', validateSignupForm);
-
-      // Form submissions
-      document.getElementById('signin-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const submitBtn = document.getElementById('signin-btn');
-
-        setButtonLoading(submitBtn, true);
-
-        // Simulate API call
-        setTimeout(() => {
-          showSuccess('✅ Demo mode: Sign in successful!');
-          console.log('Sign in attempted');
-          setButtonLoading(submitBtn, false);
-        }, 1500);
-      });
-
-      document.getElementById('signup-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        if (validateSignupForm()) {
-          const submitBtn = document.getElementById('signup-btn');
-
-          setButtonLoading(submitBtn, true);
-
-          // Simulate API call
-          setTimeout(() => {
-            showSuccess('🎉 Demo mode: Account created successfully!');
-            console.log('Sign up attempted');
-            setButtonLoading(submitBtn, false);
-          }, 1500);
-        }
-      });
-
-      // Online/offline status
-      function updateOnlineStatus() {
-        const indicator = document.getElementById('offline-indicator');
-        if (navigator.onLine) {
-          indicator.style.display = 'none';
-          indicator.classList.remove('show');
-        } else {
-          indicator.style.display = 'block';
-          indicator.classList.add('show');
-        }
-      }
-
-      window.addEventListener('online', updateOnlineStatus);
-      window.addEventListener('offline', updateOnlineStatus);
-      updateOnlineStatus(); // Check initial status
-    });
-
-    // Initialize on window load as fallback
-    window.addEventListener('load', function() {
-      if (!window.authInitialized) {
-        document.dispatchEvent(new Event('DOMContentLoaded'));
-        window.authInitialized = true;
-      }
     });
   </script>
 </body>
