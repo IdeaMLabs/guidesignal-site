@@ -3,39 +3,576 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recruiter Dashboard</title>
+  <title>Recruiter Dashboard - GuideSignal</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f9fafb; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-    .card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 100%; }
-    h1 { color: #16a34a; margin-bottom: 1rem; }
-    button { background: #16a34a; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
-    button:hover { background: #166534; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      gap: 20px;
+    }
+
+    .header {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      border-left: 4px solid #16a34a;
+    }
+
+    h1 {
+      color: #16a34a;
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 1rem;
+    }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      border-left: 4px solid #16a34a;
+    }
+
+    .card h2 {
+      color: #16a34a;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.2s ease;
+      font-family: inherit;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #16a34a;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      background: #16a34a;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    button:hover:not(:disabled) {
+      background: #166534;
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      background: #d1d5db;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: #b91c1c;
+    }
+
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+
+    .sign-out-btn {
+      background: #6b7280;
+      margin-top: 1rem;
+    }
+
+    .sign-out-btn:hover {
+      background: #4b5563;
+    }
+
+    .job-list {
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .job-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .job-item:hover {
+      border-color: #16a34a;
+      box-shadow: 0 2px 8px rgba(22, 163, 74, 0.1);
+    }
+
+    .job-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 0.5rem;
+    }
+
+    .job-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .job-description {
+      color: #4b5563;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .job-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .loading {
+      position: relative;
+      color: transparent;
+    }
+
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 16px;
+      height: 16px;
+      margin: -8px 0 0 -8px;
+      border: 2px solid transparent;
+      border-top: 2px solid currentColor;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .message {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 14px;
+      display: none;
+    }
+
+    .message.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #6b7280;
+      font-style: italic;
+      padding: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 10px;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      .job-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Welcome, Recruiter!</h1>
-    <p>This is your dashboard. Future features: My Jobs, Candidate Management.</p>
-    <button id="signout-btn">Sign Out</button>
-  </div>
-  <script type="module">
-    import { auth, utils } from './firebase-config.js';
-    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>Recruiter Dashboard</h1>
+      <p class="subtitle">Post jobs and manage your listings</p>
+      <button id="signout-btn" class="sign-out-btn">Sign Out</button>
+    </div>
 
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Job Posting Form -->
+      <div class="card">
+        <h2>Post a New Job</h2>
+
+        <div id="form-message" class="message"></div>
+
+        <form id="job-form">
+          <div class="form-group">
+            <label for="job-title">Job Title *</label>
+            <input type="text" id="job-title" required maxlength="100" placeholder="e.g. Software Engineer">
+          </div>
+
+          <div class="form-group">
+            <label for="job-description">Job Description *</label>
+            <textarea id="job-description" required maxlength="2000" placeholder="Describe the role, responsibilities, and requirements..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="job-location">Location *</label>
+            <input type="text" id="job-location" required maxlength="100" placeholder="e.g. New York, NY or Remote">
+          </div>
+
+          <div class="form-group">
+            <label for="job-type">Job Type *</label>
+            <select id="job-type" required>
+              <option value="">Select job type</option>
+              <option value="full-time">Full-time</option>
+              <option value="part-time">Part-time</option>
+              <option value="internship">Internship</option>
+              <option value="contract">Contract</option>
+            </select>
+          </div>
+
+          <button type="submit" id="submit-btn">
+            <span class="btn-text">Post Job</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Job List -->
+      <div class="card">
+        <h2>My Job Listings</h2>
+
+        <div id="job-list" class="job-list">
+          <div class="empty-state">
+            Loading your jobs...
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth, utils, dbFunctions } from './firebase-config.js';
+    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import {
+      collection,
+      addDoc,
+      query,
+      where,
+      orderBy,
+      onSnapshot,
+      deleteDoc,
+      doc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { db } from './firebase-config.js';
+
+    let currentUser = null;
+    let unsubscribeJobs = null;
+
+    // Authentication state management
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.href = 'auth.html';
-      } else {
+        return;
+      }
+
+      try {
         const role = await utils.getUserRole(user.uid);
         if (role !== 'recruiter') {
           window.location.href = 'auth.html';
+          return;
         }
+
+        currentUser = user;
+        initializeDashboard();
+      } catch (error) {
+        console.error('Error checking user role:', error);
+        window.location.href = 'auth.html';
       }
     });
 
-    document.getElementById('signout-btn').addEventListener('click', async () => {
-      await signOut(auth);
-      window.location.href = 'auth.html';
+    function initializeDashboard() {
+      setupJobForm();
+      setupJobList();
+      setupSignOut();
+    }
+
+    // Job form handling
+    function setupJobForm() {
+      const form = document.getElementById('job-form');
+      form.addEventListener('submit', handleJobSubmit);
+    }
+
+    async function handleJobSubmit(e) {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('submit-btn');
+      const btnText = submitBtn.querySelector('.btn-text');
+
+      // Disable button and show loading
+      submitBtn.disabled = true;
+      submitBtn.classList.add('loading');
+      btnText.textContent = 'Posting...';
+
+      try {
+        // Get form data
+        const formData = {
+          title: document.getElementById('job-title').value.trim(),
+          description: document.getElementById('job-description').value.trim(),
+          location: document.getElementById('job-location').value.trim(),
+          type: document.getElementById('job-type').value,
+          employerId: currentUser.uid,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+          status: 'active',
+          applications: 0
+        };
+
+        // Validate form data
+        if (!formData.title || !formData.description || !formData.location || !formData.type) {
+          throw new Error('Please fill in all required fields');
+        }
+
+        // Create job document in Firestore
+        const docRef = await addDoc(collection(db, 'jobs'), formData);
+
+        console.log('Job created with ID:', docRef.id);
+
+        // Show success message
+        showMessage('Job posted successfully!', 'success');
+
+        // Reset form
+        document.getElementById('job-form').reset();
+
+      } catch (error) {
+        console.error('Error posting job:', error);
+        showMessage(error.message || 'Failed to post job. Please try again.', 'error');
+      } finally {
+        // Re-enable button
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+        btnText.textContent = 'Post Job';
+      }
+    }
+
+    // Job list handling with real-time updates
+    function setupJobList() {
+      if (!currentUser) return;
+
+      const jobListContainer = document.getElementById('job-list');
+
+      // Set up real-time listener for recruiter's jobs
+      const q = query(
+        collection(db, 'jobs'),
+        where('employerId', '==', currentUser.uid),
+        orderBy('createdAt', 'desc')
+      );
+
+      unsubscribeJobs = onSnapshot(q, (querySnapshot) => {
+        const jobs = [];
+        querySnapshot.forEach((doc) => {
+          jobs.push({ id: doc.id, ...doc.data() });
+        });
+
+        renderJobList(jobs);
+      }, (error) => {
+        console.error('Error loading jobs:', error);
+        jobListContainer.innerHTML = '<div class="empty-state">Error loading jobs. Please refresh the page.</div>';
+      });
+    }
+
+    function renderJobList(jobs) {
+      const jobListContainer = document.getElementById('job-list');
+
+      if (jobs.length === 0) {
+        jobListContainer.innerHTML = '<div class="empty-state">No jobs posted yet. Create your first job posting!</div>';
+        return;
+      }
+
+      const jobsHTML = jobs.map(job => `
+        <div class="job-item" data-job-id="${job.id}">
+          <div class="job-title">${escapeHtml(job.title)}</div>
+          <div class="job-meta">
+            <span>📍 ${escapeHtml(job.location)}</span>
+            <span>💼 ${escapeHtml(job.type)}</span>
+            <span>📅 ${formatDate(job.createdAt)}</span>
+          </div>
+          <div class="job-description">${escapeHtml(job.description)}</div>
+          <div class="job-actions">
+            <button class="btn-danger btn-small delete-job-btn" data-job-id="${job.id}">
+              Delete
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      jobListContainer.innerHTML = jobsHTML;
+
+      // Add delete event listeners
+      jobListContainer.querySelectorAll('.delete-job-btn').forEach(btn => {
+        btn.addEventListener('click', handleDeleteJob);
+      });
+    }
+
+    // Job deletion
+    async function handleDeleteJob(e) {
+      const jobId = e.target.dataset.jobId;
+      const jobTitle = e.target.closest('.job-item').querySelector('.job-title').textContent;
+
+      if (!confirm(`Are you sure you want to delete "${jobTitle}"?`)) {
+        return;
+      }
+
+      const deleteBtn = e.target;
+      deleteBtn.disabled = true;
+      deleteBtn.textContent = 'Deleting...';
+
+      try {
+        await deleteDoc(doc(db, 'jobs', jobId));
+        console.log('Job deleted:', jobId);
+        showMessage('Job deleted successfully!', 'success');
+      } catch (error) {
+        console.error('Error deleting job:', error);
+        showMessage('Failed to delete job. Please try again.', 'error');
+        deleteBtn.disabled = false;
+        deleteBtn.textContent = 'Delete';
+      }
+    }
+
+    // Sign out
+    function setupSignOut() {
+      document.getElementById('signout-btn').addEventListener('click', async () => {
+        try {
+          // Clean up listeners
+          if (unsubscribeJobs) {
+            unsubscribeJobs();
+          }
+
+          await signOut(auth);
+          window.location.href = 'auth.html';
+        } catch (error) {
+          console.error('Error signing out:', error);
+          showMessage('Error signing out. Please try again.', 'error');
+        }
+      });
+    }
+
+    // Utility functions
+    function showMessage(message, type) {
+      const messageEl = document.getElementById('form-message');
+      messageEl.textContent = message;
+      messageEl.className = `message ${type}`;
+      messageEl.style.display = 'block';
+
+      // Auto-hide after 5 seconds
+      setTimeout(() => {
+        messageEl.style.display = 'none';
+      }, 5000);
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatDate(timestamp) {
+      if (!timestamp) return 'Unknown date';
+
+      let date;
+      if (timestamp.toDate) {
+        // Firestore timestamp
+        date = timestamp.toDate();
+      } else if (timestamp instanceof Date) {
+        date = timestamp;
+      } else {
+        // String or other format
+        date = new Date(timestamp);
+      }
+
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+
+    // Clean up on page unload
+    window.addEventListener('beforeunload', () => {
+      if (unsubscribeJobs) {
+        unsubscribeJobs();
+      }
     });
   </script>
 </body>
