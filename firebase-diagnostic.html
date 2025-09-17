@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Configuration Diagnostic</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 20px auto; padding: 20px; }
+        .section { background: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #007bff; }
+        .error { border-left-color: #dc3545; background: #f8d7da; }
+        .success { border-left-color: #28a745; background: #d4edda; }
+        .warning { border-left-color: #ffc107; background: #fff3cd; }
+        .info { border-left-color: #17a2b8; background: #d1ecf1; }
+        pre { background: #f1f3f4; padding: 15px; border-radius: 4px; overflow-x: auto; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+        .test-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .test-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <h1>🔥 Firebase Configuration Diagnostic</h1>
+    <p>This tool will help diagnose the <code>Firebase: Error (auth/configuration-not-found)</code> issue.</p>
+
+    <div id="initial-status" class="section">
+        <h2>🔍 Initial Checks</h2>
+        <div id="basic-status">Running initial diagnostics...</div>
+    </div>
+
+    <div class="test-grid">
+        <div>
+            <div class="section">
+                <h3>🌐 Environment Information</h3>
+                <div id="env-info"></div>
+            </div>
+
+            <div class="section">
+                <h3>⚙️ Configuration Test</h3>
+                <button onclick="testConfig()">Test Firebase Config</button>
+                <div id="config-result"></div>
+            </div>
+        </div>
+
+        <div>
+            <div class="section">
+                <h3>🔑 Authentication Test</h3>
+                <button onclick="testAuth()">Test Auth Service</button>
+                <div id="auth-result"></div>
+            </div>
+
+            <div class="section">
+                <h3>🌍 Domain Verification</h3>
+                <button onclick="testDomains()">Check Domain Authorization</button>
+                <div id="domain-result"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>🧪 Live Authentication Test</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0;">
+            <input type="email" id="test-email" placeholder="test@example.com" value="test@example.com">
+            <input type="password" id="test-password" placeholder="password123" value="TestPass123!">
+        </div>
+        <button onclick="testSignIn()">Test Sign In</button>
+        <button onclick="testSignUp()">Test Sign Up</button>
+        <div id="auth-test-result"></div>
+    </div>
+
+    <div class="section">
+        <h3>📋 Diagnostic Summary</h3>
+        <div id="summary"></div>
+    </div>
+
+    <script type="module">
+        let firebaseConfig, authFunctions, auth, db;
+        let diagnosticResults = {};
+
+        // Initialize diagnostics
+        async function initDiagnostics() {
+            const basicStatus = document.getElementById('basic-status');
+
+            try {
+                // Environment info
+                document.getElementById('env-info').innerHTML = `
+                    <p><strong>Current URL:</strong> ${window.location.href}</p>
+                    <p><strong>Domain:</strong> ${window.location.hostname}</p>
+                    <p><strong>Protocol:</strong> ${window.location.protocol}</p>
+                    <p><strong>Port:</strong> ${window.location.port || 'default'}</p>
+                    <p><strong>User Agent:</strong> ${navigator.userAgent.substring(0, 100)}...</p>
+                `;
+
+                // Try to load Firebase config
+                basicStatus.innerHTML = '<p>🔄 Loading Firebase configuration...</p>';
+
+                const module = await import('./firebase-config.js');
+                firebaseConfig = module.firebaseConfig || null;
+                authFunctions = module.authFunctions;
+                auth = module.auth;
+                db = module.db;
+
+                basicStatus.innerHTML = '<p class="success">✅ Firebase module loaded successfully</p>';
+                diagnosticResults.moduleLoad = true;
+
+            } catch (error) {
+                basicStatus.innerHTML = `<p class="error">❌ Failed to load Firebase module: ${error.message}</p>`;
+                diagnosticResults.moduleLoad = false;
+                diagnosticResults.moduleError = error.message;
+            }
+        }
+
+        // Test Firebase configuration
+        window.testConfig = function() {
+            const resultDiv = document.getElementById('config-result');
+
+            if (!firebaseConfig) {
+                resultDiv.innerHTML = '<div class="error">❌ Firebase config not loaded</div>';
+                diagnosticResults.configValid = false;
+                return;
+            }
+
+            const requiredFields = ['apiKey', 'authDomain', 'projectId'];
+            const missingFields = requiredFields.filter(field => !firebaseConfig[field]);
+
+            if (missingFields.length > 0) {
+                resultDiv.innerHTML = `<div class="error">❌ Missing required fields: ${missingFields.join(', ')}</div>`;
+                diagnosticResults.configValid = false;
+                return;
+            }
+
+            resultDiv.innerHTML = `
+                <div class="success">✅ Configuration valid</div>
+                <pre>${JSON.stringify(firebaseConfig, null, 2)}</pre>
+            `;
+            diagnosticResults.configValid = true;
+        };
+
+        // Test Firebase Auth service
+        window.testAuth = async function() {
+            const resultDiv = document.getElementById('auth-result');
+            resultDiv.innerHTML = '<p>🔄 Testing authentication service...</p>';
+
+            try {
+                if (!auth) {
+                    throw new Error('Auth instance not available');
+                }
+
+                // Test basic auth operations
+                const currentUser = auth.currentUser;
+
+                resultDiv.innerHTML = `
+                    <div class="success">✅ Auth service accessible</div>
+                    <p><strong>Current User:</strong> ${currentUser ? currentUser.email : 'None'}</p>
+                    <p><strong>Auth Domain:</strong> ${firebaseConfig?.authDomain}</p>
+                `;
+                diagnosticResults.authService = true;
+
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Auth service error: ${error.message}</div>`;
+                diagnosticResults.authService = false;
+                diagnosticResults.authError = error.message;
+            }
+        };
+
+        // Test domain authorization
+        window.testDomains = function() {
+            const resultDiv = document.getElementById('domain-result');
+            const currentDomain = window.location.hostname;
+            const protocol = window.location.protocol;
+            const port = window.location.port;
+
+            const authDomain = firebaseConfig?.authDomain;
+            const expectedDomains = [
+                'localhost',
+                '127.0.0.1',
+                'guide-signal.com',
+                'www.guide-signal.com',
+                'ideamlabs.github.io'
+            ];
+
+            let domainStatus = '';
+            if (expectedDomains.includes(currentDomain)) {
+                domainStatus = '<div class="success">✅ Current domain is in expected list</div>';
+            } else {
+                domainStatus = '<div class="warning">⚠️ Current domain not in expected authorized list</div>';
+            }
+
+            resultDiv.innerHTML = `
+                ${domainStatus}
+                <p><strong>Current Domain:</strong> ${currentDomain}</p>
+                <p><strong>Auth Domain:</strong> ${authDomain}</p>
+                <p><strong>Expected Authorized Domains:</strong></p>
+                <ul>${expectedDomains.map(d => `<li>${d}</li>`).join('')}</ul>
+                <div class="info">
+                    <strong>Action Required:</strong> Ensure all domains above are added to Firebase Console → Authentication → Settings → Authorized Domains
+                </div>
+            `;
+        };
+
+        // Test actual authentication
+        window.testSignIn = async function() {
+            const resultDiv = document.getElementById('auth-test-result');
+            const email = document.getElementById('test-email').value;
+            const password = document.getElementById('test-password').value;
+
+            resultDiv.innerHTML = '<p>🔄 Testing sign-in...</p>';
+
+            try {
+                if (!authFunctions) {
+                    throw new Error('authFunctions not available');
+                }
+
+                const result = await authFunctions.signInUser(email, password);
+
+                if (result.success) {
+                    resultDiv.innerHTML = '<div class="success">✅ Sign-in test successful</div>';
+                    diagnosticResults.signInTest = true;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Sign-in failed: ${result.error}</div>`;
+                    diagnosticResults.signInTest = false;
+                    diagnosticResults.signInError = result.error;
+                }
+
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Sign-in error: ${error.message}</div>`;
+                diagnosticResults.signInTest = false;
+                diagnosticResults.signInError = error.message;
+            }
+        };
+
+        // Test sign up
+        window.testSignUp = async function() {
+            const resultDiv = document.getElementById('auth-test-result');
+            const email = document.getElementById('test-email').value;
+            const password = document.getElementById('test-password').value;
+
+            resultDiv.innerHTML = '<p>🔄 Testing sign-up...</p>';
+
+            try {
+                if (!authFunctions) {
+                    throw new Error('authFunctions not available');
+                }
+
+                const result = await authFunctions.registerUser(email, password, 'Test User', 'student');
+
+                if (result.success) {
+                    resultDiv.innerHTML = '<div class="success">✅ Sign-up test successful</div>';
+                    diagnosticResults.signUpTest = true;
+                    // Clean up test user
+                    if (result.user) {
+                        await result.user.delete();
+                    }
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Sign-up failed: ${result.error}</div>`;
+                    diagnosticResults.signUpTest = false;
+                    diagnosticResults.signUpError = result.error;
+                }
+
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Sign-up error: ${error.message}</div>`;
+                diagnosticResults.signUpTest = false;
+                diagnosticResults.signUpError = error.message;
+            }
+        };
+
+        // Generate diagnostic summary
+        function updateSummary() {
+            const summaryDiv = document.getElementById('summary');
+            const issues = [];
+            const solutions = [];
+
+            if (!diagnosticResults.moduleLoad) {
+                issues.push('Firebase module failed to load');
+                solutions.push('Check firebase-config.js file exists and has no syntax errors');
+            }
+
+            if (!diagnosticResults.configValid) {
+                issues.push('Firebase configuration invalid');
+                solutions.push('Verify all required fields (apiKey, authDomain, projectId) are present in config');
+            }
+
+            if (!diagnosticResults.authService) {
+                issues.push('Firebase Auth service not accessible');
+                solutions.push('Check if Authentication is enabled in Firebase Console');
+            }
+
+            if (diagnosticResults.signInError?.includes('configuration-not-found')) {
+                issues.push('Firebase project configuration not found');
+                solutions.push('Verify project ID and ensure Authentication is enabled in Firebase Console');
+                solutions.push('Check that API key is not restricted to wrong domains');
+            }
+
+            let summaryHTML = '';
+
+            if (issues.length > 0) {
+                summaryHTML += `
+                    <div class="error">
+                        <h4>🚨 Issues Found:</h4>
+                        <ul>${issues.map(issue => `<li>${issue}</li>`).join('')}</ul>
+                    </div>
+                    <div class="info">
+                        <h4>💡 Recommended Solutions:</h4>
+                        <ol>${solutions.map(solution => `<li>${solution}</li>`).join('')}</ol>
+                    </div>
+                `;
+            } else {
+                summaryHTML = '<div class="success">✅ All tests passed! Firebase configuration appears to be working correctly.</div>';
+            }
+
+            summaryHTML += `
+                <div class="info">
+                    <h4>📊 Test Results:</h4>
+                    <pre>${JSON.stringify(diagnosticResults, null, 2)}</pre>
+                </div>
+            `;
+
+            summaryDiv.innerHTML = summaryHTML;
+        }
+
+        // Auto-update summary when tests are run
+        const originalTestConfig = window.testConfig;
+        const originalTestAuth = window.testAuth;
+
+        window.testConfig = function() {
+            originalTestConfig();
+            setTimeout(updateSummary, 500);
+        };
+
+        window.testAuth = async function() {
+            await originalTestAuth();
+            setTimeout(updateSummary, 500);
+        };
+
+        // Initialize on page load
+        initDiagnostics().then(() => {
+            // Auto-run basic tests
+            setTimeout(() => {
+                window.testConfig();
+                window.testAuth();
+                window.testDomains();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
