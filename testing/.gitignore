@@ -7,12 +7,3 @@ serviceAccountKey.json
 
 # Logs
 *.log
-npm-debug.log*
-
-# Environment variables
-.env
-.env.local
-
-# OS generated files
-.DS_Store
-Thumbs.db

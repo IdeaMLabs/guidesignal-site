@@ -1,20 +1,16 @@
 {
   "name": "guidesignal-test-agent",
-  "version": "1.1.0",
-  "description": "Firebase authentication testing agent for GuideSignal",
-  "main": "agent.js",
+  "version": "1.0.0",
+  "main": "setup.js",
   "type": "module",
   "scripts": {
     "test": "node agent.js all",
     "test:student": "node agent.js student",
-    "test:recruiter": "node agent.js recruiter",
-    "test:jobseeker": "node agent.js job_seeker"
+    "test:jobseeker": "node agent.js jobseeker",
+    "test:recruiter": "node agent.js recruiter"
   },
   "dependencies": {
     "firebase": "^9.23.0",
     "firebase-admin": "^11.11.1"
-  },
-  "devDependencies": {
-    "@types/node": "^20.0.0"
   }
 }
