@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recruiter Dashboard</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background: #f8fffe;
-      color: #333;
+      background: #f8f9fa;
     }
     header {
       background: #16a34a;
@@ -20,78 +19,65 @@
       justify-content: space-between;
       align-items: center;
     }
+    main {
+      padding: 1.5rem;
+    }
     .filters {
       display: flex;
       gap: 1rem;
-      padding: 1rem;
-      flex-wrap: wrap;
-    }
-    select, input {
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
+      margin-bottom: 1.5rem;
     }
     .job-list {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1rem;
-      padding: 1rem;
     }
     .job-card {
-      background: #fff;
-      border: 2px solid #bbf7d0;
-      border-radius: 8px;
+      background: white;
       padding: 1rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
-    .job-card h3 {
-      margin: 0 0 0.5rem 0;
-      color: #16a34a;
-    }
-    .status {
-      font-weight: bold;
-      margin-top: 0.5rem;
-    }
-    .signout {
-      background: #fff;
-      color: #16a34a;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .signout:hover {
-      background: #e6f9ed;
+    .loading, .empty {
+      text-align: center;
+      margin-top: 2rem;
+      font-style: italic;
+      color: #666;
     }
   </style>
 </head>
 <body>
   <header>
     <h2>Recruiter Dashboard</h2>
-    <button id="signOutBtn" class="signout">Sign Out</button>
+    <button id="signOutBtn">Sign Out</button>
   </header>
-
-  <section class="filters">
-    <select id="statusFilter">
-      <option value="All">All Jobs</option>
-      <option value="active">Active</option>
-      <option value="closed">Closed</option>
-    </select>
-    <input type="text" id="searchBox" placeholder="Search by job title..."/>
-  </section>
-
   <main>
+    <div class="filters">
+      <select id="statusFilter">
+        <option value="All">All Jobs</option>
+        <option value="active">Active</option>
+        <option value="closed">Closed</option>
+      </select>
+      <select id="typeFilter">
+        <option value="All">All Types</option>
+        <option value="Full-time">Full-time</option>
+        <option value="Part-time">Part-time</option>
+        <option value="Internship">Internship</option>
+      </select>
+      <input type="text" id="searchBox" placeholder="Search by job title...">
+    </div>
+    <div id="loading" class="loading">Loading jobs...</div>
     <div id="jobList" class="job-list"></div>
+    <div id="empty" class="empty" style="display:none;">No jobs found.</div>
   </main>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { getFirestore, collection, query, where, onSnapshot, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-    // ✅ Firebase config from firebase-client.js
+    // ✅ Replace with your firebase-config.js values
     const firebaseConfig = {
       apiKey: "AIzaSyBJOVbMoHfdxHexsfqsbYsvFzFqaKBXC_s",
       authDomain: "guidesignal.firebaseapp.com",
@@ -103,78 +89,92 @@
     const db = getFirestore(app);
 
     const jobList = document.getElementById("jobList");
-    const statusFilter = document.getElementById("statusFilter");
-    const searchBox = document.getElementById("searchBox");
+    const loading = document.getElementById("loading");
+    const empty = document.getElementById("empty");
 
-    let currentUser = null;
+    const statusFilter = document.getElementById("statusFilter");
+    const typeFilter = document.getElementById("typeFilter");
+    const searchBox = document.getElementById("searchBox");
+    const signOutBtn = document.getElementById("signOutBtn");
+
     let unsubscribe = null;
 
-    function renderJobs(snapshot) {
-      jobList.innerHTML = "";
-      if (snapshot.empty) {
-        jobList.innerHTML = "<p>No jobs found.</p>";
+    // 🔐 Auth check
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "auth.html";
         return;
       }
-      snapshot.forEach(doc => {
-        const job = doc.data();
-        const div = document.createElement("div");
-        div.className = "job-card";
-        div.innerHTML = `
-          <h3>${job.title}</h3>
-          <p>${job.description || ""}</p>
-          <p><strong>Location:</strong> ${job.location || "N/A"}</p>
-          <p><strong>Type:</strong> ${job.type || "N/A"}</p>
-          <p class="status">Status: ${job.status}</p>
-          <p><small>Created: ${job.createdAt?.toDate?.().toLocaleDateString?.() || ""}</small></p>
-        `;
-        jobList.appendChild(div);
-      });
-    }
 
-    function listenForJobs() {
-      if (unsubscribe) unsubscribe();
-      let q = query(
-        collection(db, "jobs"),
-        where("employerId", "==", currentUser.uid),
-        orderBy("createdAt", "desc")
-      );
-      unsubscribe = onSnapshot(q, snapshot => {
-        const status = statusFilter.value;
-        const search = searchBox.value.toLowerCase();
-        const filteredDocs = snapshot.docs.filter(doc => {
-          const job = doc.data();
-          const matchesStatus = status === "All" || job.status === status;
-          const matchesSearch = job.title?.toLowerCase().includes(search);
-          return matchesStatus && matchesSearch;
-        });
-        renderJobs({ forEach: fn => filteredDocs.forEach(fn), empty: filteredDocs.length === 0 });
-      });
-    }
-
-    onAuthStateChanged(auth, async user => {
-      if (user) {
-        currentUser = user;
-        // 🔐 Role check
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (!userDoc.exists() || userDoc.data().role !== "recruiter") {
-          alert("Access denied: Recruiters only.");
-          window.location.href = "auth.html";
-          return;
-        }
-        listenForJobs();
-      } else {
+      // Verify recruiter role
+      const res = await fetch(`https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/users/${user.uid}`);
+      const data = await res.json();
+      if (!data.fields || data.fields.role.stringValue !== "recruiter") {
+        alert("Unauthorized. Recruiters only.");
+        await signOut(auth);
         window.location.href = "auth.html";
+        return;
       }
+
+      loadJobs();
     });
 
-    statusFilter.addEventListener("change", listenForJobs);
+    function loadJobs() {
+      if (unsubscribe) unsubscribe();
+
+      let q = collection(db, "jobs");
+
+      unsubscribe = onSnapshot(q, (snapshot) => {
+        jobList.innerHTML = "";
+        loading.style.display = "none";
+
+        let jobs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        // Apply filters
+        const statusVal = statusFilter.value;
+        const typeVal = typeFilter.value;
+        const searchVal = searchBox.value.toLowerCase();
+
+        jobs = jobs.filter(job => {
+          const matchesStatus = statusVal === "All" || job.status === statusVal;
+          const matchesType = typeVal === "All" || (job.type && job.type === typeVal);
+          const matchesSearch = !searchVal || (job.title && job.title.toLowerCase().includes(searchVal));
+          return matchesStatus && matchesType && matchesSearch;
+        });
+
+        if (jobs.length === 0) {
+          empty.style.display = "block";
+          return;
+        } else {
+          empty.style.display = "none";
+        }
+
+        jobs.forEach(job => {
+          const card = document.createElement("div");
+          card.className = "job-card";
+          card.innerHTML = `
+            <h3>${job.title || "Untitled Job"}</h3>
+            <p><strong>Type:</strong> ${job.type || "N/A"}</p>
+            <p><strong>Status:</strong> ${job.status || "N/A"}</p>
+            <p><strong>Location:</strong> ${job.location || "Unknown"}</p>
+            <p><strong>Description:</strong> ${job.description || "No description provided."}</p>
+          `;
+          jobList.appendChild(card);
+        });
+      });
+    }
+
+    statusFilter.addEventListener("change", loadJobs);
+    typeFilter.addEventListener("change", loadJobs);
     searchBox.addEventListener("input", () => {
-      clearTimeout(searchBox._timer);
-      searchBox._timer = setTimeout(listenForJobs, 300);
+      if (unsubscribe) unsubscribe();
+      loadJobs();
     });
 
-    document.getElementById("signOutBtn").addEventListener("click", () => {
-      signOut(auth).then(() => window.location.href = "auth.html");
+    signOutBtn.addEventListener("click", () => {
+      signOut(auth).then(() => {
+        window.location.href = "auth.html";
+      });
     });
   </script>
 </body>
