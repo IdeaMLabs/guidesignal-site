@@ -2,31 +2,29 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Recruiter Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f9fafb; }
-    header { background: #16a34a; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
-    h1 { margin: 0; font-size: 1.25rem; }
-    .filters { display: flex; gap: 1rem; margin: 1rem; }
-    .job-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; padding: 1rem; }
-    .job-card { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
-    .job-card h3 { margin: 0; }
-    .job-card input, .job-card textarea, .job-card select {
-      width: 100%; padding: 0.5rem; margin-top: 0.25rem; border: 1px solid #ccc; border-radius: 4px;
-    }
-    .job-card button { margin-top: 0.5rem; padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; }
-    .edit-btn { background: #facc15; }
+    body { font-family: Arial, sans-serif; background: #f9fafb; margin: 0; padding: 20px; }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    header h1 { color: #16a34a; }
+    button { padding: 6px 12px; margin: 2px; border: none; cursor: pointer; border-radius: 4px; }
+    .edit-btn { background: #facc15; color: black; }
     .save-btn { background: #16a34a; color: white; }
     .cancel-btn { background: #dc2626; color: white; }
-    .loading, .empty { text-align: center; margin-top: 2rem; font-size: 1.1rem; }
+    .delete-btn { background: #dc2626; color: white; }
+    .job-card { background: white; padding: 16px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 16px; }
+    .filters { display: flex; gap: 10px; margin-bottom: 20px; }
+    .hidden { display: none; }
+    /* Modal styles */
+    .modal { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; }
+    .modal-content { background:white; padding:20px; border-radius:8px; max-width:400px; text-align:center; }
   </style>
 </head>
 <body>
   <header>
     <h1>Recruiter Dashboard</h1>
-    <button id="signOutBtn">Sign Out</button>
+    <button id="signOutBtn" class="cancel-btn">Sign Out</button>
   </header>
 
   <section class="filters">
@@ -37,21 +35,31 @@
     </select>
     <select id="typeFilter">
       <option value="all">All Types</option>
-      <option value="Full-time">Full-time</option>
-      <option value="Part-time">Part-time</option>
-      <option value="Internship">Internship</option>
+      <option value="full-time">Full-time</option>
+      <option value="part-time">Part-time</option>
+      <option value="internship">Internship</option>
     </select>
-    <input type="text" id="searchBox" placeholder="Search jobs by title..." />
+    <input type="text" id="searchBox" placeholder="Search jobs by title..."/>
   </section>
 
-  <div id="loading" class="loading">Loading jobs...</div>
-  <div id="empty" class="empty" style="display:none;">No jobs found.</div>
-  <div id="jobList" class="job-list"></div>
+  <section id="jobsList"></section>
+  <p id="loadingMsg">Loading jobs...</p>
+  <p id="emptyMsg" class="hidden">No jobs found.</p>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Confirm Deletion</h3>
+      <p>Are you sure you want to delete this job?</p>
+      <button id="confirmDeleteBtn" class="delete-btn">Yes, Delete</button>
+      <button id="cancelDeleteBtn" class="cancel-btn">Cancel</button>
+    </div>
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { getFirestore, collection, query, where, onSnapshot, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { getFirestore, collection, query, where, onSnapshot, updateDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
     // ✅ Firebase config with actual values from firebase-config.js
     const firebaseConfig = {
@@ -64,132 +72,104 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const jobList = document.getElementById("jobList");
-    const loadingEl = document.getElementById("loading");
-    const emptyEl = document.getElementById("empty");
-    const statusFilter = document.getElementById("statusFilter");
-    const typeFilter = document.getElementById("typeFilter");
-    const searchBox = document.getElementById("searchBox");
-    const signOutBtn = document.getElementById("signOutBtn");
+    const jobsList = document.getElementById("jobsList");
+    const loadingMsg = document.getElementById("loadingMsg");
+    const emptyMsg = document.getElementById("emptyMsg");
 
+    const deleteModal = document.getElementById("deleteModal");
+    const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+    const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+    let jobToDelete = null;
     let currentUser = null;
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        window.location.href = "auth.html";
-        return;
-      }
-      currentUser = user;
+    function renderJobCard(jobDoc) {
+      const job = jobDoc.data();
+      const div = document.createElement("div");
+      div.className = "job-card";
+      div.innerHTML = `
+        <h3>${job.title || "Untitled"}</h3>
+        <p>${job.description || "No description"}</p>
+        <p><strong>Type:</strong> ${job.type || "N/A"}</p>
+        <p><strong>Status:</strong> ${job.status || "N/A"}</p>
+        <button class="edit-btn">Edit</button>
+        <button class="delete-btn">Delete</button>
+      `;
 
-      // Check role
-      const token = await user.getIdTokenResult();
-      if (!token.claims.role || token.claims.role !== "recruiter") {
-        alert("Access denied. Recruiters only.");
-        signOut(auth);
-        return;
-      }
+      div.querySelector(".delete-btn").addEventListener("click", () => {
+        jobToDelete = jobDoc.id;
+        deleteModal.classList.remove("hidden");
+      });
 
-      loadJobs();
-    });
+      return div;
+    }
 
     function loadJobs() {
-      loadingEl.style.display = "block";
-      jobList.innerHTML = "";
-      emptyEl.style.display = "none";
+      if (!currentUser) return;
 
-      const q = query(collection(db, "jobs"), where("employerId", "==", currentUser.uid));
-      onSnapshot(q, (snapshot) => {
-        loadingEl.style.display = "none";
-        jobList.innerHTML = "";
+      loadingMsg.classList.remove("hidden");
+      emptyMsg.classList.add("hidden");
+      jobsList.innerHTML = "";
 
+      const jobsRef = collection(db, "jobs");
+      const q = query(jobsRef, where("employerId", "==", currentUser.uid));
+      onSnapshot(q, snapshot => {
+        jobsList.innerHTML = "";
+        loadingMsg.classList.add("hidden");
         if (snapshot.empty) {
-          emptyEl.style.display = "block";
+          emptyMsg.classList.remove("hidden");
           return;
         }
-
-        snapshot.forEach((docSnap) => {
-          const job = docSnap.data();
-          const jobId = docSnap.id;
-          renderJob(job, jobId);
+        snapshot.forEach(docSnap => {
+          jobsList.appendChild(renderJobCard(docSnap));
         });
       });
     }
 
-    function renderJob(job, jobId) {
-      const card = document.createElement("div");
-      card.className = "job-card";
-
-      let editing = false;
-
-      const titleEl = document.createElement("h3");
-      titleEl.textContent = job.title || "Untitled Job";
-
-      const descEl = document.createElement("p");
-      descEl.textContent = job.description || "No description.";
-
-      const infoEl = document.createElement("p");
-      infoEl.textContent = `${job.type || "N/A"} | ${job.status || "N/A"}`;
-
-      const editBtn = document.createElement("button");
-      editBtn.textContent = "Edit";
-      editBtn.className = "edit-btn";
-
-      editBtn.onclick = () => {
-        if (!editing) {
-          editing = true;
-          card.innerHTML = `
-            <input id="titleInput" value="${job.title || ""}" />
-            <textarea id="descInput">${job.description || ""}</textarea>
-            <select id="typeInput">
-              <option value="Full-time" ${job.type === "Full-time" ? "selected" : ""}>Full-time</option>
-              <option value="Part-time" ${job.type === "Part-time" ? "selected" : ""}>Part-time</option>
-              <option value="Internship" ${job.type === "Internship" ? "selected" : ""}>Internship</option>
-            </select>
-            <select id="statusInput">
-              <option value="active" ${job.status === "active" ? "selected" : ""}>Active</option>
-              <option value="closed" ${job.status === "closed" ? "selected" : ""}>Closed</option>
-            </select>
-            <button id="saveBtn" class="save-btn">Save</button>
-            <button id="cancelBtn" class="cancel-btn">Cancel</button>
-          `;
-
-          const saveBtn = card.querySelector("#saveBtn");
-          const cancelBtn = card.querySelector("#cancelBtn");
-
-          saveBtn.onclick = async () => {
-            saveBtn.disabled = true;
-            try {
-              await updateDoc(doc(db, "jobs", jobId), {
-                title: card.querySelector("#titleInput").value,
-                description: card.querySelector("#descInput").value,
-                type: card.querySelector("#typeInput").value,
-                status: card.querySelector("#statusInput").value,
-              });
-              alert("✅ Job updated successfully!");
-              editing = false;
-              loadJobs();
-            } catch (err) {
-              alert("❌ Error updating job: " + err.message);
-            }
-          };
-
-          cancelBtn.onclick = () => {
-            editing = false;
-            loadJobs();
-          };
+    confirmDeleteBtn.addEventListener("click", async () => {
+      if (jobToDelete) {
+        try {
+          await deleteDoc(doc(db, "jobs", jobToDelete));
+          alert("Job deleted successfully!");
+        } catch (err) {
+          alert("Error deleting job: " + err.message);
         }
-      };
+      }
+      jobToDelete = null;
+      deleteModal.classList.add("hidden");
+    });
 
-      card.appendChild(titleEl);
-      card.appendChild(descEl);
-      card.appendChild(infoEl);
-      card.appendChild(editBtn);
+    cancelDeleteBtn.addEventListener("click", () => {
+      jobToDelete = null;
+      deleteModal.classList.add("hidden");
+    });
 
-      jobList.appendChild(card);
-    }
+    document.getElementById("signOutBtn").addEventListener("click", () => {
+      signOut(auth).then(() => { window.location.href = "auth.html"; });
+    });
 
-    signOutBtn.addEventListener("click", () => {
-      signOut(auth);
+    onAuthStateChanged(auth, async user => {
+      if (!user) {
+        window.location.href = "auth.html";
+        return;
+      }
+
+      currentUser = user;
+
+      // ✅ Verify recruiter role in Firestore before allowing access
+      try {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (!userDoc.exists() || userDoc.data().role !== "recruiter") {
+          alert("Access denied. Recruiters only.");
+          await signOut(auth);
+          window.location.href = "auth.html";
+          return;
+        }
+        loadJobs();
+      } catch (error) {
+        console.error("Error checking user role:", error);
+        alert("Error verifying access. Please try again.");
+        window.location.href = "auth.html";
+      }
     });
   </script>
 </body>
