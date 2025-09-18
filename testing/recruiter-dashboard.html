@@ -14,10 +14,14 @@
     .cancel-btn { background: #dc2626; color: white; }
     .delete-btn { background: #dc2626; color: white; }
     .job-card { background: white; padding: 16px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 16px; }
+    .applicant-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb; }
+    .applicant-item { background: #f8f9fa; padding: 12px; margin: 8px 0; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+    .applicant-info { flex: 1; }
+    .status-dropdown { padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; }
     .filters { display: flex; gap: 10px; margin-bottom: 20px; }
     .hidden { display: none; }
     /* Modal styles */
-    .modal { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; }
+    .modal { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index: 1000; }
     .modal-content { background:white; padding:20px; border-radius:8px; max-width:400px; text-align:center; }
   </style>
 </head>
@@ -56,6 +60,18 @@
     </div>
   </div>
 
+  <!-- Status Change Confirmation Modal -->
+  <div id="statusModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Confirm Status Change</h2>
+      <p id="statusModalMessage" class="mb-6"></p>
+      <div style="display: flex; justify-content: center; gap: 12px;">
+        <button id="cancelStatusBtn" class="cancel-btn">Cancel</button>
+        <button id="confirmStatusBtn" class="save-btn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -79,8 +95,15 @@
     const deleteModal = document.getElementById("deleteModal");
     const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
     const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+
+    const statusModal = document.getElementById("statusModal");
+    const statusModalMessage = document.getElementById("statusModalMessage");
+    const confirmStatusBtn = document.getElementById("confirmStatusBtn");
+    const cancelStatusBtn = document.getElementById("cancelStatusBtn");
+
     let jobToDelete = null;
     let currentUser = null;
+    let pendingStatusChange = null;
 
     function renderJobCard(jobDoc) {
       const job = jobDoc.data();
@@ -93,6 +116,10 @@
         <p><strong>Status:</strong> ${job.status || "N/A"}</p>
         <button class="edit-btn">Edit</button>
         <button class="delete-btn">Delete</button>
+        <div class="applicant-section">
+          <h4>Applicants (<span id="count-${jobDoc.id}">0</span>)</h4>
+          <div id="applicants-${jobDoc.id}"></div>
+        </div>
       `;
 
       div.querySelector(".delete-btn").addEventListener("click", () => {
@@ -100,7 +127,73 @@
         deleteModal.classList.remove("hidden");
       });
 
+      // Load applicants for this job
+      loadApplicants(jobDoc.id);
+
       return div;
+    }
+
+    function loadApplicants(jobId) {
+      const applicantsRef = collection(db, "applications");
+      const q = query(applicantsRef, where("jobId", "==", jobId));
+
+      onSnapshot(q, snapshot => {
+        const applicantsDiv = document.getElementById(`applicants-${jobId}`);
+        const countSpan = document.getElementById(`count-${jobId}`);
+
+        if (!applicantsDiv || !countSpan) return;
+
+        countSpan.textContent = snapshot.docs.length;
+        applicantsDiv.innerHTML = "";
+
+        snapshot.forEach(appDoc => {
+          const application = appDoc.data();
+          const applicantDiv = document.createElement("div");
+          applicantDiv.className = "applicant-item";
+          applicantDiv.innerHTML = `
+            <div class="applicant-info">
+              <strong>${application.email || application.userEmail || "Unknown"}</strong>
+              <br>
+              <small>Applied: ${application.createdAt?.toDate?.()?.toLocaleDateString?.() || "Unknown date"}</small>
+            </div>
+            <select class="status-dropdown" data-app-id="${appDoc.id}" data-current-status="${application.status || 'pending'}">
+              <option value="pending" ${(application.status || 'pending') === 'pending' ? 'selected' : ''}>Pending</option>
+              <option value="reviewing" ${application.status === 'reviewing' ? 'selected' : ''}>Reviewing</option>
+              <option value="accepted" ${application.status === 'accepted' ? 'selected' : ''}>Accepted</option>
+              <option value="rejected" ${application.status === 'rejected' ? 'selected' : ''}>Rejected</option>
+            </select>
+          `;
+
+          const dropdown = applicantDiv.querySelector(".status-dropdown");
+          dropdown.addEventListener("change", (e) => {
+            const newStatus = e.target.value;
+            const currentStatus = e.target.dataset.currentStatus;
+
+            if (newStatus !== currentStatus) {
+              // Store pending change and show modal
+              pendingStatusChange = {
+                appId: appDoc.id,
+                newStatus: newStatus,
+                dropdown: dropdown,
+                currentStatus: currentStatus
+              };
+
+              statusModalMessage.textContent =
+                `Are you sure you want to change this applicant's status to "${newStatus}"?`;
+              statusModal.classList.remove("hidden");
+            }
+          });
+
+          applicantsDiv.appendChild(applicantDiv);
+        });
+      });
+    }
+
+    function handleStatusChange(appId, newStatus) {
+      pendingStatusChange = { appId, newStatus };
+      statusModalMessage.textContent =
+        `Are you sure you want to change this applicant's status to "${newStatus}"?`;
+      statusModal.classList.remove("hidden");
     }
 
     function loadJobs() {
@@ -125,6 +218,7 @@
       });
     }
 
+    // Delete modal handlers
     confirmDeleteBtn.addEventListener("click", async () => {
       if (jobToDelete) {
         try {
@@ -141,6 +235,45 @@
     cancelDeleteBtn.addEventListener("click", () => {
       jobToDelete = null;
       deleteModal.classList.add("hidden");
+    });
+
+    // Status change modal handlers
+    confirmStatusBtn.addEventListener("click", async () => {
+      if (pendingStatusChange) {
+        try {
+          await updateDoc(doc(db, "applications", pendingStatusChange.appId), {
+            status: pendingStatusChange.newStatus,
+            updatedAt: new Date()
+          });
+
+          // Update dropdown's current status
+          if (pendingStatusChange.dropdown) {
+            pendingStatusChange.dropdown.dataset.currentStatus = pendingStatusChange.newStatus;
+          }
+
+          alert("Application status updated successfully!");
+        } catch (err) {
+          alert("Error updating status: " + err.message);
+
+          // Revert dropdown to previous value
+          if (pendingStatusChange.dropdown) {
+            pendingStatusChange.dropdown.value = pendingStatusChange.currentStatus;
+          }
+        }
+      }
+
+      pendingStatusChange = null;
+      statusModal.classList.add("hidden");
+    });
+
+    cancelStatusBtn.addEventListener("click", () => {
+      // Revert dropdown to previous value
+      if (pendingStatusChange && pendingStatusChange.dropdown) {
+        pendingStatusChange.dropdown.value = pendingStatusChange.currentStatus;
+      }
+
+      pendingStatusChange = null;
+      statusModal.classList.add("hidden");
     });
 
     document.getElementById("signOutBtn").addEventListener("click", () => {
