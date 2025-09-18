@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f9fafb; }
+    header { background:#2563eb; color:white; padding:1rem; text-align:center; }
+    .container { max-width:1000px; margin:2rem auto; padding:1rem; }
+    .filters { display:flex; gap:1rem; margin-bottom:1rem; }
+    select, input { padding:0.5rem; border:1px solid #ccc; border-radius:4px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1rem; }
+    .card { background:white; border:1px solid #ddd; border-radius:6px; padding:1rem; box-shadow:0 2px 4px rgba(0,0,0,0.05); }
+    .card h3 { margin:0 0 0.5rem; }
+    .btn { display:inline-block; margin-top:0.5rem; padding:0.4rem 0.8rem; border:none; border-radius:4px; cursor:pointer; font-size:0.9rem; }
+    .btn-danger { background:#dc2626; color:white; }
+    .btn-primary { background:#2563eb; color:white; }
+    .status-pending { color:orange; }
+    .status-reviewing { color:blue; }
+    .status-accepted { color:green; }
+    .status-rejected { color:red; }
+
+    /* Modal styles */
+    .modal { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center; z-index:1000; }
+    .modal.hidden { display:none; }
+    .modal-content { background:white; padding:2rem; border-radius:8px; text-align:center; max-width:400px; width:90%; }
+    .modal-content h2 { margin-top:0; }
+    .cancel-btn { background:#dc2626; color:white; margin-right:1rem; padding:0.5rem 1rem; border:none; border-radius:4px; cursor:pointer; }
+    .confirm-btn { background:#16a34a; color:white; padding:0.5rem 1rem; border:none; border-radius:4px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎓 Student Dashboard</h1>
+    <button id="logoutBtn" class="btn btn-danger">Sign Out</button>
+  </header>
+  <div class="container">
+    <div class="filters">
+      <select id="jobTypeFilter">
+        <option value="All">All Types</option>
+        <option value="Full-time">Full-time</option>
+        <option value="Part-time">Part-time</option>
+        <option value="Internship">Internship</option>
+      </select>
+      <input type="text" id="searchBox" placeholder="Search jobs..."/>
+    </div>
+    <h2>Available Jobs</h2>
+    <div id="jobsContainer" class="grid"></div>
+    <h2>Saved Jobs</h2>
+    <div id="savedJobsContainer" class="grid"></div>
+  </div>
+
+  <!-- Withdrawal Confirmation Modal -->
+  <div id="withdrawModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Confirm Removal</h2>
+      <p>Are you sure you want to remove this saved job from your list?</p>
+      <button id="cancelWithdrawBtn" class="cancel-btn">Cancel</button>
+      <button id="confirmWithdrawBtn" class="confirm-btn">Yes, Remove</button>
+    </div>
+  </div>
+
+  <script type="module">
+    // ================= Firebase Config (replace placeholders with actual values) =================
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, collection, query, where, onSnapshot, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBJOVbMoHfdxHexsfqsbYsvFzFqaKBXC_s",
+      authDomain: "guidesignal.firebaseapp.com",
+      projectId: "guidesignal"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const jobsContainer = document.getElementById("jobsContainer");
+    const savedJobsContainer = document.getElementById("savedJobsContainer");
+    const jobTypeFilter = document.getElementById("jobTypeFilter");
+    const searchBox = document.getElementById("searchBox");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    let currentUser = null;
+    let jobToWithdraw = null;
+
+    // Modal elements
+    const withdrawModal = document.getElementById("withdrawModal");
+    const cancelWithdrawBtn = document.getElementById("cancelWithdrawBtn");
+    const confirmWithdrawBtn = document.getElementById("confirmWithdrawBtn");
+
+    cancelWithdrawBtn.addEventListener("click", () => {
+      withdrawModal.classList.add("hidden");
+      jobToWithdraw = null;
+    });
+
+    confirmWithdrawBtn.addEventListener("click", async () => {
+      if (jobToWithdraw) {
+        try {
+          await deleteDoc(doc(db, "savedJobs", jobToWithdraw));
+          alert("✅ Saved job removed successfully!");
+        } catch (err) {
+          alert("❌ Failed to remove job: " + err.message);
+        }
+      }
+      withdrawModal.classList.add("hidden");
+      jobToWithdraw = null;
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "auth.html";
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "auth.html";
+        return;
+      }
+      currentUser = user;
+      // TODO: Add role check → Only allow "student"
+      loadJobs();
+      loadSavedJobs();
+    });
+
+    function loadJobs() {
+      const q = collection(db, "jobs");
+      onSnapshot(q, (snapshot) => {
+        jobsContainer.innerHTML = "";
+        snapshot.forEach(docSnap => {
+          const job = docSnap.data();
+          if (applyFilters(job)) {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+              <h3>${job.title || "Untitled"}</h3>
+              <p>${job.description || "No description"}</p>
+              <p><strong>Type:</strong> ${job.type || "N/A"}</p>
+              <button class="btn btn-primary">Save</button>
+            `;
+            card.querySelector("button").addEventListener("click", async () => {
+              try {
+                await addDoc(collection(db, "savedJobs"), {
+                  userId: currentUser.uid,
+                  jobId: docSnap.id,
+                  savedAt: new Date().toISOString()
+                });
+                alert("✅ Job saved successfully!");
+              } catch (err) {
+                alert("❌ Failed to save job: " + err.message);
+              }
+            });
+            jobsContainer.appendChild(card);
+          }
+        });
+      });
+    }
+
+    function loadSavedJobs() {
+      const q = query(collection(db, "savedJobs"), where("userId", "==", currentUser.uid));
+      onSnapshot(q, async (snapshot) => {
+        savedJobsContainer.innerHTML = "";
+        snapshot.forEach(async (docSnap) => {
+          const savedJob = docSnap.data();
+          const jobDoc = doc(db, "jobs", savedJob.jobId);
+          // Could fetch job details if needed
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <h3>Saved Job</h3>
+            <p><strong>Job ID:</strong> ${savedJob.jobId}</p>
+            <button class="btn btn-danger">Remove</button>
+          `;
+          card.querySelector("button").addEventListener("click", () => {
+            jobToWithdraw = docSnap.id;
+            withdrawModal.classList.remove("hidden");
+          });
+          savedJobsContainer.appendChild(card);
+        });
+      });
+    }
+
+    function applyFilters(job) {
+      const typeFilter = jobTypeFilter.value;
+      const searchValue = searchBox.value.toLowerCase();
+      const typeMatch = (typeFilter === "All" || (job.type && job.type.toLowerCase() === typeFilter.toLowerCase()));
+      const searchMatch = (job.title && job.title.toLowerCase().includes(searchValue));
+      return typeMatch && searchMatch;
+    }
+
+    jobTypeFilter.addEventListener("change", loadJobs);
+    searchBox.addEventListener("input", loadJobs);
+  </script>
+</body>
+</html>
