@@ -1,187 +1,322 @@
+<!-- ===========================
+ jobseeker-dashboard.html
+ GuideSignal - Jobseeker Dashboard
+ With Confirmation Modal for Application Withdrawal
+ =========================== -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jobseeker Dashboard - GuideSignal</title>
+  <meta charset="UTF-8">
+  <title>Jobseeker Dashboard</title>
   <style>
     body {
-      font-family: system-ui, sans-serif;
+      font-family: Arial, sans-serif;
       margin: 0; padding: 0;
-      background: #f9fafb; color: #111827;
+      background-color: #f9fafb;
     }
     header {
-      background: #b91c1c; color: white;
-      padding: 1rem; display: flex;
-      justify-content: space-between; align-items: center;
+      background: #dc2626; /* Red theme for jobseeker */
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    h1 { margin: 0; font-size: 1.5rem; }
-    button { cursor: pointer; }
-    main { padding: 1.5rem; max-width: 900px; margin: auto; }
-    .filters { display: flex; gap: 1rem; margin-bottom: 1rem; }
-    select { padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; }
-    .jobs, .applications { margin-top: 2rem; }
-    .card {
-      background: white; padding: 1rem;
-      border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    header h1 { margin: 0; }
+    header button {
+      background: white;
+      color: #dc2626;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    main { padding: 1rem; }
+    .filters {
+      display: flex; gap: 1rem; margin-bottom: 1rem;
+    }
+    .filters select {
+      padding: 0.5rem; border-radius: 4px;
+    }
+    .section {
+      margin-top: 2rem;
+    }
+    .job-card, .app-card {
+      background: white;
+      padding: 1rem;
       margin-bottom: 1rem;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
-    .status {
-      font-weight: bold; padding: 0.25rem 0.5rem;
-      border-radius: 4px; display: inline-block;
+    .job-card h3, .app-card h3 { margin-top: 0; }
+    .job-card button, .app-card button {
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
     }
-    .status.pending { background: #fef3c7; color: #92400e; }
-    .status.reviewing { background: #dbeafe; color: #1e40af; }
-    .status.accepted { background: #d1fae5; color: #065f46; }
-    .status.rejected { background: #fee2e2; color: #991b1b; }
+    .status-pending { color: orange; }
+    .status-reviewing { color: blue; }
+    .status-accepted { color: green; }
+    .status-rejected { color: red; }
+    /* Modal styles */
+    .modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal.hidden { display: none; }
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+    .modal-content h2 { margin-top: 0; }
+    .cancel-btn {
+      background: #ef4444;
+      color: white;
+      margin-right: 1rem;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .confirm-btn {
+      background: #16a34a;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>Jobseeker Dashboard</h1>
-    <button id="signout-btn">Sign Out</button>
+    <button id="logoutBtn">Sign Out</button>
   </header>
 
   <main>
-    <section class="filters">
-      <label>
-        Job Type:
-        <select id="jobTypeFilter">
-          <option value="all">All</option>
-          <option value="full-time">Full-time</option>
-          <option value="part-time">Part-time</option>
-          <option value="internship">Internship</option>
-        </select>
-      </label>
-      <label>
-        Application Status:
-        <select id="statusFilter">
-          <option value="all">All</option>
-          <option value="pending">Pending</option>
-          <option value="reviewing">Reviewing</option>
-          <option value="accepted">Accepted</option>
-          <option value="rejected">Rejected</option>
-        </select>
-      </label>
-    </section>
+    <!-- Filters -->
+    <div class="filters">
+      <select id="jobTypeFilter">
+        <option value="all">All Types</option>
+        <option value="Full-time">Full-time</option>
+        <option value="Part-time">Part-time</option>
+        <option value="Internship">Internship</option>
+      </select>
+      <select id="appStatusFilter">
+        <option value="all">All Applications</option>
+        <option value="pending">Pending</option>
+        <option value="reviewing">Reviewing</option>
+        <option value="accepted">Accepted</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
 
-    <section class="jobs">
+    <!-- Job Browser -->
+    <section class="section">
       <h2>Available Jobs</h2>
-      <div id="jobs-list"></div>
+      <div id="jobList">Loading jobs...</div>
     </section>
 
-    <section class="applications">
+    <!-- Applications -->
+    <section class="section">
       <h2>My Applications</h2>
-      <div id="applications-list"></div>
+      <div id="appList">Loading applications...</div>
     </section>
   </main>
 
+  <!-- Confirmation Modal for Withdrawal -->
+  <div id="withdrawModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Confirm Withdrawal</h2>
+      <p id="withdrawMessage">Are you sure you want to withdraw this application?</p>
+      <button id="cancelWithdrawBtn" class="cancel-btn">Cancel</button>
+      <button id="confirmWithdrawBtn" class="confirm-btn">Yes, Withdraw</button>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { getFirestore, collection, query, where, onSnapshot, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { getFirestore, collection, query, where, onSnapshot, addDoc, doc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-    // ✅ Firebase config from firebase-client.js
+    // ================== FIREBASE CONFIG ==================
+    // ✅ Firebase config with actual values from firebase-client.js
     const firebaseConfig = {
       apiKey: "AIzaSyBJOVbMoHfdxHexsfqsbYsvFzFqaKBXC_s",
       authDomain: "guidesignal.firebaseapp.com",
       projectId: "guidesignal"
     };
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const jobsList = document.getElementById("jobs-list");
-    const applicationsList = document.getElementById("applications-list");
-    const jobTypeFilter = document.getElementById("jobTypeFilter");
-    const statusFilter = document.getElementById("statusFilter");
-
     let currentUser = null;
+    let pendingWithdrawal = null; // Stores context for modal
 
+    // ================== AUTH CHECK ==================
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.href = "auth.html";
         return;
       }
-
-      // ✅ Check role authorization
-      const userRef = doc(db, "users", user.uid);
-      const snap = await getDoc(userRef);
-      if (!snap.exists() || snap.data().role !== "jobseeker") {
-        await signOut(auth);
-        window.location.href = "auth.html";
-        return;
-      }
-
       currentUser = user;
-      loadJobs();
-      loadApplications();
+
+      // Role check
+      try {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (!userDoc.exists() || userDoc.data().role !== "jobseeker") {
+          alert("Unauthorized access");
+          await signOut(auth);
+          window.location.href = "auth.html";
+          return;
+        }
+
+        loadJobs();
+        loadApplications();
+      } catch (error) {
+        console.error("Error checking user role:", error);
+        alert("Error verifying access. Please try again.");
+        window.location.href = "auth.html";
+      }
     });
 
-    document.getElementById("signout-btn").addEventListener("click", async () => {
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
       await signOut(auth);
       window.location.href = "auth.html";
     });
 
-    // Add filter event listeners
-    jobTypeFilter.addEventListener("change", loadJobs);
-    statusFilter.addEventListener("change", loadApplications);
-
+    // ================== LOAD JOBS ==================
     function loadJobs() {
-      let q = query(collection(db, "jobs"), where("status", "==", "active"));
-      onSnapshot(q, (snapshot) => {
-        jobsList.innerHTML = "";
-        snapshot.forEach((doc) => {
-          const job = doc.data();
-          const jobType = job.type?.toLowerCase() || "other";
-          if (jobTypeFilter.value !== "all" && jobTypeFilter.value !== jobType) return;
-          const card = document.createElement("div");
-          card.className = "card";
-          card.innerHTML = `
-            <h3>${job.title}</h3>
-            <p>${job.description}</p>
-            <p><strong>Location:</strong> ${job.location}</p>
-            <p><strong>Type:</strong> ${job.type}</p>
-            <button>Apply</button>
+      const jobList = document.getElementById("jobList");
+      jobList.innerHTML = "Loading jobs...";
+
+      const jobTypeFilter = document.getElementById("jobTypeFilter");
+      const baseQuery = collection(db, "jobs");
+
+      onSnapshot(baseQuery, (snapshot) => {
+        jobList.innerHTML = "";
+        if (snapshot.empty) {
+          jobList.innerHTML = "<p>No jobs found.</p>";
+          return;
+        }
+        snapshot.forEach((docSnap) => {
+          const job = docSnap.data();
+          if (
+            jobTypeFilter.value !== "all" &&
+            job.type &&
+            job.type.toLowerCase() !== jobTypeFilter.value.toLowerCase()
+          ) {
+            return;
+          }
+          const div = document.createElement("div");
+          div.className = "job-card";
+          div.innerHTML = `
+            <h3>${job.title || "Untitled"}</h3>
+            <p>${job.description || "No description"}</p>
+            <p><strong>Type:</strong> ${job.type || "N/A"}</p>
+            <button data-id="${docSnap.id}" class="applyBtn">Apply</button>
           `;
-          card.querySelector("button").addEventListener("click", async () => {
+          jobList.appendChild(div);
+        });
+
+        document.querySelectorAll(".applyBtn").forEach((btn) => {
+          btn.addEventListener("click", async () => {
             try {
               await addDoc(collection(db, "applications"), {
-                jobId: doc.id,
+                jobId: btn.dataset.id,
                 userId: currentUser.uid,
                 email: currentUser.email,
                 status: "pending",
-                createdAt: serverTimestamp()
+                createdAt: new Date().toISOString()
               });
-              alert("✅ Applied successfully!");
+              alert("Application submitted!");
             } catch (err) {
-              alert("❌ Error applying: " + err.message);
+              alert("Error applying: " + err.message);
             }
           });
-          jobsList.appendChild(card);
         });
       });
     }
 
+    // ================== LOAD APPLICATIONS ==================
     function loadApplications() {
-      if (!currentUser) return;
-      let q = query(collection(db, "applications"), where("userId", "==", currentUser.uid));
-      onSnapshot(q, (snapshot) => {
-        applicationsList.innerHTML = "";
-        snapshot.forEach((doc) => {
-          const appData = doc.data();
-          if (statusFilter.value !== "all" && statusFilter.value !== appData.status) return;
-          const card = document.createElement("div");
-          card.className = "card";
-          card.innerHTML = `
-            <p><strong>Job ID:</strong> ${appData.jobId}</p>
-            <p><strong>Status:</strong> <span class="status ${appData.status}">${appData.status}</span></p>
-            <p><strong>Applied:</strong> ${appData.createdAt?.toDate?.() || 'Recently'}</p>
+      const appList = document.getElementById("appList");
+      appList.innerHTML = "Loading applications...";
+
+      const appStatusFilter = document.getElementById("appStatusFilter");
+      const baseQuery = query(collection(db, "applications"), where("userId", "==", currentUser.uid));
+
+      onSnapshot(baseQuery, (snapshot) => {
+        appList.innerHTML = "";
+        if (snapshot.empty) {
+          appList.innerHTML = "<p>No applications found.</p>";
+          return;
+        }
+        snapshot.forEach((docSnap) => {
+          const app = docSnap.data();
+          if (
+            appStatusFilter.value !== "all" &&
+            app.status &&
+            app.status.toLowerCase() !== appStatusFilter.value.toLowerCase()
+          ) {
+            return;
+          }
+          const div = document.createElement("div");
+          div.className = "app-card";
+          div.innerHTML = `
+            <h3>Application for Job ID: ${app.jobId}</h3>
+            <p>Status: <span class="status-${app.status}">${app.status}</span></p>
+            <button data-id="${docSnap.id}" class="withdrawBtn">Withdraw</button>
           `;
-          applicationsList.appendChild(card);
+          appList.appendChild(div);
+        });
+
+        document.querySelectorAll(".withdrawBtn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            pendingWithdrawal = btn.dataset.id;
+            document.getElementById("withdrawModal").classList.remove("hidden");
+          });
         });
       });
     }
+
+    // ================== MODAL HANDLERS ==================
+    document.getElementById("cancelWithdrawBtn").addEventListener("click", () => {
+      pendingWithdrawal = null;
+      document.getElementById("withdrawModal").classList.add("hidden");
+    });
+
+    document.getElementById("confirmWithdrawBtn").addEventListener("click", async () => {
+      if (!pendingWithdrawal) return;
+      try {
+        await deleteDoc(doc(db, "applications", pendingWithdrawal));
+        alert("Application withdrawn.");
+      } catch (err) {
+        alert("Error withdrawing: " + err.message);
+      }
+      pendingWithdrawal = null;
+      document.getElementById("withdrawModal").classList.add("hidden");
+    });
+
+    // ================== FILTER EVENT LISTENERS ==================
+    document.getElementById("jobTypeFilter").addEventListener("change", loadJobs);
+    document.getElementById("appStatusFilter").addEventListener("change", loadApplications);
   </script>
 </body>
 </html>
