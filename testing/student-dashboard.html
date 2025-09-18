@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      margin: 0;
+      background: #f0f9ff;
+      color: #333;
+    }
+    header {
+      background: #2563eb;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 { margin: 0; font-size: 1.5rem; }
+    button {
+      background: #1e40af;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover { background: #1d4ed8; }
+    .filters {
+      margin: 1rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    select {
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    main { padding: 1rem; }
+    .jobs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .job-card {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .job-card h3 { margin: 0 0 0.5rem 0; }
+    .job-card p { margin: 0.25rem 0; }
+    .empty { text-align: center; margin-top: 2rem; color: #555; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎓 Student Dashboard</h1>
+    <button id="logout-btn">Sign Out</button>
+  </header>
+
+  <!-- Filters -->
+  <div class="filters">
+    <label for="job-type">Filter by type:</label>
+    <select id="job-type">
+      <option value="all">All</option>
+      <option value="Full-time">Full-time</option>
+      <option value="Part-time">Part-time</option>
+      <option value="Internship">Internship</option>
+    </select>
+  </div>
+
+  <main>
+    <h2>Available Jobs</h2>
+    <div id="jobs" class="jobs"></div>
+    <p id="empty" class="empty" style="display:none;">No jobs found.</p>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    // ✅ Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBJOVbMoHfdxHexsfqsbYsvFzFqaKBXC_s",
+      authDomain: "guidesignal.firebaseapp.com",
+      projectId: "guidesignal",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const jobsContainer = document.getElementById("jobs");
+    const emptyMsg = document.getElementById("empty");
+    const jobTypeSelect = document.getElementById("job-type");
+
+    let unsubscribe = null;
+
+    function renderJobs(snapshot) {
+      jobsContainer.innerHTML = "";
+      if (snapshot.empty) {
+        emptyMsg.style.display = "block";
+        return;
+      }
+      emptyMsg.style.display = "none";
+      snapshot.forEach(doc => {
+        const job = doc.data();
+        const div = document.createElement("div");
+        div.className = "job-card";
+        div.innerHTML = `
+          <h3>${job.title}</h3>
+          <p><strong>Location:</strong> ${job.location}</p>
+          <p><strong>Type:</strong> ${job.type}</p>
+          <p>${job.description}</p>
+        `;
+        jobsContainer.appendChild(div);
+      });
+    }
+
+    function loadJobs(type) {
+      if (unsubscribe) unsubscribe();
+      let q = collection(db, "jobs");
+      if (type !== "all") {
+        q = query(q, where("type", "==", type));
+      }
+      unsubscribe = onSnapshot(q, renderJobs);
+    }
+
+    jobTypeSelect.addEventListener("change", e => {
+      loadJobs(e.target.value);
+    });
+
+    document.getElementById("logout-btn").addEventListener("click", () => {
+      signOut(auth).then(() => {
+        window.location.href = "auth.html";
+      });
+    });
+
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        window.location.href = "auth.html";
+      } else {
+        // ✅ Check role
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        (async () => {
+          const userRef = doc(db, "users", user.uid);
+          const snap = await getDoc(userRef);
+          if (!snap.exists() || snap.data().role !== "student") {
+            await signOut(auth);
+            window.location.href = "auth.html";
+          } else {
+            loadJobs("all"); // initial load
+          }
+        })();
+      }
+    });
+  </script>
+</body>
+</html>
