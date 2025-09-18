@@ -1,83 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Recruiter Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f8f9fa;
+    body { font-family: Arial, sans-serif; margin: 0; background: #f9fafb; }
+    header { background: #16a34a; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+    h1 { margin: 0; font-size: 1.25rem; }
+    .filters { display: flex; gap: 1rem; margin: 1rem; }
+    .job-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; padding: 1rem; }
+    .job-card { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .job-card h3 { margin: 0; }
+    .job-card input, .job-card textarea, .job-card select {
+      width: 100%; padding: 0.5rem; margin-top: 0.25rem; border: 1px solid #ccc; border-radius: 4px;
     }
-    header {
-      background: #16a34a;
-      color: white;
-      padding: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    main {
-      padding: 1.5rem;
-    }
-    .filters {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .job-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1rem;
-    }
-    .job-card {
-      background: white;
-      padding: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-    .loading, .empty {
-      text-align: center;
-      margin-top: 2rem;
-      font-style: italic;
-      color: #666;
-    }
+    .job-card button { margin-top: 0.5rem; padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; }
+    .edit-btn { background: #facc15; }
+    .save-btn { background: #16a34a; color: white; }
+    .cancel-btn { background: #dc2626; color: white; }
+    .loading, .empty { text-align: center; margin-top: 2rem; font-size: 1.1rem; }
   </style>
 </head>
 <body>
   <header>
-    <h2>Recruiter Dashboard</h2>
+    <h1>Recruiter Dashboard</h1>
     <button id="signOutBtn">Sign Out</button>
   </header>
-  <main>
-    <div class="filters">
-      <select id="statusFilter">
-        <option value="All">All Jobs</option>
-        <option value="active">Active</option>
-        <option value="closed">Closed</option>
-      </select>
-      <select id="typeFilter">
-        <option value="All">All Types</option>
-        <option value="Full-time">Full-time</option>
-        <option value="Part-time">Part-time</option>
-        <option value="Internship">Internship</option>
-      </select>
-      <input type="text" id="searchBox" placeholder="Search by job title...">
-    </div>
-    <div id="loading" class="loading">Loading jobs...</div>
-    <div id="jobList" class="job-list"></div>
-    <div id="empty" class="empty" style="display:none;">No jobs found.</div>
-  </main>
+
+  <section class="filters">
+    <select id="statusFilter">
+      <option value="all">All Jobs</option>
+      <option value="active">Active</option>
+      <option value="closed">Closed</option>
+    </select>
+    <select id="typeFilter">
+      <option value="all">All Types</option>
+      <option value="Full-time">Full-time</option>
+      <option value="Part-time">Part-time</option>
+      <option value="Internship">Internship</option>
+    </select>
+    <input type="text" id="searchBox" placeholder="Search jobs by title..." />
+  </section>
+
+  <div id="loading" class="loading">Loading jobs...</div>
+  <div id="empty" class="empty" style="display:none;">No jobs found.</div>
+  <div id="jobList" class="job-list"></div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { getFirestore, collection, query, where, onSnapshot, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-    // ✅ Replace with your firebase-config.js values
+    // ✅ Firebase config with actual values from firebase-config.js
     const firebaseConfig = {
       apiKey: "AIzaSyBJOVbMoHfdxHexsfqsbYsvFzFqaKBXC_s",
       authDomain: "guidesignal.firebaseapp.com",
@@ -89,30 +65,27 @@
     const db = getFirestore(app);
 
     const jobList = document.getElementById("jobList");
-    const loading = document.getElementById("loading");
-    const empty = document.getElementById("empty");
-
+    const loadingEl = document.getElementById("loading");
+    const emptyEl = document.getElementById("empty");
     const statusFilter = document.getElementById("statusFilter");
     const typeFilter = document.getElementById("typeFilter");
     const searchBox = document.getElementById("searchBox");
     const signOutBtn = document.getElementById("signOutBtn");
 
-    let unsubscribe = null;
+    let currentUser = null;
 
-    // 🔐 Auth check
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.href = "auth.html";
         return;
       }
+      currentUser = user;
 
-      // Verify recruiter role
-      const res = await fetch(`https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/users/${user.uid}`);
-      const data = await res.json();
-      if (!data.fields || data.fields.role.stringValue !== "recruiter") {
-        alert("Unauthorized. Recruiters only.");
-        await signOut(auth);
-        window.location.href = "auth.html";
+      // Check role
+      const token = await user.getIdTokenResult();
+      if (!token.claims.role || token.claims.role !== "recruiter") {
+        alert("Access denied. Recruiters only.");
+        signOut(auth);
         return;
       }
 
@@ -120,61 +93,103 @@
     });
 
     function loadJobs() {
-      if (unsubscribe) unsubscribe();
+      loadingEl.style.display = "block";
+      jobList.innerHTML = "";
+      emptyEl.style.display = "none";
 
-      let q = collection(db, "jobs");
-
-      unsubscribe = onSnapshot(q, (snapshot) => {
+      const q = query(collection(db, "jobs"), where("employerId", "==", currentUser.uid));
+      onSnapshot(q, (snapshot) => {
+        loadingEl.style.display = "none";
         jobList.innerHTML = "";
-        loading.style.display = "none";
 
-        let jobs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-        // Apply filters
-        const statusVal = statusFilter.value;
-        const typeVal = typeFilter.value;
-        const searchVal = searchBox.value.toLowerCase();
-
-        jobs = jobs.filter(job => {
-          const matchesStatus = statusVal === "All" || job.status === statusVal;
-          const matchesType = typeVal === "All" || (job.type && job.type === typeVal);
-          const matchesSearch = !searchVal || (job.title && job.title.toLowerCase().includes(searchVal));
-          return matchesStatus && matchesType && matchesSearch;
-        });
-
-        if (jobs.length === 0) {
-          empty.style.display = "block";
+        if (snapshot.empty) {
+          emptyEl.style.display = "block";
           return;
-        } else {
-          empty.style.display = "none";
         }
 
-        jobs.forEach(job => {
-          const card = document.createElement("div");
-          card.className = "job-card";
-          card.innerHTML = `
-            <h3>${job.title || "Untitled Job"}</h3>
-            <p><strong>Type:</strong> ${job.type || "N/A"}</p>
-            <p><strong>Status:</strong> ${job.status || "N/A"}</p>
-            <p><strong>Location:</strong> ${job.location || "Unknown"}</p>
-            <p><strong>Description:</strong> ${job.description || "No description provided."}</p>
-          `;
-          jobList.appendChild(card);
+        snapshot.forEach((docSnap) => {
+          const job = docSnap.data();
+          const jobId = docSnap.id;
+          renderJob(job, jobId);
         });
       });
     }
 
-    statusFilter.addEventListener("change", loadJobs);
-    typeFilter.addEventListener("change", loadJobs);
-    searchBox.addEventListener("input", () => {
-      if (unsubscribe) unsubscribe();
-      loadJobs();
-    });
+    function renderJob(job, jobId) {
+      const card = document.createElement("div");
+      card.className = "job-card";
+
+      let editing = false;
+
+      const titleEl = document.createElement("h3");
+      titleEl.textContent = job.title || "Untitled Job";
+
+      const descEl = document.createElement("p");
+      descEl.textContent = job.description || "No description.";
+
+      const infoEl = document.createElement("p");
+      infoEl.textContent = `${job.type || "N/A"} | ${job.status || "N/A"}`;
+
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "Edit";
+      editBtn.className = "edit-btn";
+
+      editBtn.onclick = () => {
+        if (!editing) {
+          editing = true;
+          card.innerHTML = `
+            <input id="titleInput" value="${job.title || ""}" />
+            <textarea id="descInput">${job.description || ""}</textarea>
+            <select id="typeInput">
+              <option value="Full-time" ${job.type === "Full-time" ? "selected" : ""}>Full-time</option>
+              <option value="Part-time" ${job.type === "Part-time" ? "selected" : ""}>Part-time</option>
+              <option value="Internship" ${job.type === "Internship" ? "selected" : ""}>Internship</option>
+            </select>
+            <select id="statusInput">
+              <option value="active" ${job.status === "active" ? "selected" : ""}>Active</option>
+              <option value="closed" ${job.status === "closed" ? "selected" : ""}>Closed</option>
+            </select>
+            <button id="saveBtn" class="save-btn">Save</button>
+            <button id="cancelBtn" class="cancel-btn">Cancel</button>
+          `;
+
+          const saveBtn = card.querySelector("#saveBtn");
+          const cancelBtn = card.querySelector("#cancelBtn");
+
+          saveBtn.onclick = async () => {
+            saveBtn.disabled = true;
+            try {
+              await updateDoc(doc(db, "jobs", jobId), {
+                title: card.querySelector("#titleInput").value,
+                description: card.querySelector("#descInput").value,
+                type: card.querySelector("#typeInput").value,
+                status: card.querySelector("#statusInput").value,
+              });
+              alert("✅ Job updated successfully!");
+              editing = false;
+              loadJobs();
+            } catch (err) {
+              alert("❌ Error updating job: " + err.message);
+            }
+          };
+
+          cancelBtn.onclick = () => {
+            editing = false;
+            loadJobs();
+          };
+        }
+      };
+
+      card.appendChild(titleEl);
+      card.appendChild(descEl);
+      card.appendChild(infoEl);
+      card.appendChild(editBtn);
+
+      jobList.appendChild(card);
+    }
 
     signOutBtn.addEventListener("click", () => {
-      signOut(auth).then(() => {
-        window.location.href = "auth.html";
-      });
+      signOut(auth);
     });
   </script>
 </body>
