@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Student Dashboard</title>
+  <title>Jobseeker Dashboard</title>
   <style>
     body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f9fafb; }
-    header { background:#2563eb; color:white; padding:1rem; display:flex; justify-content:space-between; align-items:center; }
+    header { background:#dc2626; color:white; padding:1rem; display:flex; justify-content:space-between; align-items:center; }
     .container { max-width:1000px; margin:2rem auto; padding:1rem; }
     button { cursor:pointer; padding:.5rem 1rem; border:none; border-radius:4px; }
-    .signout-btn { background:#dc2626; color:white; font-weight:bold; }
+    .signout-btn { background:#2563eb; color:white; font-weight:bold; }
   </style>
 </head>
 <body>
   <header>
-    <h1>Student Dashboard</h1>
+    <h1>Jobseeker Dashboard</h1>
     <button id="signOutBtn" class="signout-btn">Sign Out</button>
   </header>
   <div class="container">
-    <p>Welcome, Student! Your job browsing and saved jobs go here.</p>
+    <p>Welcome, Jobseeker! Browse jobs and manage your applications here.</p>
   </div>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -40,7 +40,7 @@
         return;
       }
       const roleDoc = await getDoc(doc(db, "users", user.uid));
-      if (!roleDoc.exists() || roleDoc.data().role !== "student") {
+      if (!roleDoc.exists() || roleDoc.data().role !== "jobseeker") {
         await signOut(auth);
         window.location.href = "auth.html";
       }
