@@ -22,6 +22,7 @@ const db = getFirestore(app);
 // User roles
 const USER_ROLES = {
   STUDENT: 'student',
+  JOB_SEEKER: 'job_seeker',
   RECRUITER: 'recruiter'
 };
 
@@ -482,7 +483,7 @@ export const authFunctions = {
     }
     
     // Role validation
-    const validRoles = [USER_ROLES.STUDENT, USER_ROLES.RECRUITER];
+    const validRoles = [USER_ROLES.STUDENT, USER_ROLES.JOB_SEEKER, USER_ROLES.RECRUITER];
     if (!role || !validRoles.includes(role)) {
       errors.push('Please select a valid role');
     }
