@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign In - GuideSignal</title>
+  <link rel="stylesheet" href="css/style.css">
   <style>
     /* === GLOBAL RESET === */
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -222,25 +223,76 @@
       }
     }
 
+    function setLoading(button, isLoading, defaultText) {
+      const textSpan = button.querySelector('.btn-text');
+      if (!textSpan) return;
+
+      button.disabled = isLoading;
+      button.classList.toggle('loading', isLoading);
+      textSpan.textContent = isLoading ? 'Processing...' : defaultText;
+    }
+
+    function validateSignupForm(showErrors = true) {
+      const name = document.getElementById('signup-name').value.trim();
+      const email = document.getElementById('signup-email').value.trim();
+      const password = document.getElementById('signup-password').value;
+      const confirm = document.getElementById('signup-password-confirm').value;
+      const role = document.querySelector('input[name="role"]:checked')?.value;
+      const termsChecked = document.getElementById('terms').checked;
+
+      const errors = [];
+
+      if (!termsChecked) {
+        errors.push('Please agree to the Terms and Privacy Policy');
+      }
+
+      const validationResult = window.authFunctions.validateRegistrationData(
+        email,
+        password,
+        name,
+        role
+      );
+
+      if (!validationResult.isValid) {
+        errors.push(...validationResult.errors);
+      }
+
+      if (password && confirm && password !== confirm) {
+        errors.push('Passwords do not match');
+      }
+
+      const submitBtn = document.getElementById('create-account-btn');
+      submitBtn.disabled = errors.length > 0;
+
+      if (showErrors && errors.length > 0) {
+        showMessage(errors[0], 'error');
+      } else if (!errors.length) {
+        document.getElementById('error-message').style.display = 'none';
+      }
+
+      return errors.length === 0;
+    }
+
     // Signin
     async function handleSignIn(e) {
       e.preventDefault();
       const btn = document.getElementById('signin-btn');
-      btn.disabled = true; btn.classList.add('loading'); btn.querySelector('.btn-text').textContent = 'Processing...';
+      const rememberMe = document.getElementById('remember-me').checked;
+      setLoading(btn, true, 'Sign In');
       try {
         const email = document.getElementById('signin-email').value;
         const password = document.getElementById('signin-password').value;
-        const result = await window.authFunctions.signInUser(email, password);
+        const result = await window.authFunctions.signInUser(email, password, rememberMe);
         if (result.success) {
           showMessage('✅ Signed in! Redirecting...', 'success');
           setTimeout(() => window.location.href = 'dashboard.html', 1000);
         } else {
           showMessage(result.error || 'Sign in failed', 'error');
-          btn.disabled = false; btn.classList.remove('loading'); btn.querySelector('.btn-text').textContent = 'Sign In';
+          setLoading(btn, false, 'Sign In');
         }
       } catch (error) {
         showMessage('Network error', 'error');
-        btn.disabled = false; btn.classList.remove('loading'); btn.querySelector('.btn-text').textContent = 'Sign In';
+        setLoading(btn, false, 'Sign In');
       }
     }
 
@@ -248,7 +300,10 @@
     async function handleSignUp(e) {
       e.preventDefault();
       const btn = document.getElementById('create-account-btn');
-      btn.disabled = true; btn.classList.add('loading'); btn.querySelector('.btn-text').textContent = 'Processing...';
+      const isValid = validateSignupForm(true);
+      if (!isValid) return;
+
+      setLoading(btn, true, 'Create Account');
       try {
         const name = document.getElementById('signup-name').value.trim();
         const email = document.getElementById('signup-email').value.trim();
@@ -256,9 +311,6 @@
         const confirm = document.getElementById('signup-password-confirm').value;
         const role = document.querySelector('input[name="role"]:checked')?.value;
         const terms = document.getElementById('terms').checked;
-
-        if (!name || !email || !password || !confirm || !role || !terms) throw new Error('All fields required');
-        if (password !== confirm) throw new Error('Passwords do not match');
 
         const result = await window.authFunctions.registerUser(email, password, name, role, {});
         if (result.success) {
@@ -269,7 +321,7 @@
         }
       } catch (err) {
         showMessage(err.message, 'error');
-        btn.disabled = false; btn.classList.remove('loading'); btn.querySelector('.btn-text').textContent = 'Create Account';
+        setLoading(btn, false, 'Create Account');
       }
     }
 
@@ -280,9 +332,17 @@
         document.querySelectorAll('.role-option').forEach(o => o.classList.remove('selected'));
         opt.classList.add('selected');
         opt.querySelector('input').checked = true;
+        validateSignupForm(false);
       }));
+      ['signup-name', 'signup-email', 'signup-password', 'signup-password-confirm'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => validateSignupForm(false));
+      });
+      document.getElementById('terms').addEventListener('change', () => validateSignupForm(false));
       document.getElementById('signin-form').addEventListener('submit', handleSignIn);
       document.getElementById('signup-form').addEventListener('submit', handleSignUp);
+
+      // Initialize button state
+      validateSignupForm(false);
     });
   </script>
 </body>
